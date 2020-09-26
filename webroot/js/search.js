@@ -1,0 +1,310 @@
+/**
+ * search.js
+ *
+ * Gestion des actions lors d'une recherche
+ *
+ */
+
+// variable
+
+// la variable currenturl est générée par le layout search pour déterminer si on ait une recherche classqieu ou via hashtag
+
+const regexp = /#(\S)/g; // expression régulière qui va servir à ôter le hashtag # sur la génération d'une URL de recherche hashtag
+
+const spinner = document.getElementById("spinner"); // div qui accueuillera le spinner de chargement des données via AJAX
+
+const navAnchor = document.querySelectorAll('.tablink'); // liste de tous les liens du menu pour permettre de surligner le lien actif
+
+// surlignage
+
+// ajout d'un écouteur de clique sur chaque lien du menu
+
+navAnchor.forEach(anchor => {
+  anchor.addEventListener('click', addActive);
+})
+
+// on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
+
+function addActive(e) {
+  const current = document.querySelector('.w3-red');
+  current.className = current.className.replace("w3-red", "");
+  e.target.className += " w3-red";
+}
+
+// chargement de donné via lien
+
+document.addEventListener('click',function(e){
+
+var URL; // URL de rercherche à charger suivant l'onglet cliqué
+
+if(e.target.id){
+
+  		switch(e.target.id)
+  	{
+  		case "searchusers": // recherche d'utilisateurs
+                          if(currenturl === 'search') // page de recherche classiqie
+                        {
+  							           URL = '/twittux/search/users/'+keyword+'';
+                        }
+                          else // page de recherche hashtag sur la description
+                        {
+
+                          keyword = keyword.replace(regexp, '$1');
+
+                          URL = '/twittux/search/hashtag/users/'+keyword+'';
+          
+                        }
+
+  							break;
+
+  		case "searchtweets": // recherche dans les tweets
+                          if(currenturl === 'search') // page de recherche classiqie
+                        {
+  							           URL = '/twittux/search/'+keyword+'';
+                        }
+                          else // page de recherche hashtag sur le contenu des tweets
+                        {
+
+                          keyword = keyword.replace(regexp, '$1');
+
+                          URL = '/twittux/search/hashtag/'+keyword+'';
+          
+                        }
+
+  							break;
+
+  		case "searchmostrecent": // tri sur la date des tweets (les plus récents)
+                              if(currenturl === 'search') // page de recherche classiqie
+                            {
+  							               URL = '/twittux/search/'+keyword+'?sort=created&direction=desc';
+                            }
+                              else // page de recherche hashtag sur le contenu des tweets
+                            {
+                              keyword = keyword.replace(regexp, '$1');
+
+                              URL = '/twittux/search/hashtag/'+keyword+'?sort=created&direction=desc';
+                            }
+  							break;
+  	}
+
+  	document.getElementById("result_search").innerHTML = ""; // on vide la div d'affichage des résultats
+
+    spinner.removeAttribute('hidden'); // affichage du spinner de chargement
+
+    fetch(URL, { // URL à charger dans la div précédente
+
+                headers: {
+                            'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                          }
+              })
+
+    .then(function (data) {
+                            return data.text();
+                          })
+    .then(function (html) {
+
+	   spinner.setAttribute('hidden', ''); // disparition du spinner
+	
+      document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
+
+    })
+
+    // affichage d'erreur si besoin
+
+    .catch(function(err) { 
+  	                       console.log("fail" + err);
+  	});
+}
+})
+
+// traitement des actions d'abonnement/demande/suppression sur les résultats utilisateurs du moteur de recherche
+
+document.addEventListener('click',function(e){
+
+  if(e.target && e.target.className == 'follow'){
+
+    var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
+
+           var data = { 
+                        "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
+                      } 
+
+    let response = fetch('/twittux/abonnement/'+action+'', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format JSON
+  })
+    .then(function(Data) {
+
+  switch(Data.Result)
+{
+
+    // ajout d'un abonnement
+
+    case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
+                                        '<p>Abonnement ajouté.</p>'+
+                                        '</div>.');
+    // nouveau bouton 
+
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'">Ne plus suivre</a></button>';
+                                                
+    break;
+
+    // impossible d'ajouter un nouvel abonnement
+
+    case "abonnementnonajoute": alertbox.show('<div class="w3-panel w3-red">'+ // notification
+                                        '<p>Impossible d\'ajouter cet abonnement.</p>'+
+                                        '</div>.');
+
+    break;
+
+    //suppression d'un abonnement
+
+    case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
+                              '<p>Abonnement supprimer.</p>'+
+                              '</div>.'); 
+
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+
+    break;
+
+    //Impossible de supprimer un abonnement
+
+    case "abonnementnonsupprime": alertbox.show('<div class="w3-panel w3-red">'+
+                                  '<p>Impossible de supprimer cet abonnement.</p>'+
+                                  '</div>.');
+
+    break;
+
+    //abonnement existant
+
+    case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
+                        '<p>Vous suivez déjà ' + data.username +' .</p>'+
+                        '</div>.');
+                              
+    
+    break;
+
+    // envoi d'une demande d'abonnement
+    
+    case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
+                      '<p>Demande d\'abonnement envoyée.</p>'+
+                      '</div>.');
+    
+    // bouton pour annuler ma demande d'abonnement
+
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
+
+    break;
+
+    //annulation d'une demande d'abonnement
+
+    case "demandeannule": alertbox.show('<div class="w3-panel w3-green">'+
+                          '<p>Demande d\'abonnemment annulée.</p>'+
+                          '</div>.');
+
+    // bouton pour suivre ultérieurement
+          
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+
+    break;
+
+    //impossible d'annuler une demande d'abonnement
+
+    case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
+                            '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
+                            '</div>.');
+          
+    break;
+
+}
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                    '</div>.');
+ 
+    });
+       }
+})
+
+/** affichage des notifications **/
+
+ var AlertBox = function(id, option) {
+  this.show = function(msg) {
+
+      var alertArea = document.querySelector(id);
+      var alertBox = document.createElement('DIV');
+      var alertContent = document.createElement('DIV');
+      var alertClose = document.createElement('A');
+      var alertClass = this;
+      alertContent.classList.add('alert-content');
+      alertContent.innerHTML = msg;
+      alertClose.classList.add('alert-close');
+      alertClose.setAttribute('href', '#');
+      alertBox.classList.add('alert-box');
+      alertBox.appendChild(alertContent);
+      if (!option.hideCloseButton || typeof option.hideCloseButton === 'undefined') {
+        alertBox.appendChild(alertClose);
+      }
+      alertArea.appendChild(alertBox);
+      alertClose.addEventListener('click', function(event) {
+        event.preventDefault();
+        alertClass.hide(alertBox);
+      });
+      if (!option.persistent) {
+        var alertTimeout = setTimeout(function() {
+          alertClass.hide(alertBox);
+          clearTimeout(alertTimeout);
+        }, option.closeTime);
+      }
+    
+  };
+
+  this.hide = function(alertBox) {
+    alertBox.classList.add('hide');
+    var disperseTimeout = setTimeout(function() {
+      alertBox.parentNode.removeChild(alertBox);
+      clearTimeout(disperseTimeout);
+    }, 500);
+  };
+};
+
+var alertbox = new AlertBox('#alert-area', {
+  closeTime: 5000,
+  persistent: false,
+  hideCloseButton: false
+});
+
+/** fin affichage des notifications **/
+
+ //menu déroulant tweet
+ 
+ function openmenutweet(id) {
+
+    document.getElementById("btntweet"+id).classList.toggle("show");
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
