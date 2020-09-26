@@ -74,11 +74,22 @@ class UsersController extends AppController
      */
         public function add()
     {
-        $user = $this->Users->newEmptyEntity(); // création d'une nouvell entité
+        
 
         if ($this->request->is('post')) // requête POST
     { 
-        $user = $this->Users->patchEntity($user, $this->request->getData()); // mise à jour de la nouvelle entité
+
+      $user = $this->Users->newEmptyEntity(); // création d'une nouvell entité
+
+      $data = array(
+                                'username' => $this->request->getData('username'), // moi
+                                'password' => $this->request->getData('password'),
+                                'email' =>  $this->request->getData('email'), // personne que je veut suivre
+                                'description' => 'Aucune description',
+                                'lieu' => 'Aucun lieu' // abonnement valide
+                            );
+
+        $user = $this->Users->patchEntity($user, $data); // mise à jour de la nouvelle entité
          
                 if ($this->Users->save($user)) 
             {
