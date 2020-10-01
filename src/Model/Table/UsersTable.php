@@ -49,6 +49,8 @@ class UsersTable extends Table
         $this->hasMany('Abonnements');
 
         $this->hasMany('Tweets');
+
+        $this->hasMany('Aime');
     }
 
     /**

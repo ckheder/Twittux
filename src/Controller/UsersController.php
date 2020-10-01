@@ -38,18 +38,6 @@ class UsersController extends AppController
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function index()
-    {
-        $users = $this->paginate($this->Users);
-
-        $this->set(compact('users'));
-    }
-
-    /**
      * View method
      *
      * @param string|null $id User id.
@@ -75,19 +63,18 @@ class UsersController extends AppController
         public function add()
     {
         
-
         if ($this->request->is('post')) // requête POST
     { 
 
       $user = $this->Users->newEmptyEntity(); // création d'une nouvell entité
 
       $data = array(
-                                'username' => $this->request->getData('username'), // moi
-                                'password' => $this->request->getData('password'),
-                                'email' =>  $this->request->getData('email'), // personne que je veut suivre
-                                'description' => 'Aucune description',
-                                'lieu' => 'Aucun lieu' // abonnement valide
-                            );
+                      'username' => $this->request->getData('username'), // nom d'utilisateur
+                      'password' => $this->request->getData('password'), // mot de passe
+                      'email' =>  $this->request->getData('email'), // adresse mail
+                      'description' => 'Aucune description', // description par défaut
+                      'lieu' => 'Aucun lieu' // lieu par défaut
+                    );
 
         $user = $this->Users->patchEntity($user, $data); // mise à jour de la nouvelle entité
          

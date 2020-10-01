@@ -37,6 +37,8 @@ use Cake\Routing\Router;
 
         <?= $this->element('navbar') ?>
 
+        <?= $this->element('modallike') ?>
+
     <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
 
         <div class="w3-row">

@@ -172,6 +172,16 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/search/hashtag/users/{query}',['controller' => 'Search', 'action' => 'userhashtag']);
 
+    /* ROUTE LIKE */
+
+        // liste des personnes aimant un post (fenêtre modal)
+
+    $builder->connect('/like/{idtweet}',['controller' => 'Aime', 'action' => 'view'],['idtweet' => '\d+', 'pass' => ['idtweet']]);
+
+        // ajouter/supprimer un like
+
+    $builder->connect('/likecontent',['controller' => 'Aime', 'action' => 'add']);
+
 
     /*
      * Connect catchall routes for all controllers.

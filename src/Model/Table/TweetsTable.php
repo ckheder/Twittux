@@ -47,6 +47,8 @@ class TweetsTable extends Table
 
         $this->hasMany('Commentaires');
 
+        $this->hasMany('Aime');
+
         $this->belongsTo('Abonnements', [
                                             'foreignKey' => 'user_tweet',
                                             'bindingKey' => 'suivi'

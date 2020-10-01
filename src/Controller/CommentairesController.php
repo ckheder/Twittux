@@ -12,33 +12,6 @@ use Cake\Http\Exception\NotFoundException;
  */
 class CommentairesController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function index()
-    {
-        $commentaires = $this->paginate($this->Commentaires);
-
-        $this->set(compact('commentaires'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Commentaire id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $commentaire = $this->Commentaires->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set('commentaire', $commentaire);
-    }
 
     /**
      * Add method
@@ -76,30 +49,6 @@ class CommentairesController extends AppController
             throw new NotFoundException(__('Cette page n\'existe pas.'));
         }
    
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Commentaire id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $commentaire = $this->Commentaires->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $commentaire = $this->Commentaires->patchEntity($commentaire, $this->request->getData());
-            if ($this->Commentaires->save($commentaire)) {
-                $this->Flash->success(__('The commentaire has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The commentaire could not be saved. Please, try again.'));
-        }
-        $this->set(compact('commentaire'));
     }
 
     /**

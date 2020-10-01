@@ -56,10 +56,17 @@
 
         <p><?= $actu->contenu_tweet ;?></p>
 
+        <hr class="w3-clear">
+
+        <span class="w3-opacity"> <a onclick="openmodallike(<?= $actu->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>- <?= $actu->nb_commentaire;?> Commentaire(s)</span>
+
+        <hr class="w3-clear">
+
         <!--boutons like et commentaire -->
 
-        <button type="button" class="w3-button w3-blue-grey w3-margin-bottom"><i class="fa fa-thumbs-up"></i> <?= $actu->nb_like ;?>  Like</button> 
-        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> <?= $actu->nb_commentaire;?>  commentaire(s)</a> 
+        <button type="button" class="w3-button w3-blue-grey w3-margin-bottom" onclick="return false;" data_action="like" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</button> 
+        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a> 
+
 </div>
 
             <?php endforeach; ?>

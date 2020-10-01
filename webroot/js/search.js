@@ -308,3 +308,87 @@ window.onclick = function(event) {
     }
   }
 }
+
+/** traitement des like **/
+
+// ajout/suppression like
+
+document.addEventListener('click',function(e){
+
+  if(e.target && e.target.getAttribute('data_action') == 'like'){
+
+    var idtweet = e.target.getAttribute('data_id_tweet');
+
+    let response = fetch('/twittux/likecontent', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(idtweet)
+    })
+      .then(function(response) 
+      {
+        return response.json(); // récupération des données au format json
+      })
+
+      .then(function(Data) {
+
+  switch(Data.Result)
+{
+
+    // ajout d'un like -> mise à jour du nombre de like
+
+    case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
+                                             
+    break;
+
+    // suppression d'un like -> mise à jour du nombre de like  
+
+    case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
+
+    break;
+
+    // problème de création de like
+
+    case "probleme": alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                    '</div>.');
+
+    break;
+
+}
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                    '</div>.');
+    });
+       }
+})
+
+// affichage modal des likes
+
+  function openmodallike(idtweetlike)
+{
+  document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
+
+  fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
+  .then(function (data) 
+  {
+    return data.text();
+  })
+  .then(function (html) 
+  {
+    document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
+  })
+  .catch((err) => console.log("fail" + err));
+}
+
+// fin affichage modal des like
+
+/** fin traitement des like **/

@@ -71,9 +71,16 @@
 
         <!--boutons like et commentaire -->
 
-        <button type="button" class="w3-button w3-blue-grey w3-margin-bottom"><i class="fa fa-thumbs-up"></i> <?= $query_tweet->nb_like ;?>  Like</button> 
+        <hr class="w3-clear">
 
-        <a href="/twittux/statut/<?= $query_tweet->id_tweet ;?>" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> <?= $query_tweet->nb_commentaire;?>  commentaire(s)</a> 
+<span class="w3-opacity"> <a onclick="openmodallike(<?= $query_tweet->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_like ;?></span> J'aime</a>- <?= $query_tweet->nb_commentaire;?> Commentaire(s)</span>
+
+<hr class="w3-clear">
+
+<!--boutons like et commentaire -->
+
+<button type="button" class="w3-button w3-blue-grey w3-margin-bottom" onclick="return false;" data_action="like" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</button> 
+<a href="./statut/<?= $query_tweet->id_tweet ;?>" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a> 
 
 </div>
 
