@@ -51,6 +51,8 @@ class UsersTable extends Table
         $this->hasMany('Tweets');
 
         $this->hasMany('Aime');
+
+        $this->hasMany('Partage');
     }
 
     /**

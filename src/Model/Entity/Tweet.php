@@ -33,7 +33,6 @@ class Tweet extends Entity
     protected $_accessible = [
         'id_tweet' => true,
         'user_tweet' => true,
-        'user_timeline' => true,
         'contenu_tweet' => true,
         'created' => true,
         'nb_commentaire' => true,

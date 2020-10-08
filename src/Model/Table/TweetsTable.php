@@ -49,6 +49,8 @@ class TweetsTable extends Table
 
         $this->hasMany('Aime');
 
+        $this->hasMany('Partage');
+
         $this->belongsTo('Abonnements', [
                                             'foreignKey' => 'user_tweet',
                                             'bindingKey' => 'suivi'
@@ -77,12 +79,6 @@ class TweetsTable extends Table
             ->maxLength('user_tweet', 255)
             ->requirePresence('user_tweet', 'create')
             ->notEmptyString('user_tweet');
-
-        $validator
-            ->scalar('user_timeline')
-            ->maxLength('user_timeline', 255)
-            ->requirePresence('user_timeline', 'create')
-            ->notEmptyString('user_timeline');
 
         $validator
             ->scalar('contenu_tweet')

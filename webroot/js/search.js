@@ -392,3 +392,69 @@ document.addEventListener('click',function(e){
 // fin affichage modal des like
 
 /** fin traitement des like **/
+
+/** traitement des partages **/
+
+document.addEventListener('click',function(e){
+
+  if(e.target && e.target.getAttribute('data_action') == 'share'){
+
+    var idtweet = e.target.getAttribute('data_id_tweet');
+
+    let response = fetch('/twittux/share', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(idtweet)
+    })
+      .then(function(response) 
+      {
+        return response.json(); // récupération des données au format json
+      })
+
+      .then(function(Data) {
+
+  switch(Data.Result)
+{
+
+    // ajout d'un partage -> mise à jour du nombre de partage
+
+    case "addshare": document.querySelector('.nb_share_'+idtweet).textContent ++;
+
+                      alertbox.show('<div class="w3-panel w3-green">'+
+                      '<p>Post partagé.</p>'+
+                    '</div>.');
+                                             
+    break;
+
+    // suppression d'un like -> mise à jour du nombre de like  
+
+    case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Vous avez déjà partagé ce post.</p>'+
+                    '</div>.');
+
+    break;
+
+    // problème de création de like
+
+    case "probleme": alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard controller.</p>'+
+                    '</div>.');
+
+    break;
+
+}
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                    '</div>.');
+    });
+       }
+})

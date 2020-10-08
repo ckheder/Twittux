@@ -5,6 +5,10 @@
 /logs/*
 /tmp/*
 /vendor/*
+/tests/*
+twittux.sql
+
+
 
 # OS generated files #
 ######################

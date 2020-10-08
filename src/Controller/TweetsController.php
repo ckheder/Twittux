@@ -23,6 +23,8 @@ class TweetsController extends AppController
         parent::initialize();
         $this->loadComponent('Paginator');
         $this->loadModel('Commentaires');
+        $this->loadModel('Partage');
+        $this->loadModel('Abonnements');
     }
 
     /**
@@ -34,7 +36,7 @@ class TweetsController extends AppController
 
         $current_user = $this->request->getParam('username'); // récupération de l'utilisateur en URL
 
-        $this->set('title' , ''.$current_user.'| Twittux'); // titre de la page
+        $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
 
         $this->viewBuilder()->setLayout('tweet'); // définition du layout
 
@@ -42,8 +44,14 @@ class TweetsController extends AppController
 
         $tweets = $this->paginate($this->Tweets->find()
                                                 ->select(['id_tweet','user_tweet','contenu_tweet','created','nb_commentaire','nb_partage','nb_like'])
-                                                ->where(['user_timeline' => $current_user])
+                                                            ->leftjoin(
+                    ['Partage'=>'partage'],
+                    ['Tweets.id_tweet = (Partage.id_tweet)']
+                    )
+                                                ->where([ 
+                                                    'OR' => ['user_tweet' => $current_user,'Partage.username' => $current_user]])
                                                 ->order(['created' => 'DESC'])
+                                                
 
                                                         );
 
@@ -67,7 +75,7 @@ class TweetsController extends AppController
 
         $this->set('tweet', $tweet);
 
-        $this->set('title',''.$tweet->user_timeline.' : '.$tweet->contenu_tweet.''); // on reprend le début du tweet pour en faire un titre
+        $this->set('title',''.$tweet->user_tweet.' : '.$tweet->contenu_tweet.''); // on reprend le début du tweet pour en faire un titre
 
         //récupération des commentaires par odre décroissant
 
@@ -98,7 +106,6 @@ class TweetsController extends AppController
             $data = array(
                             'id_tweet' => $idtweet,
                             'user_tweet' => $this->Auth->user('username'),
-                            'user_timeline' => $this->Auth->user('username'),
                             'contenu_tweet' => AppController::linkify_content($contenu_tweet),
                             'nb_commentaire' =>0,
                             'nb_partage' =>0,
@@ -139,11 +146,13 @@ class TweetsController extends AppController
            if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
+            $idtweet = $this->request->input('json_decode');
+
             $statement = ConnectionManager::get('default')->prepare(
                         'DELETE FROM tweets WHERE id_tweet = :id_tweet AND user_tweet = :user_tweet');
 
 
-            $statement->bindValue('id_tweet', $this->request->getParam('id'), 'integer');
+            $statement->bindValue('id_tweet', $idtweet, 'integer');
             $statement->bindValue('user_tweet', $this->Auth->user('username'), 'string');
             $statement->execute();
 
@@ -166,7 +175,7 @@ class TweetsController extends AppController
     }
 
     /**
-     * Méthode actualités : affichage des tweets des gens que je suis
+     * Méthode actualités : affichage des tweets des gens que je suis ainsi que les éventuels post qu'ils auraient partagé
      *
      */
 
@@ -177,9 +186,17 @@ class TweetsController extends AppController
 
         $this->set('title', 'Twittux | Actualités'); // titre de la page
 
-        // Récupération des tweets de mes abonnements par odre décroissant
+        // Récupération de mes abonnements
 
-                $actu = $this->Tweets->find()
+       $abonnement_valide = $this->Abonnements->find()
+
+                                                ->select(['suivi'])
+
+                                                ->where(['Abonnements.suiveur' =>  $this->Auth->user('username'), 'etat' => 1]);
+
+        // Récupération des posts ddes personnes se trouvant dans les résultats de la requête précédente
+
+            $actu = $this->Tweets->find()
                                         ->select([
                                                     'Tweets.id_tweet',
                                                     'Tweets.user_tweet',
@@ -187,13 +204,18 @@ class TweetsController extends AppController
                                                     'Tweets.created',
                                                     'Tweets.nb_commentaire',
                                                     'Tweets.nb_partage',
-                                                    'Tweets.nb_like',      
+                                                    'Tweets.nb_like',
+                                                    'Partage.username',    
                                                     ])
 
-                                            ->where(['Abonnements.suiveur' =>  $this->Auth->user('username') ])
-                                            ->contain(['Users'])
-                                            ->contain(['Abonnements']);
+                                        ->leftjoin(
+                                                    ['Partage'=>'partage'],
+                                                    ['Tweets.id_tweet = (Partage.id_tweet)']
+                                                    )
 
+                                        ->where([ 
+                                                'OR' => ['Tweets.user_tweet IN' => $abonnement_valide,'Partage.username IN' => $abonnement_valide]]);
+                                            
             if($actu->isEmpty()) // aucun résultat
         {
             $this->set('no_actu', 0);
@@ -202,7 +224,6 @@ class TweetsController extends AppController
         {
             $this->set('actu', $this->paginate($actu, ['limit' => 8]));
         }    
-
     }
 
     /**

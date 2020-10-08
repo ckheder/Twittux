@@ -82,9 +82,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     // route recherche utilisateurs (autocomplete)
 
-     $builder->connect('/searchusers-{query}',['controller' => 'Users', 'action' => 'searchusers']);
-                                                    
-
+    $builder->connect('/searchusers-{query}',['controller' => 'Users', 'action' => 'searchusers']);
 
     /* ROUTE TWEET */
 
@@ -104,9 +102,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // supprimer un tweet
 
-    $builder->connect('/tweet/delete/{id}',
-        ['controller' => 'Tweets', 'action' => 'delete'],
-                                                    ['id' => '\d+', 'pass' => ['id']]);
+    $builder->connect('/tweet/delete',
+        ['controller' => 'Tweets', 'action' => 'delete']);
 
         // voir mon actualités
 
@@ -181,6 +178,16 @@ $routes->scope('/', function (RouteBuilder $builder) {
         // ajouter/supprimer un like
 
     $builder->connect('/likecontent',['controller' => 'Aime', 'action' => 'add']);
+
+    /* ROUTE PARTAGE */
+
+        // ajouter un partage
+
+    $builder->connect('/share',['controller' => 'Partage', 'action' => 'add']);
+
+        // supprimer un partage
+
+    $builder->connect('/share/delete',['controller' => 'Partage', 'action' => 'delete']);
 
 
     /*

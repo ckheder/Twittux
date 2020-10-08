@@ -7,6 +7,7 @@
  */ -->
 
     <div class="w3-third">
+    	
  		<div class="w3-bar-block w3-white">
 
  			<!-- lien de tri vers les plus récents -->

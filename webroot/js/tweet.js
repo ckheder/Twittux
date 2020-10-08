@@ -8,6 +8,7 @@
   const menuemoji = document.getElementById("menuemoji"); //div contentant la liste des emojis
   const textarea_tweet = document.querySelector('#textarea_tweet'); // textarea de rédaction d'un tweet
   const zone_abo = document.querySelector('#zone_abo'); // zone contentna t les boutons d'abonnement, suppression ou demande
+  var URL; // URL à atteindre suivant le type de suppression d'un tweet : tweet personnel ou tweet partagé
 
  //menu déroulant tweet
  
@@ -129,8 +130,13 @@ el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w
             '<span class="w3-opacity">à l\'instant</span>'+
         		'<hr class="w3-clear">'+
         		'<p>'+ jsonData.contenu_tweet+'</p>'+
-        		'<button type="button" class="w3-button w3-blue-grey w3-margin-bottom"><i class="fa fa-thumbs-up"></i> '+ jsonData.nb_like+'  Like</button> '+
-        		'<a href="./statut/'+ jsonData.id_tweet+'" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> '+jsonData.nb_commentaire+'  commentaire(s)</a> '+
+            '<hr class="w3-clear">'+
+            '<span class="w3-opacity"> <a onclick="openmodallike('+ jsonData.id_tweet+')" style="cursor: pointer;"><span class="nb_like_'+ jsonData.id_tweet+'">0</span>'+
+            'J\'aime</a> - 0 Commentaire(s) - Partagé <span class="nb_share_'+ jsonData.id_tweet+'">0</span> fois</span>'+
+            '<hr><p>'+
+            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ jsonData.id_tweet+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+ 
+        		'<a href="./statut/'+ jsonData.id_tweet+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
+            '</p>'+
       			'</div>');
 
 //on vide la formulaire
@@ -167,21 +173,32 @@ document.addEventListener('click',function(e){
 
   if(e.target && e.target.className == 'deletetweet'){
 
+      if(e.target.getAttribute('data_type') == 0) // pas un tweet partagé
+    {
+      URL = '/twittux/tweet/delete'; // URL de suppression d'une entité TWEET
+    }
+      else
+    {
+      URL = '/twittux/share/delete'; // URL de suppression d'une entité PARTAGE
+    }
+
   var idtweet = e.target.getAttribute('data_idtweet');// on récupère l'id du commentaire associé au lien cliqué
 
-    let response = fetch('/twittux/tweet/delete/'+idtweet+'', { // on ajoute l'id à l'URL
+    let response = fetch(URL, {
       headers: {
-                  'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
-                }
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(idtweet)
     })
 .then(function(response) {
     return response.text(); // récupération des données au format texte
   })
     .then(function(Data) {
 
-//suppression du commentaire
-
-  if(Data == 'tweetnonsupprime') // impossible de supprimer un commentaire : mauvais utilisateur par exemple
+  if(Data == 'tweetnonsupprime') // impossible de supprimer de tweet
 {
           alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Impossible de supprimer ce tweet.</p>'+
@@ -190,9 +207,9 @@ document.addEventListener('click',function(e){
   else if(Data == 'tweetsupprime')
 {
 
-var divtweet = document.querySelector('#tweet'+idtweet); // on récupère la div contenant le commentaire
+var divtweet = document.querySelector('#tweet'+idtweet); // on récupère la div contenant le tweet
 
-divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le commentaire 
+divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le tweet
     
 //notification de réussite
 
@@ -469,3 +486,71 @@ document.addEventListener('click',function(e){
 // fin affichage modal des like
 
 /** fin traitement des like **/
+
+/** traitement des partages **/
+
+document.addEventListener('click',function(e){
+
+  if(e.target && e.target.getAttribute('data_action') == 'share'){
+
+    var idtweet = e.target.getAttribute('data_id_tweet');
+
+    let response = fetch('/twittux/share', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(idtweet)
+    })
+      .then(function(response) 
+      {
+        return response.json(); // récupération des données au format json
+      })
+
+      .then(function(Data) {
+
+  switch(Data.Result)
+{
+
+    // ajout d'un partage -> mise à jour du nombre de partage
+
+    case "addshare": document.querySelector('.nb_share_'+idtweet).textContent ++;
+
+                      alertbox.show('<div class="w3-panel w3-green">'+
+                      '<p>Post partagé.</p>'+
+                    '</div>.');
+                                             
+    break;
+
+    // suppression d'un like -> mise à jour du nombre de like  
+
+    case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Vous avez déjà partagé ce post.</p>'+
+                    '</div>.');
+
+    break;
+
+    // problème de création de like
+
+    case "probleme": alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard controller.</p>'+
+                    '</div>.');
+
+    break;
+
+}
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                    '</div>.');
+    });
+       }
+})
+
+/** fin traitement des partages **/

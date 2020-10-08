@@ -21,12 +21,11 @@ class AimeController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view()
+        public function view()
     {
 
         $this->viewBuilder()->setLayout('ajax');
-
-        
+      
         // récupération des informations sur les personnes que je suis
 
             $username_like = $this->Aime->find()
@@ -86,14 +85,8 @@ class AimeController extends AppController
 
             else
         {
-
-            // recherche de l'id du like existant
-
-            $query_like = $this->Aime->find()->select(['id_like'])->where([
-                                                                        'username' => $this->Auth->user('username'),
-                                                                        'id_tweet' => $jsonData
-        ]);
-
+            // récupération du l'identifiant du like existant
+            
             foreach ($query_like as $query_like) 
         {
             $id_like = $query_like['id_like'];

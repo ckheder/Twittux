@@ -11,19 +11,24 @@
 
         <?=  $this->Html->image('/img/avatar/'.$tweet->user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
-                        <!--bouton -->
+                        <!--bouton de désactivation des commentaires -->
     <div class="dropdown">
-  <button onclick="opencommoption()" class="dropbtn">...</button>
-  <div id="commoption" class="dropdown-content">
-    <a class="optioncomm" href="#" onclick="return false;"> Désactiver les commentaires</a>
-  </div>
-</div>
+
+      <button onclick="opencommoption()" class="dropbtn">...</button>
+
+        <div id="commoption" class="dropdown-content">
+
+          <a class="optioncomm" href="#" onclick="return false;"> Désactiver les commentaires</a>
+
+        </div>
+
+    </div>
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $tweet->user_tweet ;?></h4>
+        <h4><?= $this->Html->link(''.h($tweet->user_tweet).'','/'.h($tweet->user_tweet).'') ?></h4>
 
-                <!--date formatée -->
+        <!--date formatée -->
 
         <span class="w3-opacity"><?= $tweet->created->i18nformat('dd MMMM YYYY - HH:mm');?></span>
 
@@ -32,15 +37,12 @@
         <!--corps du tweet -->
 
         <p><?= $tweet->contenu_tweet ;?></p>
-
-        <!--boutons like et commentaire -->
-
-        <button type="button" class="w3-button w3-blue-grey w3-margin-bottom"><i class="fa fa-thumbs-up"></i> <?= $tweet->nb_like ;?>  Like</button> 
-         
-   
+ 
       <!--zone de notification sur l'état de l'envoi d'un commentaire -->
-<div id="alert-area" class="alert-area"></div>
-<!--fin zone de notification sur l'état de l'envoi d'un commentaire -->
+
+      <div id="alert-area" class="alert-area"></div>
+
+      <!--fin zone de notification sur l'état de l'envoi d'un commentaire -->
 
 <!-- ZONE COMMENTAIRE -->
 
@@ -55,9 +57,14 @@
                   <?= $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
 
                 <!--bouton dropdown -->
-                    <div class="w3-dropdown-click">
-    <a onclick="openemojimenu()" class="btnemoji"><img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
-    <div id="menuemoji" class="w3-dropdown-content w3-bar-block w3-border">
+
+    <div class="w3-dropdown-click">
+
+      <a onclick="openemojimenu()" class="btnemoji">
+
+        <img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
+
+          <div id="menuemoji" class="w3-dropdown-content w3-bar-block w3-border">
 <?php // parcours du dossier contenant les emojis et affichage dans la div
 
   $dir = WWW_ROOT . 'img/emoji';
@@ -73,14 +80,15 @@
 
 <!--champ caché contenant l'id du tweet -->
 
-                  <?= $this->Form->hidden('id_tweet',['value' => $this->request->getParam('id')]); ?>
+          <?= $this->Form->hidden('id_tweet',['value' => $this->request->getParam('id')]); ?>
                            
             <div class="w3-center">
+
               <br />
+
 <!--bouton d'envoi -->
+
                     <?= $this->Form->button('Commenter',['class' =>'w3-button w3-blue w3-round']) ?>
-
-
             </div>
 
             <?= $this->Form->end() ?> 
@@ -93,7 +101,11 @@
 
     <br />
 
-            <h5><i class="fa fa-comment"></i> <span class="nbcomm"><?= $tweet->nb_commentaire;?></span>  commentaire(s)</a></h5>
+            <h5>
+
+              <i class="fa fa-comment"></i> <span class="nbcomm"><?= $tweet->nb_commentaire;?></span>  commentaire(s)
+
+            </h5>
 </div>
 
 <br />
@@ -111,15 +123,20 @@
 
                 <!--bouton dropdown -->
     <div class="dropdown">
+
       <button onclick="opencommoption(<?= $commentaires->id_comm ?>)" class="dropbtn">...</button>
+
         <div id="btncomm<?= $commentaires->id_comm ?>" class="dropdown-content">
+
           <a class="deletecomm" href="#" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+
       </div>
+
     </div>
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $commentaires->username ;?></h4>
+        <h4><?= $this->Html->link(''.h($commentaires->username).'','/'.h($commentaires->username).'') ?></h4>
 
         <!--date formatée -->
 
@@ -147,6 +164,7 @@
 <!-- FIN ZONE COMMENTAIRE -->
 
  </div>
+ 
   </div>
 
 

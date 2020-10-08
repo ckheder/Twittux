@@ -5,9 +5,11 @@
  * Mise en page actualité
  *
  */ -->
+
     <div class="w3-col m7">
+      
       <div class="w3-row-padding">
-          <div class="w3-card w3-round w3-white">
+          
             <div class="w3-container w3-padding">
               <div id="list_actu_online">
 <!--zone de notification -->
@@ -26,25 +28,57 @@
 
           foreach ($actu as $actu): ?>
 
-<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round" id="tweet<?= $actu->id_tweet ;?>">
-              <br>
+<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round">
+
+<!-- bouton de dropdown  : signaler un post, ne plus suivre -->
+
+  <div class="dropdown">
+
+    <br />
+
+      <button onclick="openmenutweet(<?= $actu->id_tweet ?>)" class="dropbtn">...</button>
+
+        <div id="btntweet<?= $actu->id_tweet ?>" class="dropdown-content">
+
+          <a class="unfollow" href="" onclick="return false;" data_action="delete" data_username="<?= $actu->user_tweet ?>">Ne plus suivre <?= $actu->user_tweet ?></a>
+
+          <a href="#">Signaler ce post </a>  
+
+        </div>
+
+  </div>
+
+  <?php
+
+          // si c'est un tweet partagé 
+
+          if(!is_null($actu->Partage['username']) AND $actu->Partage['username'] != $actu->user_tweet)
+        {
+
+            if($actu->Partage['username'] == $authName) // si c''est moi qui ais partagé
+          {
+            echo '<p><span class="w3-opacity"><i class="fas fa-retweet"></i> Vous avez partagé ce post.</span></p>';
+          }
+            else // ce n'est pas moi qui ais partagé
+          {
+            echo '<p><span class="w3-opacity"><i class="fas fa-retweet"></i> '.$actu->Partage['username'].' à partagé ce post.</span></p>';
+          }
+
+        }
+          else
+        {          
+          echo '<br />';
+        }
+
+        ?>
 
         <!--avatar -->
 
         <?=  $this->Html->image('/img/avatar/'.$actu->user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
-                        <!--menu déroulant : suppression d'un abonnement / signaler un post -->
-    <div class="dropdown">
-      <button onclick="openmenutweet(<?= $actu->id_tweet ?>)" class="dropbtn">...</button>
-        <div id="btntweet<?= $actu->id_tweet ?>" class="dropdown-content">
-          <a class="unfollow" href="" onclick="return false;" data_action="delete" data_username="<?= $actu->user_tweet ?>">Ne plus suivre</a>
-    <a href="#">Signaler ce post </a>  
-        </div>
-    </div>
-
         <!--nom d'utilisateur -->
 
-        <h4><?= $actu->user_tweet ;?></h4>
+        <h4><?= $this->Html->link(''.h($actu->user_tweet).'','/'.h($actu->user_tweet).'') ?></h4>
 
         <!--date formatée -->
 
@@ -58,14 +92,52 @@
 
         <hr class="w3-clear">
 
-        <span class="w3-opacity"> <a onclick="openmodallike(<?= $actu->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>- <?= $actu->nb_commentaire;?> Commentaire(s)</span>
+        <!-- zone d'affichage du nombre de like, commentaire et de partage -->
 
-        <hr class="w3-clear">
+        <span class="w3-opacity">
 
-        <!--boutons like et commentaire -->
+        <!-- affichage du nombre de like -->  
 
-        <button type="button" class="w3-button w3-blue-grey w3-margin-bottom" onclick="return false;" data_action="like" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</button> 
-        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-btn w3-grey w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a> 
+          <a onclick="openmodallike(<?= $actu->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>
+
+        <!-- affichage du nombre de commentaire -->
+
+          - <?= $actu->nb_commentaire;?> Commentaire(s) 
+
+        <!-- affichage du nombre de partage --> 
+
+          - Partagé <span class="nb_share_<?= $actu->id_tweet ?>"><?= $actu->nb_partage ;?></span> fois</span>
+
+        <hr>
+
+        <!--boutons like,commentaire et partage -->
+
+         <p>
+
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a> 
+        &nbsp;
+        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+
+        <?php 
+
+        // si je ne suis pas l'auteut du tweet et que ce n'est pas un tweet partagé, affichage du bouton de partage
+
+          if($actu->user_tweet != $authName AND $actu->Partage['username'] != $authName)
+        { 
+            
+          ?>
+
+        &nbsp;
+
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+
+        <?php
+
+        }
+
+      ?>
+      
+      </p>
 
 </div>
 
@@ -83,7 +155,6 @@
 
         } ?>
  </div>
-</div>
 </div>
 </div>
 </div>
