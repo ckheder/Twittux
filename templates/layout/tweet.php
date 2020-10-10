@@ -13,7 +13,6 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  * @var \App\View\AppView $this
  */
-use Cake\Routing\Router;
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,26 +43,7 @@ use Cake\Routing\Router;
 
         <div class="w3-row">
 
-            <?php
-
-            //Remplir dynamiquement la cell des informations utilisateurs : si on est sur la page des profils la cell est remplit avec les données du profil courant, si on est sur une autre page, on remplit la cell avec les infos de l'utilisateur authentifié
-
-            $current_route = Router::url(null, false); // récupération de l'URL actuelle
-
-            $route_profil = Router::url(['_name' => 'profil', 'username' => $this->request->getParam('username')]); // URL profil
-
-            if($current_route == $route_profil)
-        {
-            $username = $this->request->getParam('username');
-        }
-            else
-        {
-            $username = $authName;
-        }
-
-            ?>
-
-            <?= $this->cell('Users',['username' => $username]); ?> 
+            <?= $this->cell('Users',['username' => $this->request->getParam('username')]); ?> 
  
             <?= $this->fetch('content') ?>
 
