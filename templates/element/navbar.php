@@ -73,7 +73,7 @@
 
   <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
 
-  <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
+  <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
 
   <div class="w3-dropdown-hover">
 
