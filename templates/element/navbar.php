@@ -30,9 +30,9 @@
 
 <!-- lien vers les paramètres -->
 
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Paramètres"><i class="fas fa-users-cog"></i></a>
+    <a href="/twittux/settings" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Paramètres"><i class="fas fa-users-cog"></i></a>
 
-<!-- zone de recherche --> 
+<!-- zone de recherche -->
 
       <div class="w3-dropdown-hover">
 
@@ -45,9 +45,9 @@
             <ul id="autocomplete-results" class="w3-ul w3-hoverable"></ul>
 
           </div>
-          
+
       </div>
-    <!-- lien de déconnexion --> 
+    <!-- lien de déconnexion -->
 
     <a href="/twittux/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></a>
 
@@ -82,8 +82,8 @@
       <input type="text" class="w3-bar-item w3-input input-search-resp" placeholder="Recherche sur Twittux...">
 
     </form>
-       
-  </div>  
+
+  </div>
 
   <a href="/twittux/<?= $authName ?>" class="w3-bar-item w3-button w3-padding-large"> <i><?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'21', 'height'=>'21')); ?></i> Mon profil</a>
 

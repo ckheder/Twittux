@@ -36,19 +36,19 @@ class CommentairesController extends AppController
 
             $commentaire = $this->Commentaires->patchEntity($commentaire, $data);
 
-                if ($this->Commentaires->save($commentaire)) 
+                if ($this->Commentaires->save($commentaire))
             {
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($commentaire));
             }
-           
+
          }
-     
+
             else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
         }
-   
+
     }
 
     /**
@@ -60,29 +60,30 @@ class CommentairesController extends AppController
      */
     public function delete($id = null)
     {
-        //$this->request->allowMethod(['post', 'delete']);
-
 
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
         $commentaire = $this->Commentaires->get($id);
 
-        if($commentaire->username == $this->Auth->user('username'))
+          if($commentaire->username == $this->Auth->user('username'))
         {
 
-        if ($this->Commentaires->delete($commentaire)) {
-            //$this->Flash->success(__('The commentaire has been deleted.'));
+              if ($this->Commentaires->delete($commentaire))
+            {
 
-            return $this->response->withStringBody('ok');
+              return $this->response->withStringBody('ok');
+            }
+
         }
-        } else {
-            //$this->Flash->error(__('The commentaire could not be deleted. Please, try again.'));
+
+          else
+
+        {
 
             return $this->response->withStringBody('nonok');
         }
 
-        //return $this->redirect($this->referer());
     }
                 else // en cas de non requête AJAX on lève une exception 404
         {

@@ -36,17 +36,17 @@ class UserListener implements EventListenerInterface {
             public function addentity($event, $user)
         {
 
-            //$entity = TableRegistry::get('users')
+            $entity = TableRegistry::get('Settings');
 
-            //$query = $entity->query();
+            $query = $entity->query();
 
             // le reste est complété par le SGBD
 
-            //$query->insert(['user_id'])
-                    //->values([
-                                //'user_id' => $user->username
-                         //   ])
-                    //->execute();
+            $query->insert(['username'])
+                    ->values([
+                                'username' => $user->username
+                            ])
+                    ->execute();
 
             //creation du dossier utilisateur
 
@@ -64,5 +64,3 @@ class UserListener implements EventListenerInterface {
         }
 
 }
-
-

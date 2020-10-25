@@ -45,7 +45,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('Paginator');
-        
+
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
@@ -53,7 +53,7 @@ class AppController extends Controller
         //$this->loadComponent('FormProtection');
 
         $this->loadComponent('Auth', [
-                     
+
             'authenticate' => [
                 'Form' => [
                     'fields' => [
@@ -91,14 +91,14 @@ class AppController extends Controller
 */
         public function linkify_content($contenu)
     {
-        
+
         $contenu =  preg_replace('/:([^\s]+):/', '<img src="/twittux/img/emoji/$1.png" class="emoji" alt=" :$1: "/>', $contenu); // emoji
 
         //URL
 
         $pattern_link = '/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\\\\\\\w]*))?)/';
 
-        $contenu = preg_replace($pattern_link, '<a href="$1" target="_blank">$1</a>', $contenu);
+        $contenu = preg_replace($pattern_link, '<a href="$1" class="w3-text-blue" target="_blank">$1</a>', $contenu);
 
         // conversion média en lecteur vidéo
 
@@ -133,11 +133,10 @@ class AppController extends Controller
         $contenu = preg_replace('~\[imageUrl]([^{]*)\[/imageUrl]~i', '<a href="$1" ><img src="$1" width="100%" alt="img_media"/></a>', $contenu);
         }
 
-        $contenu =  preg_replace('/#([^\s]+)/','<a href="/twittux/search/hashtag/%23$1">#$1</a>',$contenu); //#something
+        $contenu =  preg_replace('/#([^\s]+)/','<a href="/twittux/search/hashtag/%23$1" class="w3-text-blue">#$1</a>',$contenu); //#something
 
         return $contenu;
     }
 
 
     }
-

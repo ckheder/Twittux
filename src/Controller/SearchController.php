@@ -11,7 +11,7 @@ use Cake\Http\Exception\NotFoundException;
  */
     class SearchController extends AppController
 {
-       
+
         public $paginate = [
                             'limit' => 8,
                             ];
@@ -57,19 +57,19 @@ use Cake\Http\Exception\NotFoundException;
 
             // on récupère toutes les informations du tweets contenant le mot clé
 
-            $this->set('query_tweet', $this->paginate($this->Tweets->find()->select([      
+            $this->set('query_tweet', $this->paginate($this->Tweets->find()->select([
                                                                                         'Tweets.id_tweet',
-                                                                                        'Tweets.user_tweet',
+                                                                                        'Tweets.username',
                                                                                         'Tweets.contenu_tweet',
                                                                                         'Tweets.created',
                                                                                         'Tweets.nb_commentaire',
                                                                                         'Tweets.nb_partage',
-                                                                                        'Tweets.nb_like',        
+                                                                                        'Tweets.nb_like',
                                                                                     ])
                                                 ->where(['MATCH (Tweets.contenu_tweet) AGAINST(:search)'])
                                                 ->where(['private' => 0]) // on ne cherche que les tweets publics
                                                 ->bind(':search', $keyword)));
-                                 
+
     }
 
       /**
@@ -81,7 +81,7 @@ use Cake\Http\Exception\NotFoundException;
 
         public function searchusers()
     {
-      
+
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
@@ -132,12 +132,12 @@ use Cake\Http\Exception\NotFoundException;
 
         $this->set('resultat_tweet', $this->paginate($this->Tweets->find()->select([
                                                                                         'Tweets.id_tweet',
-                                                                                        'Tweets.user_tweet',
+                                                                                        'Tweets.username',
                                                                                         'Tweets.contenu_tweet',
                                                                                         'Tweets.created',
                                                                                         'Tweets.nb_commentaire',
                                                                                         'Tweets.nb_partage',
-                                                                                        'Tweets.nb_like',     
+                                                                                        'Tweets.nb_like',
                                                         ])
                                                 ->where(['Tweets.contenu_tweet REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]'])
                                                 ->where(['private' => 0])));
@@ -156,14 +156,14 @@ use Cake\Http\Exception\NotFoundException;
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
             $this->viewBuilder()->setLayout('ajax');
-        
+
             $keyword = preg_replace('/#([^\s]+)/','$1',$this->request->GetParam('query'));
 
             $this->set('resultat_users', $this->paginate($this->Users->find()->select([
                                                                                         'Users.username',
                                                                                         'Users.description',
                                                         ])
-                                                ->where(['Users.description REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]'])));                                            
+                                                ->where(['Users.description REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]'])));
     }
             else // en cas de non requête AJAX on lève une exception 404
         {

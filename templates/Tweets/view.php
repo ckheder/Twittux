@@ -4,12 +4,46 @@
  */
 ?>
 <div class="w3-col m10">
-      
+
+  <!--zone de notification -->
+                    <div id="alert-area" class="alert-area"></div>
+  <!--fin zone de notification  -->
+
+    <?php if(isset($no_see)) // tweet appartenant à un profil privé
+  {
+    ?>
+  <div class="w3-container">
+
+    <div class="w3-panel w3-red">
+
+      <p>Ce tweet est privé, vous devez suivre <?= $user_tweet ;?> pour consulter ce tweet.</p>
+
+    </div>
+
+    <div class="w3-center">
+
+      <span class="zone_abo">
+
+    <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
+
+      </span>
+
+    </div>
+
+  </div>
+
+<?php
+
+  }
+  else {
+
+  ?>
+
       <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin"><br>
 
         <!--avatar -->
 
-        <?=  $this->Html->image('/img/avatar/'.$tweet->user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
+        <?=  $this->Html->image('/img/avatar/'.$tweet->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
                         <!--bouton de désactivation des commentaires -->
     <div class="dropdown">
@@ -26,7 +60,7 @@
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $this->Html->link(''.h($tweet->user_tweet).'','/'.h($tweet->user_tweet).'') ?></h4>
+        <h4><?= $this->Html->link(''.h($tweet->username).'','/'.h($tweet->username).'') ?></h4>
 
         <!--date formatée -->
 
@@ -37,7 +71,7 @@
         <!--corps du tweet -->
 
         <p><?= $tweet->contenu_tweet ;?></p>
- 
+
       <!--zone de notification sur l'état de l'envoi d'un commentaire -->
 
       <div id="alert-area" class="alert-area"></div>
@@ -51,7 +85,7 @@
 <?= $this->Form->create(null, [
                                 'id' =>'form_comm',
                                 'url' => ['controller' => 'Commentaires', 'action' => 'add']
-    
+
                                 ]);?>
 <!--textarea -->
                   <?= $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
@@ -72,7 +106,7 @@
   foreach(new RecursiveIteratorIterator($iterator) as $file)
 {
   $img = $file->getFilename();
-  echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";  
+  echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
 }
 ?>
     </div>
@@ -81,7 +115,7 @@
 <!--champ caché contenant l'id du tweet -->
 
           <?= $this->Form->hidden('id_tweet',['value' => $this->request->getParam('id')]); ?>
-                           
+
             <div class="w3-center">
 
               <br />
@@ -91,7 +125,7 @@
                     <?= $this->Form->button('Commenter',['class' =>'w3-button w3-blue w3-round']) ?>
             </div>
 
-            <?= $this->Form->end() ?> 
+            <?= $this->Form->end() ?>
 
 <!--fin formulaire -->
 
@@ -128,7 +162,22 @@
 
         <div id="btncomm<?= $commentaires->id_comm ?>" class="dropdown-content">
 
-          <a class="deletecomm" href="#" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+          <?php
+
+            if($commentaires->username == $authName) // si je suis l'auteur du commentaire
+          {
+
+            ?>
+
+          <a class="deletecomm" href="" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+
+          <?php
+
+        }
+
+           ?>
+
+          <a class="deletecomm" href="" onclick="return false;"> Signaler</a>
 
       </div>
 
@@ -159,13 +208,14 @@
 
 </div>
 
+<?php
+
+}
+
+ ?>
+
 <!-- fin affichage des commentaires -->
 
 <!-- FIN ZONE COMMENTAIRE -->
 
  </div>
- 
-  </div>
-
-
-

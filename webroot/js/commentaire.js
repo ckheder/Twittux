@@ -58,7 +58,7 @@ function openemojimenu() {
 
  if (menuemoji.className.indexOf("w3-show") == -1) {
         menuemoji.className += " w3-show";
-    } else { 
+    } else {
         menuemoji.className = menuemoji.className.replace(" w3-show", "");
     }
 }
@@ -80,9 +80,12 @@ document.addEventListener('click',function(e){
   //focus sur la textarea
   textarea_comm.focus();
 }
-});       
+});
 
 //ajout d'un commentaire
+
+  if(no_see == 0) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public
+{
 
 let form_comm = document.querySelector('#form_comm') // récupération du formulaire
 
@@ -111,7 +114,7 @@ form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du
     return response.json(); // récupération des données en JSON
   })
     .then(function(jsonData) {
-    
+
 var el = document.getElementById("list_comm"); // récupération de la div ou l'on va insérer le nouveau commentaire
 
 //insertion du nouveau commentaire au tout début de la div
@@ -152,7 +155,7 @@ form_comm.reset()
     	  alertbox.show('<div class="w3-panel w3-red">'+
   										'<p>Impossible de commenter.</p>'+
 										'</div>.');
-     
+
     });
   button_submit_comm.disabled = false // on réactive le bouton
   button_submit_comm.textContent = buttonTextSubmitComm // on remet le texte initial du bouton
@@ -189,8 +192,8 @@ document.addEventListener('click',function(e){
 
 var divcomm = document.querySelector('#comm'+idcomm); // on récupère la div contenant le commentaire
 
-divcomm.parentNode.removeChild(divcomm); // suppression de la div contenant le commentaire 
-    
+divcomm.parentNode.removeChild(divcomm); // suppression de la div contenant le commentaire
+
 //mise à jour nombre de commentaire : décrémentation
 
 nb_comm.textContent --;
@@ -209,12 +212,12 @@ nb_comm.textContent --;
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Impossible de supprimer ce commentaire.</p>'+
                     '</div>.');
- 
+
     });
 
   }
 })
-
+}
  /** affichage des notifications **/
 
  var AlertBox = function(id, option) {
@@ -245,7 +248,7 @@ nb_comm.textContent --;
           clearTimeout(alertTimeout);
         }, option.closeTime);
       }
-    
+
   };
 
   this.hide = function(alertBox) {
@@ -264,3 +267,88 @@ var alertbox = new AlertBox('#alert-area', {
 });
 
 /** fin affichage des notifications **/
+
+/** abonnement si tweet privé **/
+
+document.addEventListener('click',function(e){
+
+ if(e.target && e.target.className == 'follow'){
+
+   var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
+
+          var data = {
+                       "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
+                     }
+
+   let response = fetch('/twittux/abonnement/'+action+'', {
+     headers: {
+                 'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                 'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+               },
+               method: "POST",
+
+     body: JSON.stringify(data)
+
+   })
+.then(function(response) {
+   return response.json(); // récupération des données au format JSON
+ })
+   .then(function(Data) {
+
+ switch(Data.Result)
+{
+
+   // impossible d'ajouter un nouvel abonnement
+
+   case "abonnementnonajoute": alertbox.show('<div class="w3-panel w3-red">'+ // notification
+                                       '<p>Impossible d\'ajouter cet abonnement.</p>'+
+                                       '</div>.');
+
+   break;
+
+   // envoi d'une demande d'abonnement
+
+   case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Demande d\'abonnement envoyée.</p>'+
+                     '</div>.');
+
+   // bouton pour annuler ma demande d'abonnement
+
+   document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
+
+   break;
+
+   //annulation d'une demande d'abonnement
+
+   case "demandeannule": alertbox.show('<div class="w3-panel w3-green">'+
+                         '<p>Demande d\'abonnemment annulée.</p>'+
+                         '</div>.');
+
+  // bouton de suivi
+
+  document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+
+  break;
+
+
+   //impossible d'annuler une demande d'abonnement
+
+   case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
+                           '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
+                           '</div>.');
+
+   break;
+
+}
+
+   }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+       alertbox.show('<div class="w3-panel w3-red">'+
+                     '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
+                   '</div>.');
+
+   });
+      }
+})

@@ -25,6 +25,8 @@ class TweetsController extends AppController
         $this->loadModel('Commentaires');
         $this->loadModel('Partage');
         $this->loadModel('Abonnements');
+        $this->loadModel('Users');
+        $this->loadModel('Settings');
     }
 
     /**
@@ -40,29 +42,52 @@ class TweetsController extends AppController
 
         $this->viewBuilder()->setLayout('tweet'); // définition du layout
 
+        if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
+        {
+
+        if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
+    {
+
+        throw new NotFoundException(__('Cette page n\'existe pas.'));
+
+    }
+    // on vérifie si je peux voir le profil
+
+      if($this->get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
+    {
+      $no_see = 1; // interdiction de voir
+      $this->set('no_see', $no_see);
+    }
+
+  }
+
+    if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+  {
+
         // récupération des tweets
 
         $tweets = $this->paginate($this->Tweets->find()
-                                                ->select(['id_tweet','user_tweet','contenu_tweet','created','nb_commentaire','nb_partage','nb_like'])
+                                                ->select(['id_tweet','username','contenu_tweet','created','nb_commentaire','nb_partage','nb_like'])
                                                             ->leftjoin(
                     ['Partage'=>'partage'],
                     ['Tweets.id_tweet = (Partage.id_tweet)']
                     )
-                                                ->where([ 
-                                                    'OR' => ['user_tweet' => $current_user,'Partage.username' => $current_user]])
+                                                ->where([
+                                                    'OR' => ['Tweets.username' => $current_user,'Partage.username' => $current_user]])
                                                 ->order(['created' => 'DESC'])
-                                                
+
 
                                                         );
 
         $this->set(compact('tweets'));
     }
+  }
 
     /**
      * Méthode View : visualisation d'un tweet et de ses commentaires
      *
      * Paramètres : $id -> identifiant donné en URL
-     * 
+     *
      */
         public function view()
     {
@@ -71,11 +96,34 @@ class TweetsController extends AppController
 
         $this->viewBuilder()->setLayout('comment'); // définition du layout
 
-        $tweet = $this->Tweets->get($id); //récupération du tweet
+        $tweet = $this->Tweets->get($id); // on récupère les infos du tweet
+
+          if(!$tweet) // entité vide
+        {
+          throw new NotFoundException(__('Ce tweet n\'existe pas.'));
+        }
+
+          if($tweet->username != $this->Auth->user('username')) // si je ne suis pas l'auteur du tweet
+        {
+            if($this->get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // su profil prive et non abonné
+          {
+
+            $no_see = 1; // interdiction de voir
+            $this->set('title','Tweet privé'); // nouveau titre
+            $this->set('no_see', $no_see); // envoi d'une varibale d'information
+            $this->set('user_tweet', $tweet->username); // renvoi du nom de l'auteur pour message personnalisé
+
+          }
+    }
+
+        if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+      {
 
         $this->set('tweet', $tweet);
 
-        $this->set('title',''.$tweet->user_tweet.' : '.$tweet->contenu_tweet.''); // on reprend le début du tweet pour en faire un titre
+        $titre = strip_tags($tweet->contenu_tweet);
+
+        $this->set('title',''.$tweet->username.' : '.$titre.''); // on reprend le début du tweet pour en faire un titre
 
         //récupération des commentaires par odre décroissant
 
@@ -83,9 +131,10 @@ class TweetsController extends AppController
                                     ->where(['Commentaires.id_tweet' => $id])
                                     ->order(['created' => 'DESC']));
 
-        $this->set(compact('commentaires'));                         
+        $this->set(compact('commentaires'));
 
     }
+  }
 
     /**
      * méthode add : ajout d'un nouveau tweet
@@ -96,40 +145,48 @@ class TweetsController extends AppController
     {
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
-            
+
             $tweet = $this->Tweets->newEmptyEntity(); // création d'une nouvelle entité
 
             $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
-        
+
+            if($this->get_type_profil($this->Auth->user('username')) == 'prive') // su profil prive et non abonné
+          {
+
+            $private = 1; // tweet prive
+          }
+          else {
+            $private = 0;
+          }
             $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
 
             $data = array(
                             'id_tweet' => $idtweet,
-                            'user_tweet' => $this->Auth->user('username'),
+                            'username' => $this->Auth->user('username'),
                             'contenu_tweet' => AppController::linkify_content($contenu_tweet),
                             'nb_commentaire' =>0,
                             'nb_partage' =>0,
                             'nb_like' =>0,
-                            'private' =>0,
+                            'private' =>$private,
                             'allow_comment' => 0
                             );
 
             $tweet = $this->Tweets->patchEntity($tweet, $data); // sauvegarde de la nouvelle entité
 
 
-                if ($this->Tweets->save($tweet)) 
+                if ($this->Tweets->save($tweet))
             {
 
                 // suppression des lignes du tableau data non nécessaires à l'affichage du tweet
 
-                unset($tweet["user_timeline"], $tweet["nb_partage"] , $tweet["private"], $tweet["allow_comment"]);
+                unset($tweet["private"], $tweet["allow_comment"]);
 
                 // renvoi d'une réponse JSON
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($tweet));
-            }       
+            }
         }
-     
+
             else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
@@ -149,14 +206,14 @@ class TweetsController extends AppController
             $idtweet = $this->request->input('json_decode');
 
             $statement = ConnectionManager::get('default')->prepare(
-                        'DELETE FROM tweets WHERE id_tweet = :id_tweet AND user_tweet = :user_tweet');
+                        'DELETE FROM tweets WHERE id_tweet = :id_tweet AND username = :username');
 
 
             $statement->bindValue('id_tweet', $idtweet, 'integer');
-            $statement->bindValue('user_tweet', $this->Auth->user('username'), 'string');
+            $statement->bindValue('username', $this->Auth->user('username'), 'string');
             $statement->execute();
 
-            $rowCount = $statement->rowCount(); 
+            $rowCount = $statement->rowCount();
 
             if ($rowCount == 1) { // la ligne à était supprimée
 
@@ -199,13 +256,13 @@ class TweetsController extends AppController
             $actu = $this->Tweets->find()
                                         ->select([
                                                     'Tweets.id_tweet',
-                                                    'Tweets.user_tweet',
+                                                    'Tweets.username',
                                                     'Tweets.contenu_tweet',
                                                     'Tweets.created',
                                                     'Tweets.nb_commentaire',
                                                     'Tweets.nb_partage',
                                                     'Tweets.nb_like',
-                                                    'Partage.username',    
+                                                    'Partage.username',
                                                     ])
 
                                         ->leftjoin(
@@ -213,17 +270,17 @@ class TweetsController extends AppController
                                                     ['Tweets.id_tweet = (Partage.id_tweet)']
                                                     )
 
-                                        ->where([ 
-                                                'OR' => ['Tweets.user_tweet IN' => $abonnement_valide,'Partage.username IN' => $abonnement_valide]]);
-                                            
+                                        ->where([
+                                                'OR' => ['Tweets.username IN' => $abonnement_valide,'Partage.username IN' => $abonnement_valide]]);
+
             if($actu->isEmpty()) // aucun résultat
         {
             $this->set('no_actu', 0);
         }
-            else // pagination des résultats  
+            else // pagination des résultats
         {
             $this->set('actu', $this->paginate($actu, ['limit' => 8]));
-        }    
+        }
     }
 
     /**
@@ -255,4 +312,71 @@ class TweetsController extends AppController
                 idtweet(); // ou $this->idtweet();
             }
     }
+
+    /**
+         * Méthode Verifuser
+         *
+         * Vérifie si l'utilisateur existe
+         *
+         * Paramètre : $username -> nom à tester
+         *
+         * Sortie : 0 -> membre inexistant | 1 -> membre existant
+         *
+         *
+    */
+            private function verif_user($username)
+        {
+
+            $check_user = $this->Users->find()
+                                        ->where(['username' => $username ])
+                                        ->count();
+
+            return $check_user;
+        }
+
+        /**
+             * Méthode Get_Type_Profil
+             *
+             * Récupération du type de profil privé ou public
+             *
+             *
+             * Sortie : public -> profil public | prive -> profil privé
+             *
+             *
+        */
+              private function get_type_profil($username)
+            {
+
+                $type_profil = $this->Settings->find()
+                                                ->select(['type_profil'])
+                                                ->where(['username' => $username]);
+
+                            foreach ($type_profil as $type_profil)
+                        {
+                            $type_profil = $type_profil->type_profil;
+                        }
+
+                return $type_profil;
+            }
+
+            /**
+                 * Méthode Get_Abo
+                 *
+                 * Récupération du type de profil privé ou public
+                 *
+                 *
+                 * Sortie : 0 -> aucn abonnement | 1 -> abonnement existant et validé
+                 *
+                 *
+            */
+                  private function check_abo($username)
+                {
+                  $check_abo = $this->Abonnements->find()
+
+                                                    ->where(['suiveur' => $this->Auth->user('username'), 'suivi' => $username, 'etat' => 1])
+
+                                                    ->count();
+
+                    return $check_abo;
+                }
 }

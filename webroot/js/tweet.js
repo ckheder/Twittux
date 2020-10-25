@@ -11,7 +11,7 @@
   var URL; // URL à atteindre suivant le type de suppression d'un tweet : tweet personnel ou tweet partagé
 
  //menu déroulant tweet
- 
+
  function openmenutweet(id) {
 
     document.getElementById("btntweet"+id).classList.toggle("show");
@@ -25,7 +25,7 @@ function openemojimenu() {
 
  if (menuemoji.className.indexOf("w3-show") == -1) {
         menuemoji.className += " w3-show";
-    } else { 
+    } else {
         menuemoji.className = menuemoji.className.replace(" w3-show", "");
     }
 }
@@ -48,15 +48,15 @@ document.addEventListener('click',function(e){
 
 // restriction et compteur de caractère tweet : 255 caractères
 
-function countCharacters(e) {                                    
-  var textEntered, countRemaining, counter;          
-  textEntered = textarea_tweet.value;  
+function countCharacters(e) {
+  var textEntered, countRemaining, counter;
+  textEntered = textarea_tweet.value;
   counter = (255 - (textEntered.length));
-  countRemaining = document.getElementById('charactersRemaining'); 
-  countRemaining.textContent = counter + ' caractère(s) restant(s)';               
+  countRemaining = document.getElementById('charactersRemaining');
+  countRemaining.textContent = counter + ' caractère(s) restant(s)';
 }
 
-const el = document.getElementById('textarea_tweet');                   
+const el = document.getElementById('textarea_tweet');
 el.addEventListener('keydown', countCharacters);
 
 // Fermeture du bouton si je clique hors du menu déroulant des tweets
@@ -113,20 +113,20 @@ form_tweet.addEventListener('submit', async function (e) { // on capte l'envoi d
     return response.json(); // récupération des données en JSON
   })
     .then(function(jsonData) {
-    
+
 var el = document.getElementById("list_tweet"); // récupération de la div ou l'on va insérer le nouveau tweet
 
 //insertion du nouveau tweet au tout début de la div
 
 el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ jsonData.id_tweet+'"><br>'+
-        		'<img src="/twittux/img/avatar/'+ jsonData.user_tweet+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
+        		'<img src="/twittux/img/avatar/'+ jsonData.username+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
             '<div class="dropdown">'+
             '<button onclick="openmenutweet('+ jsonData.id_tweet+')" class="dropbtn">...</button>'+
             '<div id="btntweet'+ jsonData.id_tweet+'" class="dropdown-content">'+
             '<a class="deletetweet" href="#" onclick="return false;" data_idtweet="'+ jsonData.id_tweet+'"> Supprimer</a>'+
             '</div>'+
             '</div>'+
-        		'<h4>'+ jsonData.user_tweet+'</h4>'+
+        		'<h4>'+ jsonData.username+'</h4>'+
             '<span class="w3-opacity">à l\'instant</span>'+
         		'<hr class="w3-clear">'+
         		'<p>'+ jsonData.contenu_tweet+'</p>'+
@@ -134,7 +134,7 @@ el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w
             '<span class="w3-opacity"> <a onclick="openmodallike('+ jsonData.id_tweet+')" style="cursor: pointer;"><span class="nb_like_'+ jsonData.id_tweet+'">0</span>'+
             'J\'aime</a> - 0 Commentaire(s) - Partagé <span class="nb_share_'+ jsonData.id_tweet+'">0</span> fois</span>'+
             '<hr><p>'+
-            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ jsonData.id_tweet+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+ 
+            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ jsonData.id_tweet+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+
         		'<a href="./statut/'+ jsonData.id_tweet+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
             '</p>'+
       			'</div>');
@@ -161,7 +161,7 @@ document.getElementById('charactersRemaining').textContent = '255 caractère(s) 
     	  alertbox.show('<div class="w3-panel w3-red">'+
   										'<p>Impossible de poster ce tweet.</p>'+
 										'</div>.');
-     
+
     });
   button_submit_tweet.disabled = false // on réactive le bouton
   button_submit_tweet.textContent = buttonTextSubmitTweet// on remet le texte initial du bouton
@@ -210,7 +210,7 @@ document.addEventListener('click',function(e){
 var divtweet = document.querySelector('#tweet'+idtweet); // on récupère la div contenant le tweet
 
 divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le tweet
-    
+
 //notification de réussite
 
   alertbox.show('<div class="w3-panel w3-green">'+
@@ -225,7 +225,7 @@ divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Impossible de supprimer ce tweet.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -240,9 +240,9 @@ document.addEventListener('click',function(e){
 
     var action = e.target.getAttribute('data_action'); // add -> crée un abonnement, cancel -> annuler une demande d'abonnement, delete -> supprimer un abonnement
 
-    var data = { 
+    var data = {
                 "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
-                } 
+                }
 
     let response = fetch('/twittux/abonnement/'+action+'', {
       headers: {
@@ -270,10 +270,10 @@ document.addEventListener('click',function(e){
     // nouveau bouton de suppression d'abonnement
 
     zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+data.username +'">Ne plus suivre</a></button>';
-                                                
+
     break;
 
-    // impossible d'ajouter un abonnement  
+    // impossible d'ajouter un abonnement
 
     case "abonnementnonajoute": alertbox.show('<div class="w3-panel w3-red">'+ // notification
                                         '<p>Impossible d\'ajouter cet abonnement.</p>'+
@@ -284,7 +284,7 @@ document.addEventListener('click',function(e){
     case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
                               '<p>Abonnement supprimer.</p>'+
                               '</div>.');
-                              
+
     // nouveau bouton d'abonnement
 
     zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
@@ -296,7 +296,7 @@ document.addEventListener('click',function(e){
     case "abonnementnonsupprime": alertbox.show('<div class="w3-panel w3-red">'+
                                 '<p>Impossible de supprimer cet abonnement.</p>'+
                                 '</div>.');
-          
+
     break;
 
     //abonnement existant
@@ -304,17 +304,17 @@ document.addEventListener('click',function(e){
     case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
                               '<p>Vous suivez déjà ' + data.username +' .</p>'+
                               '</div>.');
-                              
+
     break;
 
     // envoi d'une demande d'abonnement
-    
+
     case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Demande d\'abonnement envoyée.</p>'+
                     '</div>.');
 
     // nouveau bouton pour annuler une demande d'abonnement
-    
+
     zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
 
     break;
@@ -336,7 +336,7 @@ document.addEventListener('click',function(e){
     case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
                             '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
                             '</div>.');
-          
+
     break;
 
 }
@@ -348,7 +348,7 @@ document.addEventListener('click',function(e){
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -383,7 +383,7 @@ var AlertBox = function(id, option) {
           clearTimeout(alertTimeout);
         }, option.closeTime);
       }
-    
+
   };
 
   this.hide = function(alertBox) {
@@ -422,7 +422,7 @@ document.addEventListener('click',function(e){
 
       body: JSON.stringify(idtweet)
     })
-      .then(function(response) 
+      .then(function(response)
       {
         return response.json(); // récupération des données au format json
       })
@@ -435,10 +435,10 @@ document.addEventListener('click',function(e){
     // ajout d'un like -> mise à jour du nombre de like
 
     case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
-                                             
+
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like  
+    // suppression d'un like -> mise à jour du nombre de like
 
     case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
 
@@ -472,11 +472,11 @@ document.addEventListener('click',function(e){
   document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
 
   fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
-  .then(function (data) 
+  .then(function (data)
   {
     return data.text();
   })
-  .then(function (html) 
+  .then(function (html)
   {
     document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
   })
@@ -504,7 +504,7 @@ document.addEventListener('click',function(e){
 
       body: JSON.stringify(idtweet)
     })
-      .then(function(response) 
+      .then(function(response)
       {
         return response.json(); // récupération des données au format json
       })
@@ -521,10 +521,10 @@ document.addEventListener('click',function(e){
                       alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Post partagé.</p>'+
                     '</div>.');
-                                             
+
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like  
+    // suppression d'un like -> mise à jour du nombre de like
 
     case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Vous avez déjà partagé ce post.</p>'+

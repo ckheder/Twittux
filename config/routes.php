@@ -84,6 +84,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/searchusers-{query}',['controller' => 'Users', 'action' => 'searchusers']);
 
+    // route vers edition profil
+
+    $builder->connect('/settings',['controller' => 'Users', 'action' => 'edit']);
+
     /* ROUTE TWEET */
 
         // route profil
@@ -156,7 +160,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
         //recherche tweet
 
     $builder->connect('/search/{query}',['controller' => 'Search', 'action' => 'index'],['_name' => 'search']);
-    
+
         //recherche users (moteur de recherche)
 
     $builder->connect('/search/users/{query}',['controller' => 'Search', 'action' => 'searchusers']);
@@ -188,6 +192,20 @@ $routes->scope('/', function (RouteBuilder $builder) {
         // supprimer un partage
 
     $builder->connect('/share/delete',['controller' => 'Partage', 'action' => 'delete']);
+
+    /* ROUTE SETTINGS */
+
+    // modifier type de compte : public / privé
+
+    $builder->connect('/setupprofil',['controller' => 'Settings', 'action' => 'setupprofil']);
+
+    // modifier préférence de notification
+
+    $builder->connect('/setupnotif',['controller' => 'Settings', 'action' => 'setupnotif']);
+
+    // supprimer un compte
+
+    $builder->connect('/deleteaccount',['controller' => 'Users', 'action' => 'delete']);
 
 
     /*

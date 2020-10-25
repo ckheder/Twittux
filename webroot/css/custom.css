@@ -221,6 +221,8 @@ color: #737373;
 }
 /* ## fin autocomplétion sur navbar ## */
 
+/* spinner de chargement des données AJAX */
+
 #spinner:not([hidden]) {
   position: relative;
   top: 0;
@@ -251,3 +253,4 @@ color: #737373;
     transform: rotate(360deg);
   }
 }
+/* fin spinner de chargement des données AJAX */

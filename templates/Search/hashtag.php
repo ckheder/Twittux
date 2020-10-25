@@ -5,7 +5,7 @@
  * Mise en page des résultats d'une recherche avec hashtag sur les tweets
  *
  */ -->
- 
+
  <?php
 
  use Cake\Utility\Text; // utilitaire de manipulation d'une chaîne de caractère
@@ -29,7 +29,7 @@
 
         <!--avatar -->
 
-        <?=  $this->Html->image('/img/avatar/'.$resultat_tweet->user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
+        <?=  $this->Html->image('/img/avatar/'.$resultat_tweet->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
        <!--menu déroulant : signaler un post (visible uniquement si je ne suis pas le résultat de recherche) -->
 
@@ -60,7 +60,7 @@
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $this->Html->link(''.h($resultat_tweet->user_tweet).'','/'.h($resultat_tweet->user_tweet).'') ?></h4>
+        <h4><?= $this->Html->link(''.h($resultat_tweet->username).'','/'.h($resultat_tweet->username).'') ?></h4>
 
         <!--date formatée -->
 
@@ -78,14 +78,14 @@
                               ['format' => '<b>\1</b>']
                               );
           ?>
-  
+
         </p>
 
         <hr class="w3-clear">
 
         <!-- zone d'affichage du nombre de like, commentaire et de partage -->
 
-<span class="w3-opacity"> 
+<span class="w3-opacity">
 
   <a onclick="openmodallike(<?= $resultat_tweet->id_tweet ?>)" style="cursor: pointer;">
 
@@ -95,7 +95,7 @@
 
     <!-- affichage du nombre de commentaire -->
 
-    - <?= $resultat_tweet->nb_commentaire;?> Commentaire(s) 
+    - <?= $resultat_tweet->nb_commentaire;?> Commentaire(s)
 
     <!-- affichage du nombre de partage -->
 
@@ -107,22 +107,22 @@
 
     <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a> 
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="./statut/<?= $resultat_tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+        <a href="/twittux/statut/<?= $resultat_tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
 
-        <?php 
+        <?php
 
-              if($resultat_tweet->user_tweet != $authName) // si je ne suis pas l'auteut du tweet, on affiche le lien de partage
+              if($resultat_tweet->username != $authName) // si je ne suis pas l'auteut du tweet, on affiche le lien de partage
             {
               ?>
         &nbsp;
-              <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a> 
+              <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
             }
         ?>
       </p>
-   
+
 </div>
 
             <?php endforeach; ?>

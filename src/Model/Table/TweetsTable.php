@@ -52,12 +52,12 @@ class TweetsTable extends Table
         $this->hasMany('Partage');
 
         $this->belongsTo('Abonnements', [
-                                            'foreignKey' => 'user_tweet',
-                                            'bindingKey' => 'suivi'
+                                          'foreignKey' => 'username',
+                                          'bindingKey' => 'suivi'
                                         ]);
 
         $this->belongsTo('Users', [
-                                    'foreignKey' => 'user_tweet',
+                                    'foreignKey' => 'username',
                                     'bindingKey' => 'username'
                                     ]);
     }
@@ -75,10 +75,10 @@ class TweetsTable extends Table
             ->requirePresence('id_tweet', 'create');
 
         $validator
-            ->scalar('user_tweet')
-            ->maxLength('user_tweet', 255)
-            ->requirePresence('user_tweet', 'create')
-            ->notEmptyString('user_tweet');
+            ->scalar('username')
+            ->maxLength('username', 255)
+            ->requirePresence('username', 'create')
+            ->notEmptyString('username');
 
         $validator
             ->scalar('contenu_tweet')

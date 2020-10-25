@@ -40,9 +40,9 @@
 
         <div class="w3-row">
 
+          <?= $this->Flash->render();?>
+
             <?= $this->fetch('content') ?>
-
-
 
         </div>
 
@@ -56,28 +56,7 @@
 
 <!-- script JS -->
 
-<!-- test pour déterminer si le tweet visité est privé ou public : va servir en javascript pour charger ou non des éléments comme le formulaire de commentaire -->
-
-<?php
-
-  if(isset($no_see)) // si la variable existe dans la vue, c'est un tweet privé
-{
-  $no_see = 1; // tweet privé
-}
-  else
-{
-  $no_see = 0; // tweet public
-}
-
-?>
-
-<script>
-
-var no_see = "<?= $no_see ?>";
-
-</script>
-
-          <?= $this->Html->script('commentaire.js'); ?> <!-- ajout d'un commentaire, supprimer un commentaire,emoji -->
+<?= $this->Html->script('settings.js'); ?> <!-- traitement des paramètres : mise à jour des informations utilisateur , des préférences de profil et de notifications -->
 
 </body>
 

@@ -34,9 +34,9 @@ class UsersCell extends Cell
      */
         public function display($username)
     {
-        
+
         $usersinfos = $this->Users->find()
-                                    ->select(['description','lieu','created'])
+                                    ->select(['description','lieu','website','created'])
                                     ->where(['username' => $username]);
 
         $this->set('usersinfos', $usersinfos);

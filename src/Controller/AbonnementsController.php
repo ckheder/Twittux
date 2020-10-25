@@ -19,6 +19,15 @@ use Cake\Datasource\ConnectionManager;
                         'maxLimit' => 30
 
                         ];
+
+        public function initialize() : void
+      {
+
+        parent::initialize();
+
+        $this->loadModel('Settings');
+
+      }
     /**
      * Méthode Abonnement
      *
@@ -83,9 +92,9 @@ use Cake\Datasource\ConnectionManager;
 
             ->order((['Users.username' => 'ASC']));
 
-            $this->set('abonne_valide', $this->Paginator->paginate($abonne_valide, ['limit' => 30]));     
+            $this->set('abonne_valide', $this->Paginator->paginate($abonne_valide, ['limit' => 30]));
         }
-        
+
     /**
      * Méthode add
      *
@@ -117,37 +126,51 @@ use Cake\Datasource\ConnectionManager;
                                         ->withStringBody(json_encode(['Result' => 'dejaabonne']));
             }
 
-            // création d'un nouvel abonnement
-
-                else
+              if($this->get_type_profil($username)== 'prive') // si c'est un profil prive
             {
+              $etat = 0; // demande d'abonnement car profil prive
+            }
+              else
+            {
+              $etat = 1; // abonnement validé car profil public
+            }
+
+            // création d'un nouvel abonnement
 
                 $abonnement = $this->Abonnements->newEmptyEntity();
 
                 $data = array(
                                 'suiveur' => $this->Auth->user('username'), // moi
                                 'suivi' =>  $username, // personne que je veut suivre
-                                'etat' => 1 // abonnement valide
+                                'etat' => $etat // abonnement valide
                             );
-      
+
             $abonnement = $this->Abonnements->patchEntity($abonnement, $data);
 
-                    if ($this->Abonnements->save($abonnement)) // création d'abonnement réussie, renvoi d'une réponse au format JSON 
+                    if ($this->Abonnements->save($abonnement)) // création d'abonnement réussie, renvoi d'une réponse au format JSON
                 {
 
+                    if($etat == 0) // demande d'abonnement réussie
+                  {
+                    return $this->response->withType('application/json')
+                                        ->withStringBody(json_encode(['Result' => 'demandeok']));
+                  }
+                    else // abonnement réussie
+                  {
                     return $this->response->withType('application/json')
                                         ->withStringBody(json_encode(['Result' => 'abonnementajoute']));
+                  }
 
                 }
-                else
+                else // impossible de s'abonner
                 {
                     return $this->response->withType('application/json')
                                         ->withStringBody(json_encode(['Result' => 'abonnementnonajoute']));
                 }
-            }
-                   
+
+
         }
-              
+
             else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
@@ -177,7 +200,7 @@ use Cake\Datasource\ConnectionManager;
             $statement->bindValue('suivi', $username, 'string');
             $statement->execute();
 
-            $rowCount = $statement->rowCount(); 
+            $rowCount = $statement->rowCount();
 
                 if ($rowCount == 1) // annulation réussie, envoi d'une réponse au format JSON
             {
@@ -191,8 +214,8 @@ use Cake\Datasource\ConnectionManager;
                 return $this->response->withType('application/json')
                                         ->withStringBody(json_encode(['Result' => 'demandenonannule']));
             }
-                   
-        }              
+
+        }
             else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
@@ -225,7 +248,7 @@ use Cake\Datasource\ConnectionManager;
 
             // Récupération du nombre de ligne affectée
 
-            $rowCount = $statement->rowCount(); 
+            $rowCount = $statement->rowCount();
 
                 if ($rowCount == 1) // abonnement supprimée avec succès , renvoi d'une réponse au format JSON
             {
@@ -237,7 +260,7 @@ use Cake\Datasource\ConnectionManager;
                 return $this->response->withType('application/json')
                                         ->withStringBody(json_encode(['Result' => 'abonnementnonsupprime']));
             }
-                        
+
         }
             else // en cas de non requête AJAX on lève une exception 404
         {
@@ -282,7 +305,7 @@ use Cake\Datasource\ConnectionManager;
         ->limit(10);
 
         $this->set('abonnement_attente', $this->paginate($abonnement_attente, ['limit' => 10]));
-        
+
 
     }
 
@@ -318,7 +341,7 @@ use Cake\Datasource\ConnectionManager;
 
                 // récupération du nombre de ligne affectée: ici 1
 
-                $rowCount = $statement->rowCount(); 
+                $rowCount = $statement->rowCount();
 
                     if ($rowCount == 1) // 1 ligne affectée : renvoi d'une réponse JSON
                 {
@@ -343,25 +366,48 @@ use Cake\Datasource\ConnectionManager;
 
                 // récupération du nombre de ligne affectée: ici 1
 
-                $rowCount = $statement->rowCount(); 
+                $rowCount = $statement->rowCount();
 
                 if ($rowCount == 1) // 1 ligne affectée : renvoi d'une réponse JSON
             {
                 return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'refuse']));
             }
-            
+
                 else // renvoi d'une réponse JSON signifiant un échec
             {
                 return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'norefuse']));
-            }   
-        
+            }
+
               }
           }
                 else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
         }
-    
-    }
-}
 
+    }
+    /**
+         * Méthode Get_Type_Profil
+         *
+         * Récupération du type de profil privé ou public
+         *
+         *
+         * Sortie : public -> profil public | prive -> profil privé
+         *
+         *
+    */
+          private function get_type_profil($username)
+        {
+
+            $type_profil = $this->Settings->find()
+                                            ->select(['type_profil'])
+                                            ->where(['username' => $username]);
+
+                        foreach ($type_profil as $type_profil)
+                    {
+                        $type_profil = $type_profil->type_profil;
+                    }
+
+            return $type_profil;
+        }
+}

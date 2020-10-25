@@ -92,12 +92,12 @@ class UsersTable extends Table
             ->scalar('password')
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->notEmptyString('password',"un mot de passe doit être renseignée",'create');
 
         $validator
         ->scalar('email')
         ->requirePresence('email', 'create')
-        ->notEmptyString('email', "une adresse mail doit être renseigné")          
+        ->notEmptyString('email', "une adresse mail doit être renseignée",'create')
         ->add( // l'adresse mail doit être unique
                 'email',
                         ['unique' => [
@@ -115,6 +115,10 @@ class UsersTable extends Table
             ->scalar('lieu')
             ->allowEmptyString('lieu');
 
+            $validator
+                ->scalar('website')
+                ->allowEmptyString('lieu');
+
         return $validator;
     }
 
@@ -127,7 +131,7 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->isUnique(['username','email']));
 
         return $rules;
     }

@@ -22,6 +22,7 @@ class UsersController extends AppController
         public function initialize() : void
     {
         parent::initialize();
+        $this->loadModel('Settings'); // chargement du modèle settings
 
         //listener qui va écouté la création d'un nouvelle utilisateur
 
@@ -38,33 +39,14 @@ class UsersController extends AppController
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-        public function view()
-    {
-        $this->set('title' , ''.$this->request->getParam('username').'/ Twittux');
-
-        $this->viewBuilder()->setLayout('profil');
-        //$user = $this->Users->find()->select([
-                                                //'username'])
-        //->where([''])
-
-        //$this->set('user', $user);
-    }
-
-    /**
      * Méthode Add : création d'un nouvel utilisateur
      *
      */
         public function add()
     {
-        
+
         if ($this->request->is('post')) // requête POST
-    { 
+    {
 
       $user = $this->Users->newEmptyEntity(); // création d'une nouvell entité
 
@@ -73,12 +55,13 @@ class UsersController extends AppController
                       'password' => $this->request->getData('password'), // mot de passe
                       'email' =>  $this->request->getData('email'), // adresse mail
                       'description' => 'Aucune description', // description par défaut
-                      'lieu' => 'Aucun lieu' // lieu par défaut
+                      'lieu' => 'Aucun lieu', // lieu par défaut
+                      'website' => 'Aucun site internet'
                     );
 
         $user = $this->Users->patchEntity($user, $data); // mise à jour de la nouvelle entité
-         
-                if ($this->Users->save($user)) 
+
+                if ($this->Users->save($user))
             {
 
                 $this->Auth->setUser($user); // on authentifie l'utilisateur directement
@@ -133,45 +116,209 @@ class UsersController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Modification des informations utilisateurs : avatar, description,...
+     *
+     *
      */
     public function edit($id = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+      $this->set('title' , 'Paramètres');
+
+      $this->viewBuilder()->setLayout('settings');
+
+      // récupération des préférénces du type de profil et des choix de notifications
+
+      $settings = $this->Settings->find()
+                                  ->select([
+                                              'type_profil',
+                                              'notif_message',
+                                              'notif_citation',
+                                              'notif_partage',
+                                              'notif_commentaire',
+                                              'notif_abonnement'
+                                          ])
+                    ->where(['username' => $this->Auth->user('username')]);
+
+      foreach ($settings as $settings):
+
+              $setup_profil = $settings->type_profil; // type de profil : privé/public
+              $notif_message = $settings->notif_message; // accepter ou non les notifications de message
+              $notif_citation = $settings->notif_citation; // accepter ou non les notifications de citation
+              $notif_partage = $settings->notif_partage; // accepter ou non les notifications de partge de tweets
+              $notif_commentaire = $settings->notif_commentaire; // accepter ou non les notifications de nouveau commentaire
+              $notif_abonnement = $settings->notif_abonnement; // accepter ou non les notifications de nouvel abonnement
+
+      endforeach;
+
+      //envoi des données à la vue
+
+              $this->set('setup_profil', $setup_profil);
+              $this->set('notif_message', $notif_message);
+              $this->set('notif_citation', $notif_citation);
+              $this->set('notif_partage', $notif_partage);
+              $this->set('notif_commentaire', $notif_commentaire);
+              $this->set('notif_abonnement', $notif_abonnement);
+
+// traitement des informations utilisateurs
+
+        if ($this->request->is(['post'])) { // requête POST
+
+          $user = $this->Users->get($this->Auth->user('id')); // récupération de mes information
+
+          if(!empty($this->request->getData('submittedfile'))) // avatar envoyé
+        {
+
+          $avatar = $this->request->getData('submittedfile');
+
+            if($avatar->getError() == 0) // si pas d'erreur d'envoi
+          {
+
+            $imageMimeTypes = array( // type MIME autorisé
+                                    'image/jpg',
+                                    'image/jpeg'
+                                  );
+
+              if($avatar->getSize() > 3047171) // taille du fichier
+           {
+              return $this->response->withStringBody('sizenotok'); // fichier trop gros
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+
+              if(!in_array($avatar->getClientMediaType(), $imageMimeTypes)) // test du type MIME
+            {
+              return $this->response->withStringBody('typenotok'); // type MIME incorrect
+            }
+
+          // renommage du fichier
+
+          $name = $avatar->getClientFilename();
+
+          $name = $this->Auth->user('username') . '.jpg';
+
+          $targetPath = 'img/avatar/'. $name.'';
+
+          // déplacement fichier
+
+          $avatar->moveTo($targetPath);
+
+          }
+
         }
-        $this->set(compact('user'));
+
+          $data = array(); // création d'un tableau contenant les valeurs modifiées
+
+          // vérification description
+
+            if(!empty($this->request->getData('description'))) // description non vide
+          {
+
+            $user->description = strip_tags($this->request->getData('description')); // suppression d'éventuelles balises
+
+            $user->description = AppController::linkify_content($user->description); // parsage
+
+            $data['description'] = $user->description; // stockage dans le tableau data
+
+          }
+        // vérification lieu
+
+        if(!empty($this->request->getData('lieu'))) // lieu non vide
+      {
+        $user->lieu = strip_tags($this->request->getData('lieu')); // suppression d'éventuelles balises
+
+        $data['lieu'] = $user->lieu; // stockage dans le tableau data
+      }
+
+      // mot de passe
+
+      if(!empty($this->request->getData('password')))
+    {
+      if($this->request->getData('password') != $this->request->getData('confirmpassword'))
+    {
+      return $this->response->withStringBody('notsamepassword'); // adresse mail déjà utlisée
     }
+      else
+    {
+        $data['password'] = $this->request->getData('password'); // stockage dans le tableau data
+    }
+
+    }
+
+        // website
+
+        if(!empty($this->request->getData('website')))
+      {
+
+        $data['website'] = $this->request->getData('website'); // stockage dans le tableau data
+
+      }
+
+    // adresse mail
+    if(!empty($this->request->getData('email'))) // si le champ mail n'est pas vide
+  {
+      if($this->request->getData('email') != $this->request->getData('confirmemail'))
+    {
+      return $this->response->withStringBody('notsamemail'); // adresse mail déjà utlisée
+    }
+
+    // on vérifie que l'adresse mail n'est pas déjà utilisé
+
+          $verif = $this->Users->find()
+                                ->select(['email'])
+                                ->where(['email' => $this->request->getData('email')]);
+
+        if ($verif->isEmpty()) // si le mail n'existe pas
+      {
+        $data['email'] = $this->request->getData('email');
+      }
+        else
+      {
+        return $this->response->withStringBody('existingmail'); // adresse mail déjà utlisée
+      }
+    }
+
+// sauvegarde des données
+
+            $user = $this->Users->patchEntity($user, $data);
+
+            if ($this->Users->save($user))
+          {
+
+            return $this->response->withStringBody('updateok'); // mise à jour réussie
+
+          }
+            else
+          {
+            return $this->response->withStringBody('probleme'); // echec ou pas de mise à jour
+          }
+    }
+  }
 
     /**
      * Delete method
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Suppression de mon Compte
      */
-    public function delete($id = null)
+     public function delete()
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
-        } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+
+      $user = $this->Users->get($this->Auth->user('id'));
+
+      // suppression avatar + suppression entité
+
+          if (unlink(WWW_ROOT . 'img/avatar/'.$this->Auth->user('username').'.jpg') AND $this->Users->delete($user)) // suppression avatar + entitée
+        {
+            $this->Flash->success(__('Compte supprimé avec succès.'));
+
+            return $this->redirect('/');
         }
 
-        return $this->redirect(['action' => 'index']);
+          else
+        {
+            $this->Flash->error(__('Impossible de supprimer votre compte.'));
+
+            return $this->redirect('/settings');
+        }
+
     }
 
     /**
@@ -191,7 +338,7 @@ class UsersController extends AppController
         $user = $this->Auth->identify();
 
                 if ($user) // Authentification réussie
-            { 
+            {
                 $this->Auth->setUser($user);
                 return $this->redirect('/'.$this->Auth->user('username').'');
 
@@ -229,7 +376,7 @@ class UsersController extends AppController
     {
          if ($this->request->is('ajax'))
         {
-            
+
             $this->autoRender = false;
 
             $name = $this->request->getParam('query'); //terme tapé dans l'input de recherche
@@ -259,9 +406,9 @@ class UsersController extends AppController
 
                     }
           }
-          
+
         // accès à la page hors d'une requête Ajax
-            else 
+            else
         {
           throw new NotFoundException(__('Cette page n\'existe pas.'));
         }
