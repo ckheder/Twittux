@@ -17,4 +17,4 @@ Test (alpha access) : (https://christophekheder.com/twittux/)
 
 ## Contributing
 
-[Issues](https://github.com/ckheder/Instatux/issues) - Got issues? Please tell me!
+[Issues](https://github.com/ckheder/Twittux/issues) - Got issues? Please tell me!
