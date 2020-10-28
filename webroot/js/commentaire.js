@@ -7,7 +7,7 @@
 
 // variables
 
-var menuemoji = document.getElementById("menuemoji"); //div contentant la liste des emojis
+var menuemojie = document.getElementById("menuemojie"); //div contentant la liste des emojis
 var nb_comm = document.querySelector('.nbcomm'); // récupération du nombre de commentaire afin d'incrémenter ou de décrémenter le compteur
 var textarea_comm = document.querySelector('#textarea_comm'); // textarea de rédaction d'un commentaire
 var titlepage = document.title;// titre de la page
@@ -56,10 +56,10 @@ window.onclick = function(event) {
 
 function openemojimenu() {
 
- if (menuemoji.className.indexOf("w3-show") == -1) {
-        menuemoji.className += " w3-show";
+ if (menuemojie.className.indexOf("w3-show") == -1) {
+        menuemojie.className += " w3-show";
     } else {
-        menuemoji.className = menuemoji.className.replace(" w3-show", "");
+        menuemojie.className = menuemojie.className.replace(" w3-show", "");
     }
 }
 
@@ -76,7 +76,7 @@ document.addEventListener('click',function(e){
     //ajout au textarea
   textarea_comm.value += code;
   //fermeture de la liste des emojis
-  menuemoji.className = menuemoji.className.replace(" w3-show", "");
+  menuemojie.className = menuemojie.className.replace(" w3-show", "");
   //focus sur la textarea
   textarea_comm.focus();
 }

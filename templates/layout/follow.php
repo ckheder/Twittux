@@ -20,7 +20,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>     
+    <title>
         <?= $title ;?>
     </title>
     <?= $this->Html->meta('favicon.ico','img/favicon.ico', ['type' => 'icon']); ?>
@@ -36,6 +36,8 @@
 
         <?= $this->element('navbar') ?>
 
+        <?= $this->element('modaltweet') ?>
+
     <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
 
         <div class="w3-row">
@@ -45,9 +47,9 @@
             <?= $this->fetch('content') ?>
 
         </div>
-  
+
     </div>
-   
+
           <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
           <?= $this->Html->scriptBlock(sprintf(
                                                 'var csrfToken = %s;',

@@ -6,54 +6,30 @@
 
 
     <div class="w3-col m7">
-      <div class="w3-row-padding">
-        <div class="w3-col m12">
-          <div class="w3-card w3-round w3-white">
-            <div class="w3-container w3-padding">
-              <h6 class="w3-opacity">Partager quelque chose....</h6>
-<!-- formulaire de création d'un tweet -->
-                <?= $this->Form->create(null, [
-                                                'id' =>'form_tweet',
-                                                'url' => ['controller' => 'Tweets', 'action' => 'add']
 
-                                                ]);?>
-<!--textarea -->
-                  <?=$this->Form->textarea('contenu_tweet' , ['id'=>'textarea_tweet','rows' => '3','required'=> 'required','maxlength' => '255']);?>
 
-                    <div class="w3-dropdown-click">
-    <a onclick="openemojimenu()" class="btnemoji"><img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
-    <div id="menuemoji" class="w3-dropdown-content w3-bar-block w3-border">
-<?php // parcours du dossier contenant les emojis et affichage dans la div
-
-  $dir = WWW_ROOT . 'img/emoji'; // chemin du dossier
-  $iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
-  foreach(new RecursiveIteratorIterator($iterator) as $file)
-{
-  $img = $file->getFilename();
-  echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
-}
-?>
-    </div>
-  </div>
-                  <div id="charactersRemaining" class="w3-opacity">255 caractère(s) restant(s)</div>
-
-            <div class="w3-center">
-              <br />
-<!--bouton d'envoi -->
-                    <?= $this->Form->button('Publier',['class' =>'w3-button w3-blue w3-round']) ?>
-            </div>
-            <?= $this->Form->end() ?>
-<!--fin formulaire -->
-
-<!--zone de notification sur l'état de l'envoi d'un tweet -->
-<div id="alert-area" class="alert-area"></div>
-<!--fin zone de notification sur l'état de l'envoi d'un tweet -->
-            </div>
-          </div>
-        </div>
-      </div>
 <!--affichage des tweets de l'utilisateur et des tweets partagés-->
-<div id="list_tweet">
+<div id="list_tweet_<?= $this->request->getParam('username') ?>">
+
+  <?php if(count($tweets) == 0)
+  {
+    ?>
+      <div class="w3-container">
+    <div class="w3-panel w3-blue">
+
+    <p>Aucun tweet à afficher.</p>
+
+    </div>
+
+  </div>
+  <?php
+  }
+
+?>
+
+  <!--zone de notification sur l'état de l'envoi d'un tweet -->
+  <div id="alert-area" class="alert-area"></div>
+  <!--fin zone de notification sur l'état de l'envoi d'un tweet -->
 
 <?php if(isset($no_see)) // si cette variable existe (renvoi par le controller) on visite un profil privé auquel on est pas abonné
   {
@@ -71,7 +47,7 @@
 <?php
 
   }
-  else // profil public ou privé mais abonné -> affichage des tweets 
+  else // profil public ou privé mais abonné -> affichage des tweets
   {
 
         foreach ($tweets as $tweet):  ?>

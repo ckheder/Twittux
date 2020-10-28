@@ -18,26 +18,27 @@
 <html>
 <head>
     <?= $this->Html->charset() ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-        <?= $this->fetch('title') ?>
+        <?= $title ;?>
     </title>
-    <?= $this->Html->meta('icon') ?>
-
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css">
-
-    <?= $this->Html->css('milligram.min.css') ?>
-    <?= $this->Html->css('cake.css') ?>
-
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
+    <?= $this->Html->meta('favicon.ico','img/favicon.ico', ['type' => 'icon']); ?>
+    <?= $this->Html->css('w3');?>
+     <?= $this->Html->css('custom');?>
+     <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
+
+<!-- BODY -->
+
 <body>
-    <div class="error-container">
+
+  <div class="w3-container w3-content w3-center" style="max-width:1400px;margin-top:10px">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
-        <?= $this->Html->link(__('Back'), 'javascript:history.back()') ?>
+        <br />
+        <br />
+        <a class="w3-btn w3-blue" href="javascript:history.back()">Retour</a>
     </div>
 </body>
 </html>

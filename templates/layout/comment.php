@@ -36,13 +36,13 @@
 
         <?= $this->element('navbar') ?>
 
+        <?= $this->element('modaltweet') ?>
+
     <div class="w3-container w3-content" style="margin-top:80px">
 
         <div class="w3-row">
 
             <?= $this->fetch('content') ?>
-
-
 
         </div>
 

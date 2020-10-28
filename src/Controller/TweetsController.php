@@ -47,9 +47,7 @@ class TweetsController extends AppController
 
         if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
     {
-
-        throw new NotFoundException(__('Cette page n\'existe pas.'));
-
+        throw new NotFoundException();
     }
     // on vérifie si je peux voir le profil
 
@@ -97,11 +95,6 @@ class TweetsController extends AppController
         $this->viewBuilder()->setLayout('comment'); // définition du layout
 
         $tweet = $this->Tweets->get($id); // on récupère les infos du tweet
-
-          if(!$tweet) // entité vide
-        {
-          throw new NotFoundException(__('Ce tweet n\'existe pas.'));
-        }
 
           if($tweet->username != $this->Auth->user('username')) // si je ne suis pas l'auteur du tweet
         {

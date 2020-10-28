@@ -86,7 +86,17 @@ class UsersTable extends Table
                                                 'rule'=> array('custom','/^[a-z\d_]{5,20}$/i'),
             'message'=>'Les noms doivent faire entre 5 et 20 caracères et les caractères spéciaux ne sont pas autorisés.'
          ]
-        ]);
+        ])
+
+
+        ->add( // on veut que le susername ne correspondent pas à des URL
+            'username',[
+                        'notReserved'=>[
+                                        'rule'=>'notReserved',
+                                        'provider'=>'table',
+                                        'message'=>'Ce nom ne peut pas être utlisé.'
+                                        ]
+    ]);
 
         $validator
             ->scalar('password')
@@ -129,10 +139,15 @@ class UsersTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): RulesChecker
+     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['username','email']));
 
         return $rules;
     }
+
+        public function notReserved($value, array $context) // tableau recensant les noms réservés , utilisé dans le menuco/menuoffline
+      {
+        return !in_array($value, ['actualites','accueuil','search','settings','notifications','messagerie','abonnement','logout'], false);
+      }
 }

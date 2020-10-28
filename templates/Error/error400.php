@@ -6,11 +6,12 @@ use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
 $this->layout = 'error';
+$this->set('title', 'Erreur : page non trouvée');
 
 if (Configure::read('debug')) :
     $this->layout = 'dev_error';
 
-    $this->assign('title', $message);
+    $this->assign('title', 'pas trouvé');
     $this->assign('templateName', 'error400.php');
 
     $this->start('file');
@@ -31,8 +32,7 @@ if (Configure::read('debug')) :
 $this->end();
 endif;
 ?>
-<h2><?= h($message) ?></h2>
-<p class="error">
-    <strong><?= __d('cake', 'Error') ?>: </strong>
-    <?= __d('cake', 'The requested address {0} was not found on this server.', "<strong>'{$url}'</strong>") ?>
-</p>
+
+<h2><i class="fas fa-unlink"></i> Page non trouvée</h2>
+
+  <p>  <?= __d('cake', 'L\'adresse  {0} est peut être non valide ou la page a peut-être été supprimée. Vérifiez si le lien que vous essayez d’ouvrir est correct.', "<strong>'{$url}'</strong>") ?>

@@ -5,16 +5,18 @@
 
 // Affichage du menu sur les petits résolutions en cliquant sur la bouton
 
-  function openNav() 
+  function openNav()
 {
   var x = document.getElementById("smallscreensnav");
 
   if (x.className.indexOf("w3-show") == -1) {
     x.className += " w3-show";
-  } else { 
+  } else {
     x.className = x.className.replace(" w3-show", "");
   }
 }
+
+
 
 // autocomplétion
 
@@ -30,8 +32,8 @@ searchInput.addEventListener('keyup', displayMatches); // on déclenche l'évèn
 
 function displayMatches() {
 
-	   if (searchInput.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on vide la liste des résultats 
-    { 
+	   if (searchInput.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on vide la liste des résultats
+    {
 	  	autocomplete_zone.innerHTML='';
 
       return;
@@ -64,8 +66,8 @@ function displayMatches() {
       }
 
     }
-      else 
-    { 
+      else
+    {
 
       let response = fetch('/twittux/searchusers-'+searchInput.value+'', { // on ajoute la valeur de l'input comme terme de la recherche
       headers: {
@@ -88,10 +90,10 @@ function displayMatches() {
     	{
 
     	   jsonData.forEach(function(item) //pour chaque résultat, on crée un nouvel element <li> avec l'avatar de la personne plus un lien vers le profil
-       { 
+       {
 
     	   autocomplete_zone.innerHTML += '<li><a href="/twittux/'+item.username+'"><img src="/twittux/img/avatar/'+item.username+'.jpg" alt="image utilisateur" class="w3-circle" width="23" height="23"> '+item.username+'</a></li>';
-          
+
         }
 
         )};
@@ -111,7 +113,7 @@ function displayMatches() {
     	  alertbox.show('<div class="w3-panel w3-red">'+
   										'<p>Problème lors de la recherche.</p>'+
 										'</div>.');
-    
+
     });
 
 }
@@ -132,8 +134,8 @@ document.querySelector('.testrest').addEventListener('submit', function (e) {
 
  // si pression sur la touche entrée
 
-        if (item.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on affiche un message 
-    { 
+        if (item.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on affiche un message
+    {
 
       alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Recherche trop courte.</p>'+

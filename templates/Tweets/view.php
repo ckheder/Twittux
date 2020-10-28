@@ -98,7 +98,7 @@
 
         <img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
 
-          <div id="menuemoji" class="w3-dropdown-content w3-bar-block w3-border">
+          <div id="menuemojie" class="w3-dropdown-content w3-bar-block w3-border">
 <?php // parcours du dossier contenant les emojis et affichage dans la div
 
   $dir = WWW_ROOT . 'img/emoji';

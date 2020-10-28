@@ -8,7 +8,7 @@
 
 <?php foreach ($usersinfos as $usersinfos): ?>
 
-    <div class="w3-col m3">
+    <div class="w3-col m3" style="margin-top:16px">
 <!-- informations utilisateurs -->
       <div class="w3-card w3-round w3-white">
         <div class="w3-container">
@@ -21,7 +21,7 @@
          <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> <?= $usersinfos->lieu ?></p>
          <p><i class="fas fa-desktop fa-fw w3-margin-right w3-text-theme"></i>
 
-           <!-- conversion du iste web vers un lien cliquable si il est au bon format -->
+           <!-- conversion du site web vers un lien cliquable si il est au bon format -->
 
            <?php
 

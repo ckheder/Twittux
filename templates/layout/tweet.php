@@ -19,7 +19,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>     
+    <title>
         <?= $title ;?>
     </title>
     <?= $this->Html->meta('favicon.ico','img/favicon.ico', ['type' => 'icon']); ?>
@@ -37,18 +37,20 @@
 
         <?= $this->element('modallike') ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+        <?= $this->element('modaltweet') ?>
+
+    <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
+
+          <?= $this->cell('Users',['username' => $this->request->getParam('username')]); ?>
+
+          <?= $this->fetch('content') ?>
+
+
 
         <?= $this->Flash->render();?>
 
-        <div class="w3-row">
 
-            <?= $this->cell('Users',['username' => $this->request->getParam('username')]); ?> 
- 
-            <?= $this->fetch('content') ?>
 
-        </div>
-  
     </div>
 
         <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
@@ -59,7 +61,7 @@
 
 <!-- script JS -->
 
-        <?= $this->Html->script('tweet.js'); ?> <!-- ajout d'un tweet, supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
+        <?= $this->Html->script('profil.js'); ?> <!-- supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
 
 </body>
 

@@ -47,17 +47,23 @@
           </div>
 
       </div>
+
+
     <!-- lien de déconnexion -->
 
     <a href="/twittux/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></a>
+    <!-- tweeter -->
 
     <!-- lien vers mon profil -->
 
     <a href="/twittux/<?= $authName ?>" class="w3-hide-small w3-padding-large w3-hover-white w3-right" title="Mon profil">
-         <?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'23', 'height'=>'23'));?>
+         <?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'23', 'height'=>'23'));?></a>
 
-    </a>
+         <!-- lien pour tweeter -->
+    <a onclick="document.getElementById('modaltweet').style.display='block'" class="w3-bar-item w3-button w3-padding-large w3-right"><i class="fas fa-pen"></i></a>
+
   </div>
+  
 </div>
 <!-- Navbar on small screens -->
 
