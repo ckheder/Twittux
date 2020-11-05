@@ -4,24 +4,25 @@
  */
 ?>
 
-
     <div class="w3-col m7">
 
-
 <!--affichage des tweets de l'utilisateur et des tweets partagés-->
+
 <div id="list_tweet_<?= $this->request->getParam('username') ?>">
 
-  <?php if(count($tweets) == 0)
+  <?php if(isset($tweets) AND count($tweets) == 0) // aucun tweet à afficher
   {
     ?>
       <div class="w3-container">
-    <div class="w3-panel w3-blue">
 
-    <p>Aucun tweet à afficher.</p>
+        <div class="w3-panel w3-blue">
 
-    </div>
+          <p>Aucun tweet à afficher.</p>
 
-  </div>
+        </div>
+
+      </div>
+
   <?php
   }
 
@@ -31,7 +32,9 @@
   <div id="alert-area" class="alert-area"></div>
   <!--fin zone de notification sur l'état de l'envoi d'un tweet -->
 
-<?php if(isset($no_see)) // si cette variable existe (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+<?php
+
+    if(isset($no_see)) // si cette variable existe (renvoi par le controller) on visite un profil privé auquel on est pas abonné
   {
     ?>
     <div class="w3-container">
@@ -58,11 +61,11 @@
 
         <?php
 
-        if($tweet->username != $this->request->getParam('username'))
+          if($tweet->username != $this->request->getParam('username'))
         {
           $share = 1; // partage
         }
-        else
+          else
         {
           $share = 0; // non partage
         }
@@ -155,7 +158,7 @@
               {
               ?>
                 &nbsp;
-                  <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+                  <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $tweet->username ?>" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
               }
             }
@@ -173,7 +176,7 @@ endforeach;
     </div>
 
     <!-- Right Column -->
-    <div class="w3-col m2">
+    <div class="w3-col m2" style="margin-top:16px">
 
 <!--zone de suggestion ou de hashtag -->
 
@@ -204,5 +207,6 @@ endforeach;
 }
 
 ?>
+
     <!-- End Right Column -->
     </div>

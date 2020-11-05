@@ -341,7 +341,10 @@ document.addEventListener('click',function(e){
 
   if(e.target && e.target.getAttribute('data_action') == 'share'){
 
-    var idtweet = e.target.getAttribute('data_id_tweet');
+    var data = {
+      "idtweet": e.target.getAttribute('data_id_tweet'),
+      "auttweet": e.target.getAttribute('data_auttweet')
+    }
 
     let response = fetch('/twittux/share', {
       headers: {
@@ -350,7 +353,7 @@ document.addEventListener('click',function(e){
                 },
                 method: "POST",
 
-      body: JSON.stringify(idtweet)
+      body: JSON.stringify(data)
     })
       .then(function(response)
       {
@@ -364,7 +367,7 @@ document.addEventListener('click',function(e){
 
     // ajout d'un partage -> mise à jour du nombre de partage
 
-    case "addshare": document.querySelector('.nb_share_'+idtweet).textContent ++;
+    case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
 
                       alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Post partagé.</p>'+

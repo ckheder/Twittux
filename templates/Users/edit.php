@@ -210,13 +210,13 @@
 
 <!-- notifications -->
 
-<h3>Notifications</h3>
+<h3 >Notifications</h3>
 
               <hr>
 
               <div class="w3-center">
 
-                  <span class="w3-opacity">Configurer mes notifications </span>
+                  <span class="w3-opacity" id="notifications">Configurer mes notifications </span>
 
               </div>
 
@@ -335,5 +335,5 @@
              </p>
 
         </div>
-        
+
     </div>

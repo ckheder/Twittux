@@ -129,7 +129,7 @@
 
         &nbsp;
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $actu->username ?>" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
 
         <?php
 

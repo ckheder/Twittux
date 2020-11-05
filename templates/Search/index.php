@@ -116,7 +116,7 @@
             {
               ?>
         &nbsp;
-                <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+                <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $query_tweet->username ?>" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
             }
       ?>

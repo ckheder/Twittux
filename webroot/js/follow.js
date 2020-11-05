@@ -15,12 +15,12 @@
 document.addEventListener('click',function(e){
 
     if(e.target && e.target.className == 'unfollow') // clique sur un bouton pour ne plus usivre une personne
-  { 
-        var data = { 
+  {
+        var data = {
                     "username": e.target.getAttribute('data_username') // username de la personne que je ne veut plus suivre
                     }
 
-    let response = fetch('/twittux/abonnement/delete', { 
+    let response = fetch('/twittux/abonnement/delete', {
 
       headers: {
                   'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
@@ -45,13 +45,13 @@ document.addEventListener('click',function(e){
     case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
                               '<p>Abonnement supprimer.</p>'+
                               '</div>.');
-                              
+
 		div_following.parentNode.removeChild(div_following); // suppression de la div contenant la personne à ne plus suivre
-    
+
 		// décrémentation du nombre d'abonnement
 
 		nb_following.textContent --;
-    
+
     break;
 
     //Impossible de supprimer un abonnement
@@ -59,7 +59,7 @@ document.addEventListener('click',function(e){
     case "abonnementnonsupprime": alertbox.show('<div class="w3-panel w3-red">'+
                                   '<p>Impossible de supprimer cet abonnement.</p>'+
                                   '</div>.');
-                                 
+
     break;
 
 }
@@ -73,7 +73,7 @@ document.addEventListener('click',function(e){
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -88,9 +88,11 @@ document.addEventListener('click',function(e){
 
     var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
 
-           var data = { 
+           var data = {
                         "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
-                      } 
+                      }
+
+                    
 
     let response = fetch('/twittux/abonnement/'+action+'', {
       headers: {
@@ -115,10 +117,10 @@ document.addEventListener('click',function(e){
     case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
                                         '<p>Abonnement ajouté.</p>'+
                                         '</div>.');
-    // nouveau bouton 
+    // nouveau bouton
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'">Ne plus suivre</a></button>';
-                                                
+
     break;
 
     // impossible d'ajouter un nouvel abonnement
@@ -133,7 +135,7 @@ document.addEventListener('click',function(e){
 
     case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
                               '<p>Abonnement supprimer.</p>'+
-                              '</div>.'); 
+                              '</div>.');
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
 
@@ -152,16 +154,16 @@ document.addEventListener('click',function(e){
     case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
                         '<p>Vous suivez déjà ' + data.username +' .</p>'+
                         '</div>.');
-                              
-    
+
+
     break;
 
     // envoi d'une demande d'abonnement
-    
+
     case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Demande d\'abonnement envoyée.</p>'+
                       '</div>.');
-    
+
     // bouton pour annuler ma demande d'abonnement
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
@@ -175,7 +177,7 @@ document.addEventListener('click',function(e){
                           '</div>.');
 
     // bouton pour suivre ultérieurement
-          
+
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
 
     break;
@@ -185,7 +187,7 @@ document.addEventListener('click',function(e){
     case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
                             '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
                             '</div>.');
-          
+
     break;
 
 }
@@ -197,7 +199,7 @@ document.addEventListener('click',function(e){
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -217,7 +219,7 @@ document.addEventListener('click',function(e){
                   "username": e.target.getAttribute('data_username') // username de la personne qui demande
                 }
 
-    let response = fetch('/twittux/abonnement/request', { 
+    let response = fetch('/twittux/abonnement/request', {
     	      headers: {
                   "X-Requested-With": "XMLHttpRequest", // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
                   "X-CSRF-Token": csrfToken // envoi d'un token CSRF pour authentifier mon action
@@ -249,7 +251,7 @@ document.addEventListener('click',function(e){
   // décrémentation du nombre de demande
 
   nb_attente.textContent --;
-                          
+
   break;
 
   // problème pour accepter une demande, ligne SQL inexistante ?
@@ -257,7 +259,7 @@ document.addEventListener('click',function(e){
   case "noaccept": alertbox.show('<div class="w3-panel w3-red">'+
                                 '<p>Impossible d\'accepter cette demande d\'abonnement.</p>'+
                                 '</div>.');
-                              
+
   break;
 
   // demande d'abonnement refusée
@@ -273,14 +275,14 @@ document.addEventListener('click',function(e){
   // décrémentation du nombre de demande
 
   nb_attente.textContent --;
-    
+
   break;
 
   // problème pour refuser une demande, ligne SQL inexistante ?
 
   case "norefuse": alertbox.show('<div class="w3-panel w3-red">'+
                                     '<p>Impossible de refuser cette demande d\'abonnement.</p>'+
-                                    '</div>.');                           
+                                    '</div>.');
   break;
 
 }
@@ -294,7 +296,7 @@ document.addEventListener('click',function(e){
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -331,7 +333,7 @@ document.addEventListener('click',function(e){
           clearTimeout(alertTimeout);
         }, option.closeTime);
       }
-    
+
   };
 
   this.hide = function(alertBox) {

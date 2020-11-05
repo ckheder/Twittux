@@ -45,6 +45,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('Paginator');
+        $this->loadModel('Settings');
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
@@ -92,6 +93,8 @@ class AppController extends Controller
         public function linkify_content($contenu)
     {
 
+        $contenu = preg_replace('/(^|[^@\w])@(\w{1,20})\b/','$1<a href="./$2" class="w3-text-blue">@$2</a>', $contenu); // @username
+
         $contenu =  preg_replace('/:([^\s]+):/', '<img src="/twittux/img/emoji/$1.png" class="emoji" alt=" :$1: "/>', $contenu); // emoji
 
         //URL
@@ -137,6 +140,56 @@ class AppController extends Controller
 
         return $contenu;
     }
+
+
+        /**
+         * Méthode check_notif
+         *
+         * Détermine si la personne veut ou pas des notifications
+         *
+         * Paramètre : $notification -> type de notification : comm, abo, citation,... | $username -> profil sur qui faire le test
+         *
+         * Sortie : $check_notif : oui | non
+    */
+            public function check_notif($notification, $username)
+        {
+
+          $check_notif = $this->Settings->find()->select(['notif_'.$notification.''])->where(['username' => $username]);
+
+          $notif = 'notif_'.$notification.'';
+
+          foreach ($check_notif as $check_notif)
+      {
+          $check_notif = $check_notif->$notif;
+      }
+
+          return $check_notif;
+
+        }
+
+        /**
+             * Méthode Get_Type_Profil
+             *
+             * Récupération du type de profil privé ou public
+             *
+             * Sortie : public -> profil public | prive -> profil privé
+             *
+             *
+        */
+              public function get_type_profil($username)
+            {
+
+                $type_profil = $this->Settings->find()
+                                                ->select(['type_profil'])
+                                                ->where(['username' => $username]);
+
+                            foreach ($type_profil as $type_profil)
+                        {
+                            $type_profil = $type_profil->type_profil;
+                        }
+
+                return $type_profil;
+            }
 
 
     }

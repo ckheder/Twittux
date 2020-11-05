@@ -2,6 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Event\Event;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
+use App\Event\TweetsListener;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\ConnectionManager;
 
@@ -27,6 +31,12 @@ class TweetsController extends AppController
         $this->loadModel('Abonnements');
         $this->loadModel('Users');
         $this->loadModel('Settings');
+
+        //listener qui va écouté la création d'un nouveau tweet
+
+        $TweetsListener = new TweetsListener();
+
+        $this->getEventManager()->on($TweetsListener);
     }
 
     /**
@@ -42,7 +52,7 @@ class TweetsController extends AppController
 
         $this->viewBuilder()->setLayout('tweet'); // définition du layout
 
-        if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
+          if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
         {
 
         if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
@@ -51,7 +61,7 @@ class TweetsController extends AppController
     }
     // on vérifie si je peux voir le profil
 
-      if($this->get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
+      if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
     {
       $no_see = 1; // interdiction de voir
       $this->set('no_see', $no_see);
@@ -98,7 +108,8 @@ class TweetsController extends AppController
 
           if($tweet->username != $this->Auth->user('username')) // si je ne suis pas l'auteur du tweet
         {
-            if($this->get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // su profil prive et non abonné
+
+            if(AppController::get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // sur profil prive et non abonné
           {
 
             $no_see = 1; // interdiction de voir
@@ -143,7 +154,7 @@ class TweetsController extends AppController
 
             $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
 
-            if($this->get_type_profil($this->Auth->user('username')) == 'prive') // su profil prive et non abonné
+            if(AppController::get_type_profil($this->Auth->user('username')) == 'prive') // su profil prive et non abonné
           {
 
             $private = 1; // tweet prive
@@ -173,6 +184,12 @@ class TweetsController extends AppController
                 // suppression des lignes du tableau data non nécessaires à l'affichage du tweet
 
                 unset($tweet["private"], $tweet["allow_comment"]);
+
+                // déclenchement d'un évènement destiné à voir si des utilisateurs sont mentionnés
+
+                $event = new Event('Model.Tweets.afteradd', $this, ['data' => $data]);
+
+                $this->getEventManager()->dispatch($event);
 
                 // renvoi d'une réponse JSON
 
@@ -327,33 +344,9 @@ class TweetsController extends AppController
             return $check_user;
         }
 
-        /**
-             * Méthode Get_Type_Profil
-             *
-             * Récupération du type de profil privé ou public
-             *
-             *
-             * Sortie : public -> profil public | prive -> profil privé
-             *
-             *
-        */
-              private function get_type_profil($username)
-            {
-
-                $type_profil = $this->Settings->find()
-                                                ->select(['type_profil'])
-                                                ->where(['username' => $username]);
-
-                            foreach ($type_profil as $type_profil)
-                        {
-                            $type_profil = $type_profil->type_profil;
-                        }
-
-                return $type_profil;
-            }
 
             /**
-                 * Méthode Get_Abo
+                 * Méthode check_abo
                  *
                  * Récupération du type de profil privé ou public
                  *

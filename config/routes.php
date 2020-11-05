@@ -207,6 +207,15 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/deleteaccount',['controller' => 'Users', 'action' => 'delete']);
 
+/* ROUTE Notifications */
+
+    // liste des notifications
+
+    $builder->connect('/notifications',['controller' => 'Notifications', 'action' => 'index']);
+
+    // statut des notifications
+
+    $builder->connect('/notifications/statut',['controller' => 'Notifications', 'action' => 'statut']);
 
     /*
      * Connect catchall routes for all controllers.

@@ -2,6 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Event\Event;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
+use App\Event\AbonnementListener;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\ConnectionManager;
 
@@ -26,6 +30,12 @@ use Cake\Datasource\ConnectionManager;
         parent::initialize();
 
         $this->loadModel('Settings');
+
+        //listener qui va écouté la création d'un nouvel abonnement
+
+        $AbonnementListener = new AbonnementListener();
+
+        $this->getEventManager()->on($AbonnementListener);
 
       }
     /**
@@ -126,7 +136,7 @@ use Cake\Datasource\ConnectionManager;
                                         ->withStringBody(json_encode(['Result' => 'dejaabonne']));
             }
 
-              if($this->get_type_profil($username)== 'prive') // si c'est un profil prive
+              if(AppController::get_type_profil($username ) == 'prive') // si c'est un profil prive
             {
               $etat = 0; // demande d'abonnement car profil prive
             }
@@ -142,13 +152,25 @@ use Cake\Datasource\ConnectionManager;
                 $data = array(
                                 'suiveur' => $this->Auth->user('username'), // moi
                                 'suivi' =>  $username, // personne que je veut suivre
-                                'etat' => $etat // abonnement valide
+                                'etat' => $etat
                             );
 
             $abonnement = $this->Abonnements->patchEntity($abonnement, $data);
 
                     if ($this->Abonnements->save($abonnement)) // création d'abonnement réussie, renvoi d'une réponse au format JSON
                 {
+
+
+                  if(AppController::check_notif('abonnement', $username ) == 'oui') // si la personne a laquell je m'abonne accepte les notifications d'abonnement
+                {
+
+                  // Evènement de création d'une notification de d'abonnement ou de demande
+
+                  $event = new Event('Model.Abonnement.afteradd', $this, ['data' => $data]);
+
+                  $this->getEventManager()->dispatch($event);
+
+                }
 
                     if($etat == 0) // demande d'abonnement réussie
                   {
@@ -162,13 +184,11 @@ use Cake\Datasource\ConnectionManager;
                   }
 
                 }
-                else // impossible de s'abonner
+                  else // impossible de s'abonner
                 {
                     return $this->response->withType('application/json')
                                         ->withStringBody(json_encode(['Result' => 'abonnementnonajoute']));
                 }
-
-
         }
 
             else // en cas de non requête AJAX on lève une exception 404
@@ -386,28 +406,4 @@ use Cake\Datasource\ConnectionManager;
         }
 
     }
-    /**
-         * Méthode Get_Type_Profil
-         *
-         * Récupération du type de profil privé ou public
-         *
-         *
-         * Sortie : public -> profil public | prive -> profil privé
-         *
-         *
-    */
-          private function get_type_profil($username)
-        {
-
-            $type_profil = $this->Settings->find()
-                                            ->select(['type_profil'])
-                                            ->where(['username' => $username]);
-
-                        foreach ($type_profil as $type_profil)
-                    {
-                        $type_profil = $type_profil->type_profil;
-                    }
-
-            return $type_profil;
-        }
 }

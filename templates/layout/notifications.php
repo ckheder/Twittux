@@ -13,6 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  * @var \App\View\AppView $this
  */
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,29 +36,29 @@
 
         <?= $this->element('navbar') ?>
 
-        <?= $this->element('modallike') ?>
-
         <?= $this->element('modaltweet') ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
+    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
 
-        <?= $this->Flash->render();?>
+        <div class="w3-row">
 
-          <?= $this->cell('Users',['username' => $this->request->getParam('username')]); ?>
+            <?= $this->element('notifmenu') ?>
 
-          <?= $this->fetch('content') ?>
-          
+            <?= $this->fetch('content') ?>
+
+        </div>
+
     </div>
 
-        <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-            <?= $this->Html->scriptBlock(sprintf(
+          <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
+          <?= $this->Html->scriptBlock(sprintf(
                                                 'var csrfToken = %s;',
                                               json_encode($this->request->getAttribute('csrfToken'))
                                               )); ?>
 
 <!-- script JS -->
 
-        <?= $this->Html->script('profil.js'); ?> <!-- supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
+        <?= $this->Html->script('notifications.js'); ?> <!-- traitement des actions : marquer comme lue, supprimer une notification , tous supprimer -->
 
 </body>
 

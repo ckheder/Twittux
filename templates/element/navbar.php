@@ -26,7 +26,7 @@
 
 <!-- lien vers les notifications -->
 
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Notifications"><i class="fa fa-bell"></i></a>
+    <a href="/twittux/notifications" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Notifications"><i class="fa fa-bell"></i></a>
 
 <!-- lien vers les paramètres -->
 
@@ -63,7 +63,7 @@
     <a onclick="document.getElementById('modaltweet').style.display='block'" class="w3-bar-item w3-button w3-padding-large w3-right"><i class="fas fa-pen"></i></a>
 
   </div>
-  
+
 </div>
 <!-- Navbar on small screens -->
 
@@ -77,7 +77,7 @@
 
   <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
 
-  <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
+  <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
 
   <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
 

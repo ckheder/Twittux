@@ -2,6 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Event\Event;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
+use App\Event\CommentaireListener;
 use Cake\Http\Exception\NotFoundException;
 
 /**
@@ -12,6 +16,19 @@ use Cake\Http\Exception\NotFoundException;
  */
 class CommentairesController extends AppController
 {
+
+  public function initialize() : void
+{
+  parent::initialize();
+
+
+  //listener qui va écouté la création d'un nouveau commentaire
+
+  $CommentaireListener = new CommentaireListener();
+
+  $this->getEventManager()->on($CommentaireListener);
+
+}
 
     /**
      * Add method
@@ -27,6 +44,8 @@ class CommentairesController extends AppController
 
             $idcomm = $this->idcomm(); // génération d'un nouvel identifiant de tweet
 
+            $auttweet = $this->request->getData('user_tweet'); // auteur du tweet
+
             $data = array(
                             'id_comm' => $idcomm,
                             'commentaire' => AppController::linkify_content($this->request->getData('commentaire')),
@@ -38,6 +57,20 @@ class CommentairesController extends AppController
 
                 if ($this->Commentaires->save($commentaire))
             {
+
+                if($auttweet != $this->Auth->user('username')) // si le profil qui commente n'est pas celui qui est l'auteur du tweet
+              {
+
+                if(AppController::check_notif('commentaire', $auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de commentaire
+              {
+
+              // Evènement de création d'une notification de commentaire
+
+              $event = new Event('Model.Commentaire.afteradd', $this, ['data' => $data, 'auttweet' => $auttweet]);
+
+              $this->getEventManager()->dispatch($event);
+           }
+         }
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($commentaire));
             }

@@ -53,6 +53,7 @@ class UsersTable extends Table
         $this->hasMany('Aime');
 
         $this->hasMany('Partage');
+
     }
 
     /**
@@ -69,7 +70,7 @@ class UsersTable extends Table
 
         $validator
             ->scalar('username')
-            ->maxLength('username', 50)
+            ->maxLength('username', 20)
             ->requirePresence('username', 'create')
             ->notEmptyString('username')
             ->add( // on veut que le username soit unique

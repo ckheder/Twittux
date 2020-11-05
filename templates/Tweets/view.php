@@ -116,6 +116,8 @@
 
           <?= $this->Form->hidden('id_tweet',['value' => $this->request->getParam('id')]); ?>
 
+          <?= $this->Form->hidden('user_tweet',['value' => $tweet->username]); ?>
+
             <div class="w3-center">
 
               <br />
@@ -200,9 +202,11 @@
 
     </div>
 
-    </div>
+
 
 <?php endforeach; ?>
+
+</div>
 
 <br />
 

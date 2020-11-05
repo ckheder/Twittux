@@ -46,7 +46,7 @@
                     if($resultat_users->username != $authName)
                   {
 
-                    echo $this->cell('Abonnements::testabo', [$authName, $resultat_users->username]); 
+                    echo $this->cell('Abonnements::testabo', [$authName, $resultat_users->username]);
 
                   }
 

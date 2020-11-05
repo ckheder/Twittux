@@ -52,7 +52,7 @@ if(e.target.id){
                           keyword = keyword.replace(regexp, '$1');
 
                           URL = '/twittux/search/hashtag/users/'+keyword+'';
-          
+
                         }
 
   							break;
@@ -68,7 +68,7 @@ if(e.target.id){
                           keyword = keyword.replace(regexp, '$1');
 
                           URL = '/twittux/search/hashtag/'+keyword+'';
-          
+
                         }
 
   							break;
@@ -104,14 +104,14 @@ if(e.target.id){
     .then(function (html) {
 
 	   spinner.setAttribute('hidden', ''); // disparition du spinner
-	
+
       document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
 
     })
 
     // affichage d'erreur si besoin
 
-    .catch(function(err) { 
+    .catch(function(err) {
   	                       console.log("fail" + err);
   	});
 }
@@ -125,9 +125,9 @@ document.addEventListener('click',function(e){
 
     var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
 
-           var data = { 
+           var data = {
                         "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
-                      } 
+                      }
 
     let response = fetch('/twittux/abonnement/'+action+'', {
       headers: {
@@ -152,10 +152,10 @@ document.addEventListener('click',function(e){
     case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
                                         '<p>Abonnement ajouté.</p>'+
                                         '</div>.');
-    // nouveau bouton 
+    // nouveau bouton
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'">Ne plus suivre</a></button>';
-                                                
+
     break;
 
     // impossible d'ajouter un nouvel abonnement
@@ -170,7 +170,7 @@ document.addEventListener('click',function(e){
 
     case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
                               '<p>Abonnement supprimer.</p>'+
-                              '</div>.'); 
+                              '</div>.');
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
 
@@ -189,16 +189,16 @@ document.addEventListener('click',function(e){
     case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
                         '<p>Vous suivez déjà ' + data.username +' .</p>'+
                         '</div>.');
-                              
-    
+
+
     break;
 
     // envoi d'une demande d'abonnement
-    
+
     case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Demande d\'abonnement envoyée.</p>'+
                       '</div>.');
-    
+
     // bouton pour annuler ma demande d'abonnement
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
@@ -212,7 +212,7 @@ document.addEventListener('click',function(e){
                           '</div>.');
 
     // bouton pour suivre ultérieurement
-          
+
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
 
     break;
@@ -222,7 +222,7 @@ document.addEventListener('click',function(e){
     case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
                             '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
                             '</div>.');
-          
+
     break;
 
 }
@@ -234,7 +234,7 @@ document.addEventListener('click',function(e){
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
                     '</div>.');
- 
+
     });
        }
 })
@@ -269,7 +269,7 @@ document.addEventListener('click',function(e){
           clearTimeout(alertTimeout);
         }, option.closeTime);
       }
-    
+
   };
 
   this.hide = function(alertBox) {
@@ -290,7 +290,7 @@ var alertbox = new AlertBox('#alert-area', {
 /** fin affichage des notifications **/
 
  //menu déroulant tweet
- 
+
  function openmenutweet(id) {
 
     document.getElementById("btntweet"+id).classList.toggle("show");
@@ -328,7 +328,7 @@ document.addEventListener('click',function(e){
 
       body: JSON.stringify(idtweet)
     })
-      .then(function(response) 
+      .then(function(response)
       {
         return response.json(); // récupération des données au format json
       })
@@ -341,10 +341,10 @@ document.addEventListener('click',function(e){
     // ajout d'un like -> mise à jour du nombre de like
 
     case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
-                                             
+
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like  
+    // suppression d'un like -> mise à jour du nombre de like
 
     case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
 
@@ -378,11 +378,11 @@ document.addEventListener('click',function(e){
   document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
 
   fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
-  .then(function (data) 
+  .then(function (data)
   {
     return data.text();
   })
-  .then(function (html) 
+  .then(function (html)
   {
     document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
   })
@@ -399,7 +399,10 @@ document.addEventListener('click',function(e){
 
   if(e.target && e.target.getAttribute('data_action') == 'share'){
 
-    var idtweet = e.target.getAttribute('data_id_tweet');
+    var data = {
+      "idtweet": e.target.getAttribute('data_id_tweet'),
+      "auttweet": e.target.getAttribute('data_auttweet')
+    }
 
     let response = fetch('/twittux/share', {
       headers: {
@@ -408,9 +411,9 @@ document.addEventListener('click',function(e){
                 },
                 method: "POST",
 
-      body: JSON.stringify(idtweet)
+      body: JSON.stringify(data)
     })
-      .then(function(response) 
+      .then(function(response)
       {
         return response.json(); // récupération des données au format json
       })
@@ -422,15 +425,15 @@ document.addEventListener('click',function(e){
 
     // ajout d'un partage -> mise à jour du nombre de partage
 
-    case "addshare": document.querySelector('.nb_share_'+idtweet).textContent ++;
+    case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
 
                       alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Post partagé.</p>'+
                     '</div>.');
-                                             
+
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like  
+    // suppression d'un like -> mise à jour du nombre de like
 
     case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Vous avez déjà partagé ce post.</p>'+

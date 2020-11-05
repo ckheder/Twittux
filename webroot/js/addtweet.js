@@ -1,3 +1,12 @@
+/**
+ * addtweet.js
+ *
+ * Ajout d'un tweet
+ *
+ */
+
+ // variables
+
 const menuemoji = document.getElementById("menuemoji"); //div contentant la liste des emojis
 const textarea_tweet = document.querySelector('#textarea_tweet'); // textarea de rédaction d'un tweet
 
