@@ -55,7 +55,7 @@ use Cake\Http\Exception\NotFoundException;
 
             $this->set('title', ''.$keyword.' - Recherche sur Twittux'); // titre de la page
 
-            // on récupère toutes les informations du tweets contenant le mot clé
+            // on récupère toutes les informations du tweets contenant le mot clé ou si l'auteur est le mot clé
 
             $this->set('query_tweet', $this->paginate($this->Tweets->find()->select([
                                                                                         'Tweets.id_tweet',
@@ -66,7 +66,7 @@ use Cake\Http\Exception\NotFoundException;
                                                                                         'Tweets.nb_partage',
                                                                                         'Tweets.nb_like',
                                                                                     ])
-                                                ->where(['MATCH (Tweets.contenu_tweet) AGAINST(:search)'])
+                                                ->where(['MATCH (Tweets.contenu_tweet,Tweets.username) AGAINST(:search)'])
                                                 ->where(['private' => 0]) // on ne cherche que les tweets publics
                                                 ->bind(':search', $keyword)));
 
