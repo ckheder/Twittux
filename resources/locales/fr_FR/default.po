@@ -1,0 +1,107 @@
+#/var/www/html/Twittux/vendor/cakephp/cakephp/i18n
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr " %s"
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr "le %s"
+
+#: I18n/RelativeTimeFormatter.php:120
+msgid "just now"
+msgstr "à l'instant"
+
+#: I18n/RelativeTimeFormatter.php:157
+msgid "about a second ago"
+msgstr "il y a environ une seconde"
+
+#: I18n/RelativeTimeFormatter.php:158
+msgid "about a minute ago"
+msgstr "il y a une minute"
+
+#: I18n/RelativeTimeFormatter.php:159
+msgid "about an hour ago"
+msgstr "il y a une heure"
+
+#: I18n/RelativeTimeFormatter.php:160
+msgid "about a day ago"
+msgstr "il y a un jour"
+
+#: I18n/RelativeTimeFormatter.php:161
+msgid "about a week ago"
+msgstr "il y a une semaine"
+
+#: I18n/RelativeTimeFormatter.php:162
+msgid "about a year ago"
+msgstr "il y a un an"
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr "environ une seconde"
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr "environ une minute"
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr "environ une heure"
+
+#: I18n/RelativeTimeFormatter.php:177
+msgid "in about a day"
+msgstr "environ un jour"
+
+#: I18n/RelativeTimeFormatter.php:178
+msgid "in about a week"
+msgstr "environ une semaine"
+
+#: I18n/RelativeTimeFormatter.php:179
+msgid "in about a month"
+msgstr "environ un mois"
+
+#: I18n/RelativeTimeFormatter.php:180
+msgid "in about a year"
+msgstr "environ un an"
+
+#: I18n/RelativeTimeFormatter.php:354
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} an"
+msgstr[1] "{0} ans"
+
+#: I18n/RelativeTimeFormatter.php:357
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} mois"
+msgstr[1] "{0} mois"
+
+#: I18n/RelativeTimeFormatter.php:360
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} semaine"
+msgstr[1] "{0} semaines"
+
+#: I18n/RelativeTimeFormatter.php:363
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} jour"
+msgstr[1] "{0} jours"
+
+#: I18n/RelativeTimeFormatter.php:388
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} heures"
+msgstr[1] "{0} heures"
+
+#: I18n/RelativeTimeFormatter.php:391
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minute"
+msgstr[1] "{0} minutes"
+
+#: I18n/RelativeTimeFormatter.php:394
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} seconde"
+msgstr[1] "{0} secondes"

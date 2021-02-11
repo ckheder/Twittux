@@ -16,7 +16,43 @@
          <p class="w3-center">
            <?=  $this->Html->image('/img/avatar/'.$username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>106, 'height'=>106)); // avatar?>
          </p>
-         <hr>
+         <hr />
+
+         <?php
+
+           if($this->request->getParam('username') != $authName) // si je suis pas sur mon profil
+         {
+
+         ?>
+         <p class="w3-center">
+                 <button class="w3-button w3-indigo w3-round"><a class="sendmessage" href="" onclick="return false;" data_username="<?= $this->request->getParam('username') ?>"><i class="far fa-envelope"></i> Message </a></button>
+               </p>
+                  <hr />
+                  <p class="w3-center">
+         <span id="zone_abo">
+
+         <!-- test de l'abonnement au profil visité -->
+
+           <?= $this->cell('Abonnements::testabo', [$authName,$this->request->getParam('username')]); ?>
+
+         </span>
+
+         <!-- affichage d'un bouton de blocage -->
+
+         <span id="zone_blocage">
+
+           <button class="w3-button w3-red w3-round"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $this->request->getParam('username') ?>"><i class="fas fa-user-lock"></i> Bloquer </a></button>
+
+         </span>
+</p>
+<hr />
+         <?php
+
+         }
+
+         ?>
+
+
          <p class="desc_user"><i class="fas fa-briefcase fa-fw w3-margin-right w3-text-theme"></i> <?= $usersinfos->description ?></p>
          <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> <?= $usersinfos->lieu ?></p>
          <p><i class="fas fa-desktop fa-fw w3-margin-right w3-text-theme"></i>

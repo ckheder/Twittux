@@ -25,18 +25,23 @@
             <div class="w3-container w3-padding">
 
               <h6 class="w3-opacity">Partager quelque chose....</h6>
+
 <!-- formulaire de création d'un tweet -->
+
                 <?= $this->Form->create(null, [
                                                 'id' =>'form_tweet',
                                                 'url' => ['controller' => 'Tweets', 'action' => 'add']
 
                                                 ]);?>
 <!--textarea -->
-                  <?=$this->Form->textarea('contenu_tweet' , ['id'=>'textarea_tweet','rows' => '3','required'=> 'required','maxlength' => '255']);?>
+                  <?= $this->Form->textarea('contenu_tweet' , ['id'=>'textarea_tweet','rows' => '3','required'=> 'required','maxlength' => '255']);?>
 
                     <div class="w3-dropdown-click">
+
     <a onclick="openemojimenu()" class="btnemoji"><img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
+
     <div id="menuemoji" class="w3-dropdown-content w3-bar-block w3-border">
+
 <?php // parcours du dossier contenant les emojis et affichage dans la div
 
   $dir = WWW_ROOT . 'img/emoji'; // chemin du dossier
@@ -57,7 +62,9 @@
               <br />
 <!--bouton d'envoi -->
                     <?= $this->Form->button('Publier',['class' =>'w3-button w3-blue w3-round']) ?>
+
             </div>
+            
             <?= $this->Form->end() ?>
 <!--fin formulaire -->
 
@@ -68,7 +75,7 @@
       </div>
 
     </div>
-    
+
   </div>
 
   <?= $this->Html->script('addtweet.js'); ?> <!-- ajouter un tweet -->

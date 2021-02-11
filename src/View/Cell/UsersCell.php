@@ -32,7 +32,7 @@ class UsersCell extends Cell
      * Méthode display : affiche les informations d'un utilisateur : sur tweet(index, view)
      *
      */
-        public function display($username)
+        public function display($username, $authname)
     {
 
         $usersinfos = $this->Users->find()
@@ -41,5 +41,6 @@ class UsersCell extends Cell
 
         $this->set('usersinfos', $usersinfos);
         $this->set('username',$username);
+        $this->set('authName',$authname);
     }
 }

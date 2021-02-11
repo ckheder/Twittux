@@ -251,6 +251,8 @@ var alertbox = new AlertBox('#alert-area', {
 
 /** fin affichage de notifications **/
 
+/** LIKE **/
+
 /** traitement des like **/
 
 // ajout/suppression like
@@ -335,6 +337,8 @@ document.addEventListener('click',function(e){
 
 /** fin traitement des like **/
 
+/** PARTAGE **/
+
 /** traitement des partages **/
 
 document.addEventListener('click',function(e){
@@ -405,3 +409,70 @@ document.addEventListener('click',function(e){
 })
 
 /** fin traitement des partages **/
+
+/** MESSAGERIE **/
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và vérifier si j'ai déjà une conversation avec la personne
+// si oui on redirige vers cette conversation sinon on redirige vers la messagerie avec le destinataire pré-remplie
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'sendmessage') // clique sur le bouton avec la classe 'sendmessage'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/messagerie/messagefromprofil', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format texte
+  })
+    .then(function(Data) {
+
+      // Data.new_conv == 1 -> conversation existante
+
+      if(Data.new_conv == 1)
+     {
+
+       // création d'un item localStorage avec l'identifiant de la conversation
+
+       localStorage.setItem("idconv", Data.conversation);
+
+     }
+
+       // Data.new_conv == 0 -> pas de conversation existante
+
+       else if (Data.new_conv == 0)
+      {
+
+        // création d'un item localStorage avec l'identifiant de la personne à qui je veut envoyer un message
+
+      localStorage.setItem("username", Data.username);
+
+      }
+
+  //redirection vers la messagerie
+
+  window.location.href = '/twittux/messagerie';
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de supprimer ce commentaire.</p>'+
+                    '</div>.');
+
+    });
+
+}
+})

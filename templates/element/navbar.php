@@ -22,7 +22,7 @@
 
 <!-- lien vers la messagerie -->
 
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messagerie"><i class="fa fa-envelope"></i></a>
+    <a href="/twittux/messagerie" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messagerie"><i class="fa fa-envelope"></i></a>
 
 <!-- lien vers les notifications -->
 
@@ -38,7 +38,7 @@
 
         <input type="text" class="w3-bar-item w3-hide-small w3-input input-search" placeholder="Recherche sur Twittux...">
 
-          <div class="w3-dropdown-content" id="divautocomplete">
+          <div class="w3-dropdown-content">
 
 <!-- liste contenant les résultats de la recherche d'utilisateurs -->
 
@@ -75,7 +75,7 @@
 
   <a href="/twittux/abonnements/<?= $authName ;?>" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-user-friends"></i> Social</a>
 
-  <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
+  <a href="/twittux/messagerie" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
 
   <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
 

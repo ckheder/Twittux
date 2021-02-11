@@ -43,10 +43,10 @@
 
         <?= $this->Flash->render();?>
 
-          <?= $this->cell('Users',['username' => $this->request->getParam('username')]); ?>
+          <?= $this->cell('Users',['username' => $this->request->getParam('username'), 'authname' => $authName]); ?>
 
           <?= $this->fetch('content') ?>
-          
+
     </div>
 
         <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->

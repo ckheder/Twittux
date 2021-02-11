@@ -46,6 +46,7 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('Paginator');
         $this->loadModel('Settings');
+        $this->loadModel('UserConversation');
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
@@ -145,23 +146,62 @@ class AppController extends Controller
         /**
          * Méthode check_notif
          *
-         * Détermine si la personne veut ou pas des notifications
+         * Détermine si la personne veut ou pas des notifications, cas particulier des notification de message : on détermine si la conversation est masquée ou pas
          *
-         * Paramètre : $notification -> type de notification : comm, abo, citation,... | $username -> profil sur qui faire le test
+         * Paramètre : $notification -> type de notification : comm, abo, citation,... | $username -> profil sur qui faire le test | $conversation -> identifiant de conversation dans le cas d'une notification de message
          *
          * Sortie : $check_notif : oui | non
     */
-            public function check_notif($notification, $username)
+            public function check_notif($notification, $username, $conversation = null)
         {
 
-          $check_notif = $this->Settings->find()->select(['notif_'.$notification.''])->where(['username' => $username]);
+          // cas de la messagerie (on vérifie si la conversation n'est pas masquée du côté du destinataire)
 
-          $notif = 'notif_'.$notification.'';
+            if($notification == 'message')
+          {
+            $notif_message_visible = $this->Settings
+                                    ->find()
+                                    ->select(['visible' => 'UserConversation.visible','notif_message' =>'Settings.notif_message'])
+                                    ->innerJoin(
+                ['UserConversation' => 'userconversation'],
+                [
+                'Settings.username = UserConversation.user_conv'
+              ])
 
-          foreach ($check_notif as $check_notif)
-      {
-          $check_notif = $check_notif->$notif;
-      }
+                                    ->where(['Settings.username' =>  $username,'UserConversation.conversation' => $conversation]);
+
+                                    foreach ($notif_message_visible as $notif_message_visible)
+                                  {
+                                    $visible = $notif_message_visible->visible;
+                                    $notif_message = $notif_message_visible->notif_message;
+                                  }
+
+                  if($visible == 'non')
+                {
+                    $check_notif = 'non';
+                }
+                  elseif ($notif_message == 'non')
+                {
+                  $check_notif = 'non';
+                }
+                  else
+                {
+                  $check_notif = 'oui';
+                }
+
+          }
+            else // traitement des autres notifications
+          {
+
+            $check_notif = $this->Settings->find()->select(['notif_'.$notification.''])->where(['username' => $username]);
+
+            $notif = 'notif_'.$notification.'';
+
+                foreach ($check_notif as $check_notif)
+              {
+                $check_notif = $check_notif->$notif;
+              }
+          }
 
           return $check_notif;
 
@@ -191,5 +231,32 @@ class AppController extends Controller
                 return $type_profil;
             }
 
+            /**
+                 * Méthode IsinConv
+                 *
+                 * Vérifie si la personne fais partie de la conversation en paramètres : répondre à une invitation de nouveau dans les notifications
+                 *
+                 * Paramètres : idconv -> identifiant de la conversation, $username -> nom de la personne
+                 *
+                 * Sortie : oui | non
+                 *
+                 *
+            */
+
+              public function isinconv($idconv,$username)
+            {
+              $query = $this->UserConversation->find()->where(['conversation' => $idconv,'user_conv' => $username]);
+
+                  if ($query->isEmpty()) // si pas de résultat, on peut l'inviter dans la conversation
+                {
+                  $inconv = 'non';
+                }
+                  else
+                {
+                  $inconv = 'oui';
+                }
+
+                return $inconv;
+            }
 
     }

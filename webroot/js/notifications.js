@@ -203,3 +203,88 @@
      });
 
      /** fin affichage des notifications **/
+
+     /** rejoindre une conversation après notification d'un nouveau message **/
+
+     document.addEventListener('click',function(e){
+
+         if(e.target && e.target.getAttribute('data_msg_conv')) // si le lien cliqué possède l'attribut 'data_msg_conv'
+       {
+
+         var msg_conv = e.target.getAttribute('data_msg_conv');
+
+         // envoi de l'id de conversation en local storage et on redirige vers l'index de la messagerie
+
+         localStorage.setItem("idconv", msg_conv);
+
+         window.location.href = '/twittux/messagerie';
+       }
+
+     })
+
+     /** répondre à une invitation à rejoindre une conversation **/
+
+     document.addEventListener('click',function(e){
+
+        if(e.target && e.target.getAttribute('data_idconv')) // si le lien cliqué possède l'attribut 'data_idconv'
+       {
+
+    // stockage des données nécessaires au traitemnt par CakePHP de la réponse
+    var data = {
+                  "idconv": e.target.getAttribute('data_idconv'), // identifiant de la conversation
+                  "typeconv": e.target.getAttribute('data_typeconv') // username de la personne invité
+                }
+
+    // appel controller pour crée une ligne de conversation
+
+    let response = fetch('/twittux/conversation/joinconv', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authnetifié mon action depuis le site
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format texte
+  })
+    .then(function(Data) {
+
+    // possibilité de rejoindre la conversation
+
+        if(Data.Result == 'joinconvok')
+      {
+
+        // création d'un item localStorage avec l'identifiant de la conversation
+
+        localStorage.setItem("idconv", e.target.getAttribute('data_idconv'));
+
+        // redirection vers l'index de la messagerie
+
+        window.location.href = '/twittux/messagerie';
+      }
+
+      // impossible de rejoindre la conversation
+
+        else if (Data.Result == 'joinconvnotok')
+      {
+
+          alertbox.show('<div class="w3-panel w3-red">'+
+                  '<p>Impossible de rejoindre cette conversation.</p>'+
+                '</div>.');
+
+      }
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de supprimer ce commentaire.</p>'+
+                    '</div>.');
+
+    });
+
+}
+})

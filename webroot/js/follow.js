@@ -1,7 +1,7 @@
 /**
  * follow.js
  *
- * Triatement des actions effectuées sur la page des abonnements, abonnés et demande et affichage des notifications correspondantes
+ * Traitement des actions effectuées sur la page des abonnements, abonnés et demande et affichage des notifications correspondantes
  *
  */
 
@@ -92,7 +92,7 @@ document.addEventListener('click',function(e){
                         "username": e.target.getAttribute('data_username') // username de la personne concerné par mon click sur un bouton
                       }
 
-                    
+
 
     let response = fetch('/twittux/abonnement/'+action+'', {
       headers: {

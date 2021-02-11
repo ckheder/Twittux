@@ -16,6 +16,11 @@ body
   height: 25px;
   cursor: pointer;
 }
+
+/* Lien désactivé */
+.disabled{
+    pointer-events:none
+}
 /* ## Page d'acceuil ## */
 
 /* Liste sur la page d'accueuil */
@@ -223,7 +228,9 @@ color: #737373;
 
 /* spinner de chargement des données AJAX */
 
-#spinner:not([hidden]) {
+/* spinner chargement d'une conversation */
+
+#spinnerconv:not([hidden]) {
   position: relative;
   top: 0;
   left: 0;
@@ -234,7 +241,7 @@ color: #737373;
   align-items: center;
 }
 
-#spinner::after {
+#spinnerconv::after {
   content: "";
   width: 80px;
   height: 80px;
@@ -243,6 +250,30 @@ color: #737373;
   border-radius: 100%;
   will-change: transform;
   animation: spin 1s infinite linear
+}
+
+/* spinner chargement de la liste des conversations */
+
+#spinnerloadconversation::after {
+  content: "";
+  width: 80px;
+  height: 80px;
+  border: 2px solid #f3f3f3;
+  border-top: 3px solid #f25a41;
+  border-radius: 100%;
+  will-change: transform;
+  animation: spin 1s infinite linear
+}
+
+#spinnerloadconversation:not([hidden]) {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes spin {
@@ -254,3 +285,22 @@ color: #737373;
   }
 }
 /* fin spinner de chargement des données AJAX */
+
+/* couleur au survol de la liste des conversations */
+
+.idconv
+{
+	background-color: white;
+	word-wrap: break-word;
+	cursor: pointer;
+	border-radius: 10px;
+	margin-bottom: 5px;
+
+}
+
+.idconv:hover
+{
+	background-color:  #BDCAC8;
+}
+
+/* fin couleur au survol de la liste des conversations */

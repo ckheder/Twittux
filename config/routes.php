@@ -217,6 +217,40 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/notifications/statut',['controller' => 'Notifications', 'action' => 'statut']);
 
+/* ROUTE MESSAGERIE */
+
+    // page d'accueil de la messagerie
+
+    $builder->connect('/messagerie',['controller' => 'Messagerie', 'action' => 'index'],['_name' => 'messagerie']);
+
+    // nouveau message
+
+    $builder->connect('/messagerie/newmessage',['controller' => 'Messagerie', 'action' => 'add']);
+
+    // liste des conversations
+
+    $builder->connect('/messagerie/listconv',['controller' => 'Messagerie', 'action' => 'listconv']);
+
+    // voir une conversation
+
+    $builder->connect('/conversation-{idconv}',['controller' => 'Messagerie', 'action' => 'view'],['idconv' => '\d+', 'pass' => ['idconv']]);
+
+    // rejoindre ou crée une conversation depuis le profil
+
+    $builder->connect('/messagerie/messagefromprofil',['controller' => 'Messagerie', 'action' => 'messagefromprofil']);
+
+    // masquer une conversation
+
+    $builder->connect('/conversation/update',['controller' => 'UserConversation', 'action' => 'edit']);
+
+    // inviter à rejoindre une conversation
+
+    $builder->connect('/conversation/addtoconv',['controller' => 'UserConversation', 'action' => 'addtoconv']);
+
+    // rejoindre une conversation depuis les notifications
+
+    $builder->connect('/conversation/joinconv',['controller' => 'UserConversation', 'action' => 'joinconv']);
+
     /*
      * Connect catchall routes for all controllers.
      *

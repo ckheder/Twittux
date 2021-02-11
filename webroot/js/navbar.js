@@ -22,7 +22,7 @@
 
 var searchInput = document.querySelector('.input-search'); // input de recherche
 
-var searchInputResp = document.querySelector('.input-search-resp'); // input de recherche
+var searchInputResp = document.querySelector('.input-search-resp'); // input de recherche mobile
 
 var autocomplete_zone = document.getElementById("autocomplete-results"); // zone des résultats
 

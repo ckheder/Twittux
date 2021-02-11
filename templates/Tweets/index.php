@@ -178,35 +178,7 @@ endforeach;
     <!-- Right Column -->
     <div class="w3-col m2" style="margin-top:16px">
 
-<!--zone de suggestion ou de hashtag -->
 
-<?php
-
-  if($this->request->getParam('username') != $authName) // si je suis pas sur mon profil
-{
-
-?>
-<span id="zone_abo">
-
-<!-- test de l'abonnement au profil visité -->
-
-  <?= $this->cell('Abonnements::testabo', [$authName,$this->request->getParam('username')]); ?>
-
-</span>
-
-<!-- affichage d'un bouton de blocage -->
-
-<span id="zone_blocage">
-
-  <button class="w3-button w3-red w3-round w3-right"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $this->request->getParam('username') ?>"><i class="fas fa-user-lock"></i> Bloquer </a></button>
-
-</span>
-
-<?php
-
-}
-
-?>
 
     <!-- End Right Column -->
     </div>
