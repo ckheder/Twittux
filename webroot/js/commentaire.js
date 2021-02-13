@@ -169,10 +169,14 @@ document.addEventListener('click',function(e){
 
   var idcomm = e.target.getAttribute('data_idcomm');// on récupère l'id du commentaire associé au lien cliqué
 
-    let response = fetch('/twittux/commentaire/delete/'+idcomm+'', { // on ajoute l'id à l'URL
+    let response = fetch('/twittux/commentaire/delete', { // on ajoute l'id à l'URL
       headers: {
-                  'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
-                }
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: idcomm
     })
 .then(function(response) {
     return response.text(); // récupération des données au format texte
@@ -181,13 +185,13 @@ document.addEventListener('click',function(e){
 
 //suppression du commentaire
 
-  if(Data == 'nonok') // impossible de supprimer un commentaire : mauvais utilisateur par exemple
+  if(Data == 'deletecommnotok') // impossible de supprimer un commentaire : mauvais utilisateur par exemple
 {
           alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Impossible de supprimer ce commentaire.</p>'+
                     '</div>.');
 }
-  else
+  else if (Data == 'deletecommok') // suppression réussie du commentaire
 {
 
 var divcomm = document.querySelector('#comm'+idcomm); // on récupère la div contenant le commentaire

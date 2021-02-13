@@ -166,7 +166,7 @@
 
           <?php
 
-            if($commentaires->username == $authName) // si je suis l'auteur du commentaire
+            if($commentaires->username == $authName OR $tweet->username == $authName) // si je suis l'auteur du commentaire
           {
 
             ?>

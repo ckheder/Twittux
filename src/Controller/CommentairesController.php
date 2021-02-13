@@ -7,6 +7,7 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use App\Event\CommentaireListener;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Commentaires Controller
@@ -97,28 +98,30 @@ class CommentairesController extends AppController
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
-        $commentaire = $this->Commentaires->get($id);
+          $id_comm = $this->request->input('json_decode'); // identifiant du commentaire
 
-          if($commentaire->username == $this->Auth->user('username'))
-        {
+          $statement = ConnectionManager::get('default')->prepare(
+          'DELETE FROM commentaires WHERE id_comm = :id_comm AND username = :username');
 
-              if ($this->Commentaires->delete($commentaire))
-            {
+          $statement->bindValue('id_comm', $id_comm, 'string');
+          $statement->bindValue('username', $this->Auth->user('username'), 'string');
+          $statement->execute();
 
-              return $this->response->withStringBody('ok');
-            }
+          $rowCount = $statement->rowCount();
 
-        }
+              if ($rowCount == 1) // suppression de commentaire réussie
+          {
+              return $this->response->withStringBody('deletecommok');
+          }
 
-          else
+            elseif ($rowCount == 0) // echec de la suppression d'un commentaire
+          {
 
-        {
+            return $this->response->withStringBody('deletecommnotok');
 
-            return $this->response->withStringBody('nonok');
-        }
-
+          }
     }
-                else // en cas de non requête AJAX on lève une exception 404
+            else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));
         }

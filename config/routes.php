@@ -121,9 +121,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // supprimer un commentaire
 
-    $builder->connect('/commentaire/delete/{id}',
-        ['controller' => 'Commentaires', 'action' => 'delete'],
-                                                    ['id' => '\d+', 'pass' => ['id']]);
+    $builder->connect('/commentaire/delete',
+        ['controller' => 'Commentaires', 'action' => 'delete']);
 
     /* ROUTE ABONNEMENT */
 
