@@ -117,7 +117,7 @@ document.addEventListener('click',function(e){
 
     // nouveau bouton de suppression d'abonnement
 
-    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+data.username +'">Ne plus suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
     break;
 
@@ -135,7 +135,7 @@ document.addEventListener('click',function(e){
 
     // nouveau bouton d'abonnement
 
-    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
@@ -163,7 +163,7 @@ document.addEventListener('click',function(e){
 
     // nouveau bouton pour annuler une demande d'abonnement
 
-    zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
 
     break;
 
@@ -175,7 +175,7 @@ document.addEventListener('click',function(e){
 
     // nouveau bouton pour s'abonner
 
-    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
