@@ -82,7 +82,38 @@
 
                 <div id="btntweet<?= $tweet->id_tweet ?>" class="dropdown-content">
 
-                  <a class="deletetweet" href="#" onclick="return false;" data_type="<?= $share ?>" data_idtweet="<?= $tweet->id_tweet ?>"> Supprimer</a>
+                  <?php
+
+                    if($tweet->username == $authName) // si je suis l'auteur du tweet , je peux le supprimer
+                  {
+                    ?>
+
+                    <a class="deletetweet" href="#" onclick="return false;" data_type="<?= $share ?>" data_idtweet="<?= $tweet->id_tweet ?>"> Supprimer</a>
+
+                    <?php
+                  }
+                      elseif ($share == 1) // je ne suis pas l'auteur du tweet mais je l'ais partager donc je peux le supprimer
+
+                  {
+
+                    ?>
+
+                    <a class="deletetweet" href="#" onclick="return false;" data_type="<?= $share ?>" data_idtweet="<?= $tweet->id_tweet ?>"> Supprimer</a>
+
+                    <?php
+
+                  }
+
+                    else // je ne suis ni l'auteur et je n'ais pas partagé ce post (autre profil) je peux le signaler
+                  {
+                    ?>
+
+                    <a href="#">Signaler ce post </a>
+
+                    <?php
+                  }
+
+                  ?>
 
                 </div>
 
