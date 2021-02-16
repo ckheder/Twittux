@@ -48,6 +48,13 @@ class PagesController extends AppController
         if (!$path) {
             return $this->redirect('/');
         }
+
+        // si je suis authentifié et que je clique sur l'accueuil du site, je suis redirigé vers l'actualités
+
+          if($this->Auth->user('username'))
+        {
+          return $this->redirect('/actualites');
+        }
         if (in_array('..', $path, true) || in_array('.', $path, true)) {
             throw new ForbiddenException();
         }
