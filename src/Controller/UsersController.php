@@ -305,11 +305,11 @@ class UsersController extends AppController
 
       // suppression avatar + suppression entité
 
-          if (unlink(WWW_ROOT . 'img/avatar/'.$this->Auth->user('username').'.jpg') AND $this->Users->delete($user)) // suppression avatar + entitée
+          if (unlink(WWW_ROOT . 'img/avatar/'.$this->Auth->user('username').'.jpg') AND rmdir(WWW_ROOT . 'img/media/'.$this->Auth->user('username').'') AND $this->Users->delete($user)) // suppression avatar + entitée
         {
             $this->Flash->success(__('Compte supprimé avec succès.'));
 
-            return $this->redirect('/');
+            return $this->redirect($this->Auth->logout()); // redirection vers l'accueuil
         }
 
           else
