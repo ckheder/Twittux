@@ -13,9 +13,9 @@
       <div class="w3-card w3-round w3-white">
         <div class="w3-container">
          <h4 class="w3-center"><?= $username ?></h4>
-         <p class="w3-center">
-           <?=  $this->Html->image('/img/avatar/'.$username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>106, 'height'=>106)); // avatar?>
-         </p>
+          <p class="w3-center">
+            <?=  $this->Html->image('/img/avatar/'.$username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>106, 'height'=>106)); // avatar?>
+          </p>
          <hr />
 
          <?php
@@ -24,18 +24,22 @@
          {
 
          ?>
-         <p class="w3-center">
+         <p class="w3-center"> <!-- bouton envoyer un message -->
+
                  <button class="w3-button w3-indigo w3-round"><a class="sendmessage" href="" onclick="return false;" data_username="<?= $this->request->getParam('username') ?>"><i class="far fa-envelope"></i> Message </a></button>
-               </p>
-                  <hr />
+
+        </p>
+              <hr />
+
                   <p class="w3-center">
-         <span id="zone_abo">
 
-         <!-- test de l'abonnement au profil visité -->
+                    <span id="zone_abo">
 
-           <?= $this->cell('Abonnements::testabo', [$authName,$this->request->getParam('username')]); ?>
+                      <!-- test de l'abonnement au profil visité -->
 
-         </span>
+                      <?= $this->cell('Abonnements::testabo', [$authName,$this->request->getParam('username')]); ?>
+
+                    </span>
 
          <!-- affichage d'un bouton de blocage -->
 
@@ -44,7 +48,9 @@
            <button class="w3-button w3-red w3-round"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $this->request->getParam('username') ?>"><i class="fas fa-user-lock"></i> Bloquer </a></button>
 
          </span>
-</p>
+
+                </p>
+
 <hr />
          <?php
 
@@ -52,9 +58,12 @@
 
          ?>
 
+         <!-- information utilisateur -->
 
          <p class="desc_user"><i class="fas fa-briefcase fa-fw w3-margin-right w3-text-theme"></i> <?= $usersinfos->description ?></p>
+
          <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> <?= $usersinfos->lieu ?></p>
+
          <p><i class="fas fa-desktop fa-fw w3-margin-right w3-text-theme"></i>
 
            <!-- conversion du site web vers un lien cliquable si il est au bon format -->
@@ -68,41 +77,81 @@
             ?>
 
            <?= $usersinfos->website ?></p>
-         <p><i class="fas fa-calendar-alt fa-fw w3-margin-right w3-text-theme"></i> Membre depuis le <?= $usersinfos->created->i18nformat('dd MMMM YYYY');?></p>
+
+         <p>
+
+           <i class="fas fa-calendar-alt fa-fw w3-margin-right w3-text-theme"></i> Membre depuis le <?= $usersinfos->created->i18nformat('dd MMMM YYYY');?>
+
+         </p>
+
         </div>
+
       </div>
+
       <br>
+
       <?php endforeach ;?>
 
       <div class="w3-card w3-round">
+
 <!-- affichage média -->
+
         <div class="w3-white">
-          <button onclick="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-users fa-fw w3-margin-right"></i> My Photos</button>
-          <div id="Demo3" class="w3-hide w3-container">
-         <div class="w3-row-padding">
-         <br>
-           <div class="w3-half">
-             <img src="/w3images/lights.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
-           <div class="w3-half">
-             <img src="/w3images/nature.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
-           <div class="w3-half">
-             <img src="/w3images/mountains.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
-           <div class="w3-half">
-             <img src="/w3images/forest.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
-           <div class="w3-half">
-             <img src="/w3images/nature.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
-           <div class="w3-half">
-             <img src="/w3images/snow.jpg" style="width:100%" class="w3-margin-bottom">
-           </div>
+
+           <div class="w3-row-padding">
+
+             <br>
+
+          <?php // parcours du dossier contenant les emojis et affichage dans la div
+
+          $dir = WWW_ROOT . 'img/media/'.$this->request->getParam('username').''; // chemin du dossier
+
+          $array_media = array(); // tableau de stockage des médias par date
+
+          $counter = 0; // initialisation d'un compteur de média : on limite aux 4 derniers médias postés
+
+          // change le dossier en répertoire
+
+          chdir($dir);
+
+          // tri du tableau multi dimensionnels  : tous les fichiers sont triés selon leur date de dernière modification
+
+          array_multisort(array_map('filemtime', ($files = glob("*.*"))), SORT_DESC, $files);
+
+            foreach($files as $filename)
+          {
+            $array_media[] = $filename;
+
+            $counter++;
+
+            // si il y'a 4 médias maximum on arrête le parcours du tableau
+
+              if ($counter >= 4)
+            {
+              break;
+            }
+
+          }
+
+          // on affiche les médias issus du tableau précédent
+
+            foreach($array_media as $media_user)
+          {
+
+            $img_media_user_no_extension = substr($media_user, 0, strrpos($media_user, '.')); // on supprime l'extension du fichier pour crée un lien vers le post contenant le média
+
+            echo '<a href="./statut/'.$img_media_user_no_extension.'"><img src="/twittux/img/media/'.$this->request->getParam('username').'/'.$media_user.'" class="w3-margin-bottom media_user" /></a>';
+
+          }
+
+          ?>
+
          </div>
-          </div>
+
         </div>
+
       </div>
+
       <br>
 
       <br>

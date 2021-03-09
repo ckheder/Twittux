@@ -1,12 +1,10 @@
 <?php
+
 /**
- *  Vue contenant la page d'accueil après login : liste des tweets
+ *  <!--affichage des tweets de l'utilisateur avec des médias-->
  */
-?>
 
-<!--affichage des tweets de l'utilisateur et des tweets partagés-->
-
-  <?php if(isset($tweets) AND count($tweets) == 0) // aucun tweet à afficher
+    if(isset($media_tweet) AND count($media_tweet) == 0) // aucun tweet à afficher
   {
     ?>
       <div class="w3-container">
@@ -49,7 +47,7 @@
   else // profil public ou privé mais abonné -> affichage des tweets
   {
 
-        foreach ($tweets as $tweet):  ?>
+        foreach ($media_tweet as $tweet):  ?>
 
       <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin" id="tweet<?= $tweet->id_tweet ;?>">
 
@@ -198,3 +196,4 @@
 endforeach;
 }
 ?>
+ </div>

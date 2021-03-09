@@ -304,3 +304,14 @@ color: #737373;
 }
 
 /* fin couleur au survol de la liste des conversations */
+
+/* mise en page des médias sur la cell user */
+
+.media_user
+{
+	max-height:100%;
+	max-width:100%;
+	display: block;
+}
+
+/* fin mise en page des médias sur la cell user */

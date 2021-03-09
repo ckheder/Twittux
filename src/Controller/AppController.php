@@ -104,39 +104,6 @@ class AppController extends Controller
 
         $contenu = preg_replace($pattern_link, '<a href="$1" class="w3-text-blue" target="_blank">$1</a>', $contenu);
 
-        // conversion média en lecteur vidéo
-
-// youtube
-            if (preg_match('~\[videoYoutube]([^{]*)\[/videoYoutube]~i', $contenu))
-        {
-            $contenu = preg_replace('~\[videoYoutube]([^{]*)\[/videoYoutube]~i', '<p><iframe src="https://www.youtube.com/embed/$1"  width="100%" height="360" frameborder="0" allowfullscreen></iframe></p>', $contenu);
-        }
-// dailymotion
-            elseif (preg_match('~\[videoDailymotion]([^{]*)\[/videoDailymotion]~i', $contenu))
-        {
-            $contenu = preg_replace('~\[videoDailymotion]([^{]*)\[/videoDailymotion]~i', '<p><iframe frameborder="0" width="100%" height="360" src="//www.dailymotion.com/embed/video/$1" allowfullscreen></iframe></p>', $contenu);
-        }
-// clip twitch
-            elseif (preg_match('~\[clipTwitch]([^{]*)\[/clipTwitch]~i', $contenu))
-        {
-        $contenu = preg_replace('~\[clipTwitch]([^{]*)\[/clipTwitch]~i', '<p><iframe src="https://clips.twitch.tv/embed?autoplay=false&clip=$1&tt_content=embed&tt_medium=clips_embed" width="100%" height="360" frameborder="0" scrolling="no" allowfullscreen="true"></iframe></p>', $contenu);
-        }
-// video twitch
-            elseif (preg_match('~\[videoTwitch]([^{]*)\[/videoTwitch]~i', $contenu))
-        {
-        $contenu = preg_replace('~\[videoTwitch]([^{]*)\[/videoTwitch]~i', '<p><iframe src="https://player.twitch.tv/?autoplay=false&video=v$1" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="100%"></iframe></p>', $contenu);
-        }
-// instagram
-            elseif (preg_match('~\[InstagramPost]([^{]*)\[/InstagramPost]~i', $contenu))
-        {
-        $contenu = preg_replace('~\[InstagramPost]([^{]*)\[/InstagramPost]~i', '<p><iframe src="https://www.instagram.com/p/$1/embed/captioned/" width="100%" height="780" frameborder="0" scrolling="no" allowtransparency="true"></iframe></p>', $contenu);
-        }
-// lien vers une image distante
-            elseif (preg_match('~\[imageUrl]([^{]*)\[/imageUrl]~i', $contenu))
-        {
-        $contenu = preg_replace('~\[imageUrl]([^{]*)\[/imageUrl]~i', '<a href="$1" ><img src="$1" width="100%" alt="img_media"/></a>', $contenu);
-        }
-
         $contenu =  preg_replace('/#([^\s]+)/','<a href="/twittux/search/hashtag/%23$1" class="w3-text-blue">#$1</a>',$contenu); //#something
 
         return $contenu;
@@ -259,4 +226,66 @@ class AppController extends Controller
                 return $inconv;
             }
 
+            /**
+                 * Méthode UploadFileTweet
+                 *
+                 * Envoi d'un fichier attaché lors d'un tweet : image locale
+                 *
+                 * Paramètres : idconv -> identifiant de la conversation, $username -> nom de la personne
+                 *
+                 * Sortie : oui | non
+                 *
+                 *
+            */
+
+              public function uploadfiletweet($file,$contenu,$idtweet)
+            {
+              if($file->getError() == 0) // si pas d'erreur d'envoi
+            {
+
+              $imageMimeTypes = array( // type MIME autorisé
+                                      'image/jpg',
+                                      'image/jpeg',
+                                      'image/gif'
+                                    );
+
+                if($file->getSize() > 3047171) // taille du fichier
+             {
+                return $this->response->withStringBody('sizenotok'); // fichier trop gros
+              }
+
+                if(!in_array($file->getClientMediaType(), $imageMimeTypes)) // test du type MIME
+              {
+                return $this->response->withStringBody('typenotok'); // type MIME incorrect
+              }
+
+              // renommer le fichier du même id que le futur tweet en vue d'une suppression facilitée
+
+              $name = $file->getClientFilename();
+
+              $file_name = pathinfo($name, PATHINFO_FILENAME); // nom du fichier sans l'extension
+
+              $file_name = $idtweet; // on y affecte l'id du futur tweet en nom
+
+              $extension = pathinfo($name, PATHINFO_EXTENSION); // extension du fichier
+
+              $upload = ''.$file_name.'.'. $extension.'';
+
+              $targetPath = 'img/media/'.$this->Auth->user('username').'/'.$upload.'';
+
+            // déplacement fichier
+
+              $file->moveTo($targetPath);
+
+            // mise à jour du contenu du tweet
+
+              $contenu = preg_replace('~\[image]([^{]*)\[/image]~i', '<img src="/twittux/img/media/'.$this->Auth->user('username').'/'.$upload.'"  width="100%" class="media_tweet" alt="image introuvable" />', $contenu);
+
+            return $contenu;
+            }
+            else {
+              return $this->response->withStringBody('noupload');
+            }
+
     }
+}

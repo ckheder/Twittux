@@ -65,6 +65,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
+
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
      */
@@ -103,6 +104,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/statut/{id}',
         ['controller' => 'Tweets', 'action' => 'view'],
                         ['id' => '\d+', 'pass' => ['id']],['_name' => 'viewtweet']);
+
+        // voir tweet avec media sur profil
+
+        $builder->connect('/:username/media',['controller' => 'Tweets', 'action' => 'mediatweet']);
 
         // supprimer un tweet
 
@@ -168,9 +173,17 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/search/hashtag/{query}',['controller' => 'Search', 'action' => 'hashtag']);
 
+    // recherche hashtag avec media
+
+$builder->connect('/search/hashtag/media/{query}',['controller' => 'Search', 'action' => 'mediahashtag']);
+
         //recherche users hashtag (moteur de recherche)
 
     $builder->connect('/search/hashtag/users/{query}',['controller' => 'Search', 'action' => 'userhashtag']);
+
+    //recherche tweet avec média
+
+$builder->connect('/search/media/{query}',['controller' => 'Search', 'action' => 'media']);
 
     /* ROUTE LIKE */
 

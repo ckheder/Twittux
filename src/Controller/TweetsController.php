@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use App\Event\TweetsListener;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\ConnectionManager;
+
 
 /**
  * Tweets Controller
@@ -46,19 +48,26 @@ class TweetsController extends AppController
         public function index()
     {
 
-        $current_user = $this->request->getParam('username'); // récupération de l'utilisateur en URL
+      $current_user = $this->request->getParam('username'); // récupération de l'utilisateur en URL
 
-        $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
+      if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+  {
+      $this->viewBuilder()->setLayout('ajax');
+  }
+      else
+  {
+      $this->viewBuilder()->setLayout('tweet'); // sinon le layout 'tweet'
+      $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
+  }
 
-        $this->viewBuilder()->setLayout('tweet'); // définition du layout
-
-          if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
-        {
-
-        if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
+      if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
     {
-        throw new NotFoundException();
-    }
+
+          if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
+        {
+          throw new NotFoundException();
+        }
+
     // on vérifie si je peux voir le profil
 
       if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
@@ -140,6 +149,72 @@ class TweetsController extends AppController
     }
   }
 
+  /**
+   * Méthode média : afficher les tweets contenant un média uploadé
+   *
+   * Paramètres : $id -> identifiant donné en URL
+   *
+   */
+      public function mediatweet()
+  {
+
+        $current_user = $this->request->getParam('username');
+
+    if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+{
+
+    $this->viewBuilder()->setLayout('ajax');
+}
+    else
+{
+
+    $this->viewBuilder()->setLayout('tweet'); // sinon le layout 'search'
+    $this->set('title' , ''.$current_user.' | Media'); // titre de la page
+}
+
+
+
+    if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
+  {
+
+  if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
+{
+  throw new NotFoundException();
+}
+// on vérifie si je peux voir le profil
+
+if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
+{
+$no_see = 1; // interdiction de voir
+$this->set('no_see', $no_see);
+}
+
+}
+
+if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+{
+
+    // on récupère toutes les informations du tweets contenant #mot-clé
+
+    $this->set('media_tweet', $this->paginate($this->Tweets->find()->select([
+                                                                                    'Tweets.id_tweet',
+                                                                                    'Tweets.username',
+                                                                                    'Tweets.contenu_tweet',
+                                                                                    'Tweets.created',
+                                                                                    'Tweets.nb_commentaire',
+                                                                                    'Tweets.nb_partage',
+                                                                                    'Tweets.nb_like',
+                                                    ])
+                                            ->where(['Tweets.username' => $this->request->getParam('username'),'Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"'])
+                                            ->order(['created' => 'DESC'])
+                                          ));
+
+
+    }
+
+}
+
+
     /**
      * méthode add : ajout d'un nouveau tweet
      *
@@ -150,9 +225,12 @@ class TweetsController extends AppController
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
+
             $tweet = $this->Tweets->newEmptyEntity(); // création d'une nouvelle entité
 
             $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
+
+
 
             if(AppController::get_type_profil($this->Auth->user('username')) == 'prive') // su profil prive et non abonné
           {
@@ -164,6 +242,17 @@ class TweetsController extends AppController
           }
             $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
 
+
+
+            if($this->request->getData('tweetmedia')->getError() != 4)
+          {
+
+
+            $contenu_tweet = AppController::uploadfiletweet($this->request->getData('tweetmedia'), $contenu_tweet,$idtweet); // traitement de l'envoi du fichier et mise à jour du contenu du tweets
+
+
+        }
+
             $data = array(
                             'id_tweet' => $idtweet,
                             'username' => $this->Auth->user('username'),
@@ -174,6 +263,8 @@ class TweetsController extends AppController
                             'private' =>$private,
                             'allow_comment' => 0
                             );
+
+
 
             $tweet = $this->Tweets->patchEntity($tweet, $data); // sauvegarde de la nouvelle entité
 
@@ -194,6 +285,10 @@ class TweetsController extends AppController
                 // renvoi d'une réponse JSON
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($tweet));
+            }
+            else {
+              return $this->response->withType('application/json')
+                                      ->withStringBody(json_encode(['result' => 'notweet']));
             }
         }
 
@@ -225,14 +320,27 @@ class TweetsController extends AppController
 
             $rowCount = $statement->rowCount();
 
-            if ($rowCount == 1) { // la ligne à était supprimée
+            if ($rowCount == 1) // la ligne à était supprimée
+          {
 
+              // suppression d'un éventuel média associé
+
+              $name = WWW_ROOT . 'img/media/'.$this->Auth->user('username').'/'.$idtweet.''; // media contenant l'id du tweet supprimé
+
+              $files = glob($name . '*');
+
+                if($files) // si ce fichier existe, on le supprime
+              {
+
+                unlink($files[0]);
+
+              }
                     return $this->response->withStringBody('tweetsupprime'); //renvoid'une réponse au format TEXT
-            }
-            elseif ($rowCount == 0) { // ligne non suppriméeou inexistante
-
+          }
+            elseif ($rowCount == 0) // ligne non supprimée ou inexistante
+          {
                 return $this->response->withStringBody('tweetnonsupprime'); // renvoi d'une réponse au format TEXT
-            }
+          }
     }
                 else // en cas de non requête AJAX on lève une exception 404
         {

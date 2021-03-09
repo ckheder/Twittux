@@ -82,7 +82,6 @@ class TweetsTable extends Table
 
         $validator
             ->scalar('contenu_tweet')
-            ->maxLength('contenu_tweet', 255)
             ->requirePresence('contenu_tweet', 'create')
             ->notEmptyString('contenu_tweet');
 

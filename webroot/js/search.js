@@ -85,6 +85,19 @@ if(e.target.id){
                               URL = '/twittux/search/hashtag/'+keyword+'?sort=created&direction=desc';
                             }
   							break;
+
+      case "searchmediapics": // tweets avec média
+                              if(currenturl === 'search') // page de recherche classiqie
+                            {
+            							      URL = '/twittux/search/media/'+keyword+'';
+                            }
+                              else // page de recherche hashtag sur le contenu des tweets
+                            {
+                              keyword = keyword.replace(regexp, '$1');
+
+                              URL = '/twittux/search/hashtag/media/'+keyword+'';
+                            }
+            							break;
   	}
 
   	document.getElementById("result_search").innerHTML = ""; // on vide la div d'affichage des résultats
@@ -112,7 +125,7 @@ if(e.target.id){
     // affichage d'erreur si besoin
 
     .catch(function(err) {
-  	                       console.log("fail" + err);
+  	                       console.log(err);
   	});
 }
 })

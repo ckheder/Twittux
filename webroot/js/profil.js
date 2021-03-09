@@ -6,7 +6,28 @@
  */
 
   const zone_abo = document.querySelector('#zone_abo'); // zone contentna t les boutons d'abonnement, suppression ou demande
+
   var URL; // URL à atteindre suivant le type de suppression d'un tweet : tweet personnel ou tweet partagé
+
+  const spinner = document.getElementById("spinner"); // div qui accueuillera le spinner de chargement des données via AJAX
+
+  const navAnchor = document.querySelectorAll('.tablinktweet'); // liste de tous les liens du menu pour permettre de surligner le lien actif
+
+  // surlignage
+
+  // ajout d'un écouteur de clique sur chaque lien du menu
+
+  navAnchor.forEach(anchor => {
+    anchor.addEventListener('click', addActive);
+  })
+
+  // on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
+
+  function addActive(e) {
+    const current = document.querySelector('.tablinktweet.w3-red');
+    current.className = current.className.replace("w3-red", "");
+    e.target.className += " w3-red";
+  }
 
  //menu déroulant tweet
 
@@ -14,6 +35,62 @@
 
     document.getElementById("btntweet"+id).classList.toggle("show");
 }
+
+// naviguer entre les tweet et les tweets avec media
+
+document.addEventListener('click',function(e){
+
+  var url_tweet; // URL de rercherche à charger suivant l'onglet cliqué
+
+  if(e.target.id)
+{
+
+    if(e.target.id == 'showtweets') // URL d'affichage de tous les tweets d'une personne
+  {
+
+    url_tweet = '/twittux/'+username+'';
+
+  }
+    else if (e.target.id === 'showmediatweets') // URL d'affichage de tous les tweets d'une personne contenant un média uploadé
+  {
+
+    url_tweet = '/twittux/'+username+'/media';
+
+  }
+    else
+  {
+      return;
+  }
+
+  	document.getElementById("list_tweet_"+username+"").innerHTML = ""; // on vide la div d'affichage des tweets
+
+    spinner.removeAttribute('hidden'); // affichage du spinner de chargement
+
+    fetch(url_tweet, { // URL à charger dans la div précédente
+
+                headers: {
+                            'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                          }
+              })
+
+    .then(function (data) {
+                            return data.text();
+                          })
+    .then(function (html) {
+
+	   spinner.setAttribute('hidden', ''); // disparition du spinner
+
+    document.getElementById("list_tweet_"+username+"").innerHTML = html; // chargement de la réponse dans la div précédente
+
+    })
+
+    // affichage d'erreur si besoin
+
+    .catch(function(err) {
+  	                       console.log(err);
+  	});
+}
+})
 
 // supprimer un tweet
 
@@ -469,7 +546,7 @@ document.addEventListener('click',function(e){
 // notification d'échec : problème technique, serveur,...
 
         alertbox.show('<div class="w3-panel w3-red">'+
-                      '<p>Impossible de supprimer ce commentaire.</p>'+
+                      '<p>Impossible de rejoindre cette conversation.</p>'+
                     '</div>.');
 
     });

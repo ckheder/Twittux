@@ -1,4 +1,5 @@
 <?php
+use Cake\Routing\Router;
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -39,15 +40,48 @@
 
         <?= $this->element('modaltweet') ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
+        <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
 
         <?= $this->Flash->render();?>
 
           <?= $this->cell('Users',['username' => $this->request->getParam('username'), 'authname' => $authName]); ?>
 
-          <?= $this->fetch('content') ?>
+          <div class="w3-col m7">
 
-    </div>
+            <div class="w3-container">
+
+              <div class="w3-bar w3-light-grey w3-margin-top">
+
+                <!-- bouton de tri sur les tweets -->
+
+                <button id="showtweets" class="w3-bar-item w3-button tablinktweet w3-red">Tweets</button>
+
+                <button id="showmediatweets" class="w3-bar-item w3-button tablinktweet">Média</button>
+
+              </div>
+
+            </div>
+
+        <div hidden id="spinner"></div> <!-- image de chargement des données -->
+
+          <div id="list_tweet_<?= $this->request->getParam('username') ?>">
+
+            <?= $this->fetch('content') ?>
+
+          </div>
+
+
+        </div>
+
+<!-- Right Column -->
+
+  <div class="w3-col m2" style="margin-top:16px">
+
+<!-- End Right Column -->
+
+  </div>
+
+  </div>
 
         <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
             <?= $this->Html->scriptBlock(sprintf(
@@ -56,6 +90,12 @@
                                               )); ?>
 
 <!-- script JS -->
+
+<script>
+
+  var username = "<?= $this->request->getParam('username') ?>"; // utlisateur courant
+
+</script>
 
         <?= $this->Html->script('profil.js'); ?> <!-- supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
 

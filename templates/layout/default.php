@@ -20,7 +20,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>     
+    <title>
         Bienvenue sur Twittux
     </title>
     <?= $this->Html->meta('favicon.ico','img/favicon.ico', ['type' => 'icon']); ?>
@@ -34,16 +34,16 @@
     <div class="w3-content" style="max-width:1400px">
 
         <div class="w3-row">
-        
+
             <?= $this->fetch('content') ?>
 
             <?= $this->element('modallogin') ?><!-- fenêtre modale de connexion -->
-        
+
         </div>
 
 <footer class="w3-container w3-dark-grey">
 
-    <p class="w3-center">Conditions d'utilisation - Contribuer - Contact © 2020 Christophe KHEDER. Tous droits réservés.</p>
+    <p class="w3-center">Conditions d'utilisation - Contribuer - Contact © 2021 Christophe KHEDER. Tous droits réservés.</p>
 
 </footer>
 

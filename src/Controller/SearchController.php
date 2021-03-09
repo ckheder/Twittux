@@ -72,6 +72,43 @@ use Cake\Http\Exception\NotFoundException;
 
     }
 
+    /**
+     * Méthode média : afficher les tweets contenant un média uploadé
+     *
+     * Paramètres : $id -> identifiant donné en URL
+     *
+     */
+        public function media()
+    {
+
+        if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+      {
+        $this->viewBuilder()->setLayout('ajax');
+      }
+        else
+      {
+        $this->viewBuilder()->setLayout('search'); // sinon le layout 'search'
+      }
+
+      $keyword = $this->request->GetParam('query'); // mot-clé pour la recherche
+
+      // on récupère toutes les informations du tweets contenant #mot-clé
+
+      $this->set('resultat_tweet_media', $this->paginate($this->Tweets->find()->select([
+                                                                                      'Tweets.id_tweet',
+                                                                                      'Tweets.username',
+                                                                                      'Tweets.contenu_tweet',
+                                                                                      'Tweets.created',
+                                                                                      'Tweets.nb_commentaire',
+                                                                                      'Tweets.nb_partage',
+                                                                                      'Tweets.nb_like',
+                                                      ])
+                                              ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"','MATCH (Tweets.contenu_tweet,Tweets.username) AGAINST(:search)'])
+                                              ->where(['private' => 0])
+                                              ->bind(':search', $keyword)));
+
+      }
+
       /**
      * Méthode searchusers
      *
@@ -143,6 +180,46 @@ use Cake\Http\Exception\NotFoundException;
                                                 ->where(['private' => 0])));
 
     }
+
+    /**
+* Méthode mediahashtag
+*
+* Recherche les tweets avec média (photo) contenant le #$keyword
+*
+*/
+
+        public function mediahashtag()
+      {
+          if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+
+        {
+          $this->viewBuilder()->setLayout('ajax');
+        }
+
+          else
+        {
+          $this->viewBuilder()->setLayout('search');
+        }
+
+          $keyword = preg_replace('/#([^\s]+)/','$1',$this->request->GetParam('query')); // suppression du # dans le mot clé
+
+          $this->set('title', 'Hashtag '.$keyword.' sur Twittux'); // titre de la page
+
+          // on récupère toutes les informations du tweets contenant #mot-clé
+
+          $this->set('resultat_tweet_hashtag_media', $this->paginate($this->Tweets->find()->select([
+                                                                                                    'Tweets.id_tweet',
+                                                                                                    'Tweets.username',
+                                                                                                    'Tweets.contenu_tweet',
+                                                                                                    'Tweets.created',
+                                                                                                    'Tweets.nb_commentaire',
+                                                                                                    'Tweets.nb_partage',
+                                                                                                    'Tweets.nb_like',
+                                                                                                  ])
+                                                                                            ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"','Tweets.contenu_tweet REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]'])
+                                                                                            ->where(['private' => 0])));
+
+      }
 
     /**
      * Méthode userhashtag
