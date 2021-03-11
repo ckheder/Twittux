@@ -164,10 +164,9 @@ form_tweet.addEventListener('submit',  function (e) { // on capte l'envoi du for
   return;
 }
 
-
   button_submit_tweet.disabled = true // désactivation du bouton
 
-  button_submit_tweet.textContent = 'Chargement...' // mise à jour du texte du bouton
+  button_submit_tweet.textContent = 'Publication en cours...' // mise à jour du texte du bouton
 
     let data = new FormData(this) // on récupère les données du formulaire
 

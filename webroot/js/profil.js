@@ -9,7 +9,7 @@
 
   var URL; // URL à atteindre suivant le type de suppression d'un tweet : tweet personnel ou tweet partagé
 
-  const spinner = document.getElementById("spinner"); // div qui accueuillera le spinner de chargement des données via AJAX
+  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
   const navAnchor = document.querySelectorAll('.tablinktweet'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 

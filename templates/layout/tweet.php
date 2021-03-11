@@ -60,9 +60,9 @@ use Cake\Routing\Router;
 
               </div>
 
-            </div>
+              <div hidden class="spinner"></div> <!-- image de chargement des données -->
 
-        <div hidden id="spinner"></div> <!-- image de chargement des données -->
+            </div>
 
           <div id="list_tweet_<?= $this->request->getParam('username') ?>">
 

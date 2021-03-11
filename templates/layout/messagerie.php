@@ -56,7 +56,7 @@
 
                 </div>
 
-                <div hidden id="spinnerloadconversation"></div> <!-- spinner de chargement de la liste des conversations -->
+                <div hidden class="spinner"></div> <!-- spinner de chargement de la liste des conversations -->
 
               <div id = "listconv">
 

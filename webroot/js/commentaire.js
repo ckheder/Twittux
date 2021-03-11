@@ -115,6 +115,15 @@ form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du
   })
     .then(function(jsonData) {
 
+      if(jsonData.result == 'nocomm') // echec envoi du commentaire
+    {
+      alertbox.show('<div class="w3-panel w3-red">'+
+                    '<p>Impossible de commenter ce tweet.</p>'+
+                    '</div>.');
+    }
+      else 
+    {
+
 var el = document.getElementById("list_comm"); // récupération de la div ou l'on va insérer le nouveau commentaire
 
 //insertion du nouveau commentaire au tout début de la div
@@ -147,7 +156,7 @@ form_comm.reset()
   										'<p>Commentaire posté.</p>'+
 										'</div>.');
 
-
+}
     }).catch(function(err) {
 
 // notification d'échec

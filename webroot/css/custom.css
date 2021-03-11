@@ -228,9 +228,9 @@ color: #737373;
 
 /* spinner de chargement des données AJAX */
 
-/* spinner chargement d'une conversation */
+/* spinner chargement de la liste des conversations, du changement de page sur la page tweet, moteur de recherche, page d'acceuil */
 
-#spinnerconv:not([hidden]) {
+.spinner:not([hidden]) {
   position: relative;
   top: 0;
   left: 0;
@@ -241,7 +241,7 @@ color: #737373;
   align-items: center;
 }
 
-#spinnerconv::after {
+.spinner::after {
   content: "";
   width: 80px;
   height: 80px;
@@ -254,7 +254,7 @@ color: #737373;
 
 /* spinner chargement de la liste des conversations */
 
-#spinnerloadconversation::after {
+#spinnerconv::after {
   content: "";
   width: 80px;
   height: 80px;
@@ -265,7 +265,7 @@ color: #737373;
   animation: spin 1s infinite linear
 }
 
-#spinnerloadconversation:not([hidden]) {
+#spinnerconv:not([hidden]) {
   position: relative;
   top: 0;
   left: 0;

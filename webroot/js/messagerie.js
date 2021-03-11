@@ -17,6 +17,8 @@ const menuemojimessage = document.getElementById("menuemojimessage"); //div cont
 
 const listconv = document.getElementById("listconv"); // div contenant la liste des conversations
 
+const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
+
 const spaninputadduser = document.querySelector('#inputadduser'); // zone située dans le fenetre modale d'envoi d'invitation à rejojndre une conversation, remplie dynamiquement en javascript
 
 // detetction mobile
@@ -50,7 +52,7 @@ listconv.addEventListener("load", loadconv());
 
 function loadconv() {
 
-spinnerloadconversation.removeAttribute('hidden'); // affichage du spinner de chargement
+spinner.removeAttribute('hidden'); // affichage du spinner de chargement
 
   fetch('/twittux/messagerie/listconv', { // URL à charger dans la div précédente
 
@@ -64,7 +66,7 @@ spinnerloadconversation.removeAttribute('hidden'); // affichage du spinner de ch
                         })
   .then(function (html) {
 
-spinnerloadconversation.setAttribute('hidden', ''); // disparition du spinner
+spinner.setAttribute('hidden', ''); // disparition du spinner
 
 listconv.innerHTML = html; // chargement de la réponse dans la div précédente
 
@@ -198,6 +200,8 @@ navAnchor.forEach(anchor => {
     .then(function (html) {
 
 	   spinnerconv.setAttribute('hidden', ''); // disparition du spinner
+
+
 
      btnoptionconv.removeAttribute('hidden'); // affichage du bouton d'option dans une conversation
 

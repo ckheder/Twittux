@@ -75,6 +75,12 @@ class CommentairesController extends AppController
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($commentaire));
             }
+              elseif (!$this->Commentaires->save($commentaire)) // echec de l'envoi du commentaire
+            {
+              
+              return $this->response->withType('application/json')
+                                      ->withStringBody(json_encode(['result' => 'nocomm']));
+            }
 
          }
 
