@@ -6,12 +6,10 @@
  *
  */ -->
 
-    <div class="w3-col m7">
 
-      <div class="w3-row-padding">
 
-            <div class="w3-container w3-padding">
-              <div id="list_actu_online">
+
+
 <!--zone de notification -->
                   <div id="alert-area" class="alert-area"></div>
 <!--fin zone de notification  -->
@@ -28,7 +26,7 @@
 
           foreach ($actu as $actu): ?>
 
-<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round">
+<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin">
 
 <!-- bouton de dropdown  : signaler un post, ne plus suivre -->
 
@@ -154,7 +152,3 @@
  <?php
 
         } ?>
- </div>
-</div>
-</div>
-</div>

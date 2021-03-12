@@ -357,9 +357,17 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
         public function actualites()
     {
 
-        $this->viewBuilder()->setLayout('news');
+      if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+  {
+      $this->viewBuilder()->setLayout('ajax');
+  }
+      else
+  {
+    $this->viewBuilder()->setLayout('news');
 
-        $this->set('title', 'Twittux | Actualités'); // titre de la page
+    $this->set('title', 'Twittux | Actualités'); // titre de la page
+    
+  }
 
         // Récupération de mes abonnements
 

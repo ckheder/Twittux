@@ -2,6 +2,82 @@
 // Gestion des actions sur la page d'actualités
 //
 
+//** VARIABLE **//
+
+const navAnchor = document.querySelectorAll('.tablinknews'); // liste de tous les liens du menu pour permettre de surligner le lien actif
+
+const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
+
+//**NAVIGATION **//
+
+// surlignage
+
+// ajout d'un écouteur de clique sur chaque lien du menu
+
+navAnchor.forEach(anchor => {
+  anchor.addEventListener('click', addActive);
+})
+
+// on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
+
+function addActive(e) {
+  const current = document.querySelector('.tablinknews.w3-red');
+  current.className = current.className.replace("w3-red", "");
+  e.target.className += " w3-red";
+}
+
+// naviguer entre les tweet et les tweets avec media
+
+document.addEventListener('click',function(e){
+
+  var url_news; // URL de rercherche à charger suivant l'onglet cliqué
+
+    if(e.target.id == 'showtmostrecentweets') // URL d'affichage de tous les tweets les plus récents
+  {
+
+    url_news = '/twittux/actualites?sort=created&direction=desc';
+
+  }
+    else if (e.target.id === 'showtmostcommentsweets') // URL d'affichage de tous les tweets les plus commenté
+  {
+
+    url_news = '/twittux/actualites?sort=nb_commentaire&direction=desc';
+
+  }
+    else
+  {
+      return;
+  }
+
+  	document.getElementById("list_actu_online").innerHTML = ""; // on vide la div d'affichage des tweets
+
+    spinner.removeAttribute('hidden'); // affichage du spinner de chargement
+
+    fetch(url_news, { // URL à charger dans la div précédente
+
+                headers: {
+                            'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                          }
+              })
+
+    .then(function (data) {
+                            return data.text();
+                          })
+    .then(function (html) {
+
+	   spinner.setAttribute('hidden', ''); // disparition du spinner
+
+    document.getElementById("list_actu_online").innerHTML = html; // chargement de la réponse dans la div précédente
+
+    })
+
+    // affichage d'erreur si besoin
+
+    .catch(function(err) {
+  	                       console.log(err);
+  	});
+})
+
 //** TWEET **//
 
  // menu déroulant tweet

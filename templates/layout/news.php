@@ -40,17 +40,43 @@
 
         <?= $this->element('modaltweet') ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+          <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
 
-        <div class="w3-row">
+            <!--
 
-          <?= $this->element('newsmenu') ?>
+            * Menu de tri des tweets sur la page d'actualités
+            *
+            */ -->
 
-          <?= $this->fetch('content') ?>
+             <div class="w3-col m3" style="margin-top:16px">
+
+            		<div class="w3-bar-block w3-white">
+
+            			<!-- lien de tri vers les plus récents -->
+
+                     <button id="showtmostrecentweets" class="w3-bar-item w3-button tablinknews w3-red"><i class="fas fa-clock"></i> Les plus récents</button>
+
+                 <!-- lien de tri vers les plus commentés -->
+
+                    	<button id="showtmostcommentsweets" class="w3-bar-item w3-button tablinknews"><i class="fas fa-comments"></i> Les plus commentés</a>
+
+           		</div>
+
+           	</div>
+
+            <div class="w3-col m7">
+
+              <div hidden class="spinner"></div> <!-- image de chargement des données -->
+
+                <div id="list_actu_online">
+
+                  <?= $this->fetch('content') ?>
+
+                </div>
+
+          </div>
 
         </div>
-
-    </div>
 
           <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
           <?= $this->Html->scriptBlock(sprintf(
