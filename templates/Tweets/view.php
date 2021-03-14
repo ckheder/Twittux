@@ -131,11 +131,15 @@
 
 <!--fin formulaire -->
 
+    <br />
+
+</div>
+
 <!--affichage des commentaires -->
 
 <div class="w3-center">
 
-    <br />
+  <br />
 
             <h5>
 
@@ -150,7 +154,7 @@
 
 <?php foreach ($commentaires as $commentaires) : ?>
 
-    <div style="word-wrap: break-word;" class="w3-container w3-card w3-round" id="comm<?= $commentaires->id_comm ?>"><br>
+    <div style="word-wrap: break-word;" class="w3-container w3-card w3-round w3-margin w3-white" id="comm<?= $commentaires->id_comm ?>"><br>
 
         <!--avatar -->
 
@@ -210,7 +214,7 @@
 
 <br />
 
-</div>
+
 
 <?php
 
