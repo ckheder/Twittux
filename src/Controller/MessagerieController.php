@@ -64,7 +64,7 @@ $this->loadComponent('Paginator');
 
           // si oui
 
-            if(AppController::isinconv($this->request->getParam('idconv'), $this->Auth->user('username')) == 'oui')
+            if(AppController::isinconv($this->request->getParam('idconv'), $this->Authentication->getIdentity()->username) == 'oui')
           {
 
             // récupération des messages paginés de la conversation par ordre décroisant
@@ -142,7 +142,7 @@ $this->loadComponent('Paginator');
        // tableau des données destinés à la création d'une nouvelle entité messagerie
 
           $data = array(
-                          'user_message' => $this->Auth->user('username'), // expediteur
+                          'user_message' => $this->Authentication->getIdentity()->username, // expediteur
                           'message' => AppController::linkify_content($this->request->getData('message')), // message
                           'conversation' => $conversation // conversation concerné
                           );
@@ -160,7 +160,7 @@ $this->loadComponent('Paginator');
               {
                 //tableau contenant les informations nécessaires
 
-                $data_new_conv = array('user_message' => $this->Auth->user('username'), // expediteur
+                $data_new_conv = array('user_message' => $this->Authentication->getIdentity()->username, // expediteur
                                       'conversation' => $conversation, // identifiant de conversation
                                       'destinataire' => $destinataire); // destinataire
 
@@ -244,7 +244,7 @@ $this->loadComponent('Paginator');
       INNER JOIN conversation C ON M.conversation = C.id_conv
       INNER join userconversation UC ON C.id_conv = UC.conversation
       INNER JOIN messagerie DM ON C.id_conv = DM.conversation AND M.max_date = DM.created
-      WHERE UC.user_conv = "'.$this->Auth->user('username').'"
+      WHERE UC.user_conv = "'.$this->Authentication->getIdentity()->username.'"
       ORDER BY DM.created DESC');
 
         $this->set('conv' , $conv); // renvoi de la liste des conversations
@@ -330,7 +330,7 @@ $otherparticipant = $this->Conversation
 $checkconv = $this->UserConversation
                 ->find()
                 ->select(['conversation'])
-                ->where(['user_conv' =>  $this->Auth->user('username') ]) // moi
+                ->where(['user_conv' =>  $this->Authentication->getIdentity()->username ]) // moi
                 ->andwhere(['conversation IN' => $otherparticipant]); //destinataire
 
 

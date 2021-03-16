@@ -51,7 +51,7 @@ class CommentairesController extends AppController
                             'id_comm' => $idcomm,
                             'commentaire' => AppController::linkify_content($this->request->getData('commentaire')),
                             'id_tweet' => $this->request->getData('id_tweet'),
-                            'username' => $this->Auth->user('username')
+                            'username' => $this->Authentication->getIdentity()->username
                             );
 
             $commentaire = $this->Commentaires->patchEntity($commentaire, $data);
@@ -59,7 +59,7 @@ class CommentairesController extends AppController
                 if ($this->Commentaires->save($commentaire))
             {
 
-                if($auttweet != $this->Auth->user('username')) // si le profil qui commente n'est pas celui qui est l'auteur du tweet
+                if($auttweet != $this->Authentication->getIdentity()->username) // si le profil qui commente n'est pas celui qui est l'auteur du tweet
               {
 
                 if(AppController::check_notif('commentaire', $auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de commentaire
@@ -77,7 +77,7 @@ class CommentairesController extends AppController
             }
               elseif (!$this->Commentaires->save($commentaire)) // echec de l'envoi du commentaire
             {
-              
+
               return $this->response->withType('application/json')
                                       ->withStringBody(json_encode(['result' => 'nocomm']));
             }
@@ -110,7 +110,7 @@ class CommentairesController extends AppController
           'DELETE FROM commentaires WHERE id_comm = :id_comm AND username = :username');
 
           $statement->bindValue('id_comm', $id_comm, 'string');
-          $statement->bindValue('username', $this->Auth->user('username'), 'string');
+          $statement->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
           $statement->execute();
 
           $rowCount = $statement->rowCount();

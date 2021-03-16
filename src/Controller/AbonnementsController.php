@@ -124,7 +124,7 @@ use Cake\Datasource\ConnectionManager;
             // vérification de l'existence d'un abonnement
 
             $check_abo  = $this->Abonnements->find()
-            ->where(['suiveur' => $this->Auth->user('username'), 'suivi' => $username])
+            ->where(['suiveur' => $this->Authentication->getIdentity()->username, 'suivi' => $username])
             ->count();
 
             // je suis déjà abonné , renvoi d'une réponse au format JSON
@@ -150,7 +150,7 @@ use Cake\Datasource\ConnectionManager;
                 $abonnement = $this->Abonnements->newEmptyEntity();
 
                 $data = array(
-                                'suiveur' => $this->Auth->user('username'), // moi
+                                'suiveur' => $this->Authentication->getIdentity()->username, // moi
                                 'suivi' =>  $username, // personne que je veut suivre
                                 'etat' => $etat
                             );
@@ -216,7 +216,7 @@ use Cake\Datasource\ConnectionManager;
             $statement = ConnectionManager::get('default')->prepare(
             'DELETE FROM abonnements WHERE suiveur = :suiveur AND suivi = :suivi AND etat = 0');
 
-            $statement->bindValue('suiveur', $this->Auth->user('username'), 'string');
+            $statement->bindValue('suiveur', $this->Authentication->getIdentity()->username, 'string');
             $statement->bindValue('suivi', $username, 'string');
             $statement->execute();
 
@@ -262,7 +262,7 @@ use Cake\Datasource\ConnectionManager;
             'DELETE FROM abonnements WHERE suiveur = :suiveur AND suivi = :suivi AND etat = 1');
 
 
-            $statement->bindValue('suiveur', $this->Auth->user('username'), 'string');
+            $statement->bindValue('suiveur', $this->Authentication->getIdentity()->username, 'string');
             $statement->bindValue('suivi', $username, 'string');
             $statement->execute();
 
@@ -295,7 +295,7 @@ use Cake\Datasource\ConnectionManager;
      *
      * Retourne la liste des demande d'abonnements (page accessible uniquement par moi)
      *
-     * Paramètre : $this->Auth->user('username') -> variable Auth contenant l'username
+     * Paramètre : $this->Authentication->getIdentity()->username -> variable Auth contenant l'username
      */
 
         public function demande()
@@ -318,7 +318,7 @@ use Cake\Datasource\ConnectionManager;
                     ['Users.username = (Abonnements.suiveur)']
                     )
 
-        ->where(['suivi' =>  $this->Auth->user('username'),'etat' => 0])
+        ->where(['suivi' =>  $this->Authentication->getIdentity()->username,'etat' => 0])
 
         ->order((['Users.username' => 'ASC']))
 
@@ -356,7 +356,7 @@ use Cake\Datasource\ConnectionManager;
                 'UPDATE abonnements SET etat = 1 WHERE suiveur = :suiveur AND suivi = :suivi');
 
                 $statement->bindValue('suiveur', $username, 'string');
-                $statement->bindValue('suivi', $this->Auth->user('username'), 'string');
+                $statement->bindValue('suivi', $this->Authentication->getIdentity()->username, 'string');
                 $statement->execute();
 
                 // récupération du nombre de ligne affectée: ici 1
@@ -381,7 +381,7 @@ use Cake\Datasource\ConnectionManager;
                 'DELETE FROM abonnements WHERE suiveur = :suiveur AND suivi = :suivi AND etat = 0');
 
                 $statement->bindValue('suiveur', $username, 'string');
-                $statement->bindValue('suivi', $this->Auth->user('username'), 'string');
+                $statement->bindValue('suivi', $this->Authentication->getIdentity()->username, 'string');
                 $statement->execute();
 
                 // récupération du nombre de ligne affectée: ici 1

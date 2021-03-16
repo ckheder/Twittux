@@ -53,7 +53,7 @@ class UserConversationController extends AppController
 
     $statement->bindValue('action', $action);
     $statement->bindValue('idconv', $idconv);
-    $statement->bindValue('user_conv', $this->Auth->user('username'), 'string');
+    $statement->bindValue('user_conv', $this->Authentication->getIdentity()->username, 'string');
     $statement->execute();
 
     $rowCount = $statement->rowCount();
@@ -104,7 +104,7 @@ class UserConversationController extends AppController
       if($this->isinconv($conversation, $invituser) === 'non')
     {
 
-    $data = array('whoinvit' => $this->Auth->user('username'), // compte courant invitant
+    $data = array('whoinvit' => $this->Authentication->getIdentity()->username, // compte courant invitant
                   'usertoinvit' => $invituser, // personne invitée
                   'conversation' => $conversation, // identifiant de la conversation
                   'typeconv' => $typeconv);
@@ -164,7 +164,7 @@ class UserConversationController extends AppController
 
   // vérifie si pas déjà dans le cas d'un reclique sur le lien de la notification
 
-      if(AppController::isinconv($idconv, $this->Auth->user('username')) === 'non')
+      if(AppController::isinconv($idconv, $this->Authentication->getIdentity()->username) === 'non')
     {
 
       // création d'une nouvelle entitée UserConversation
@@ -172,7 +172,7 @@ class UserConversationController extends AppController
       $conversation = $this->UserConversation->newEmptyEntity();
 
       $data = array(
-                      'user_conv' =>  $this->Auth->user('username'),
+                      'user_conv' =>  $this->Authentication->getIdentity()->username,
                       'conversation' => $idconv,
                       'visible' => 'oui' // conversation viusible par défaut
                   );
@@ -206,7 +206,7 @@ class UserConversationController extends AppController
 
 //si déjà dans la conversation car clique depuis la notification plusieurs fois
 
-      elseif (AppController::isinconv($idconv, $this->Auth->user('username')) === 'oui')
+      elseif (AppController::isinconv($idconv, $this->Authentication->getIdentity()->username) === 'oui')
     {
 
   return $this->response->withType('application/json')

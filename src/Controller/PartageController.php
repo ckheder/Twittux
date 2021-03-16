@@ -43,7 +43,7 @@ class PartageController extends AppController
             // vérification d'un partage existant
 
             $query_share = $this->Partage->find()->select(['id_partage'])->where([
-                                                                            'username' => $this->Auth->user('username'),
+                                                                            'username' => $this->Authentication->getIdentity()->username,
                                                                             'id_tweet' => $jsonData->idtweet]);
 
                     if($query_share->isEmpty()) // pas de partage existant
@@ -54,7 +54,7 @@ class PartageController extends AppController
                 $share = $this->Partage->newEmptyEntity();
 
                 $data = array(
-                                'username' => $this->Auth->user('username'), // utilisateur qui partage
+                                'username' => $this->Authentication->getIdentity()->username, // utilisateur qui partage
                                 'id_tweet' => $jsonData->idtweet // identifiant du tweet
 
                             );
@@ -115,7 +115,7 @@ class PartageController extends AppController
             'DELETE FROM partage WHERE username = :username AND id_tweet = :idtweet');
 
 
-            $statement->bindValue('username', $this->Auth->user('username'), 'string');
+            $statement->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
             $statement->bindValue('idtweet', $idtweet, 'string');
             $statement->execute();
 

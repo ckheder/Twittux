@@ -25,7 +25,7 @@ class AimeController extends AppController
     {
 
         $this->viewBuilder()->setLayout('ajax');
-      
+
         // récupération des informations sur les personnes que je suis
 
             $username_like = $this->Aime->find()
@@ -53,7 +53,7 @@ class AimeController extends AppController
             // vérification d'un like existant
 
             $query_like = $this->Aime->find()->select(['id_like'])->where([
-                                                                            'username' => $this->Auth->user('username'),
+                                                                            'username' => $this->Authentication->getIdentity()->username,
                                                                             'id_tweet' => $jsonData]);
 
                 if($query_like->isEmpty()) // pas de like existant
@@ -62,16 +62,16 @@ class AimeController extends AppController
                 $aime = $this->Aime->newEmptyEntity();
 
                     $data = array(
-                                    'username' => $this->Auth->user('username'),
+                                    'username' => $this->Authentication->getIdentity()->username,
                                     'id_tweet' => $jsonData
-                            
+
                                 );
-                           
+
                 $aime = $this->Aime->patchEntity($aime, $data);
 
                     // ajout d'un like
 
-                if ($this->Aime->save($aime)) 
+                if ($this->Aime->save($aime))
             {
                 return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'addlike']));
              }
@@ -86,8 +86,8 @@ class AimeController extends AppController
             else
         {
             // récupération du l'identifiant du like existant
-            
-            foreach ($query_like as $query_like) 
+
+            foreach ($query_like as $query_like)
         {
             $id_like = $query_like['id_like'];
         }
@@ -98,11 +98,11 @@ class AimeController extends AppController
 
                 if ($result) // suppression d'un like , renvoi d'une réponse au format JSON
             {
-                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'dislike']));                         
+                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'dislike']));
             }
                 else // échec suppression, renvoi d'une réponse au format JSON
             {
-                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'probleme']));                          
+                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'probleme']));
             }
     }
 }

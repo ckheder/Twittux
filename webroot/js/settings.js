@@ -23,11 +23,11 @@ document.querySelectorAll("#confirmemail, #confirmpassword").forEach(item => {
 
 let form_settings = document.querySelector('#form_settings'); // récupération du formulaire
 
-let inputfile = document.getElementById('submittedfile'); // input file (avatar)
+let inputavatar = document.getElementById('submittedfile'); // input file (avatar)
 
 //preview de l'Avatar
 
-inputfile.addEventListener('change', (event) => {
+inputavatar.addEventListener('change', (event) => {
 
      var imgPath = event.target;
 
@@ -68,7 +68,7 @@ alertbox.show('<div class="w3-panel w3-red">'+
                     '<p>Ce fichier est trop gros.</p>'+
                   '</div>.');
 
-                  inputfile.value = ""; // on vide l'input
+                  inputavatar.value = ""; // on vide l'input
        }
      } else {
 
@@ -77,7 +77,7 @@ alertbox.show('<div class="w3-panel w3-red">'+
 alertbox.show('<div class="w3-panel w3-red">'+
                     '<p>Seuls les fichiers Jpeg sont autorisés.</p>'+
                   '</div>.');
-                  inputfile.value = "";
+                  inputavatar.value = "";
      }
  });
 
@@ -97,7 +97,7 @@ form_settings.addEventListener('submit', function (e) { // on capte l'envoi du f
 
 // test tous les champs vide
 
-  if (!input_password && !input_confirm_password && !input_mail && !input_confirm_mail && !description && !lieu && !website && !inputfile.value)
+  if (!input_password && !input_confirm_password && !input_mail && !input_confirm_mail && !description && !lieu && !website && !inputavatar.value)
 {
   return;
 }
@@ -209,7 +209,7 @@ case "updateok": // mise à jour d'information réussie
 
 form_settings.reset();
 
-inputfile.value = ""; // on vide l'input file
+inputavatar.value = ""; // on vide l'input file
 
 //notification de réussite
 

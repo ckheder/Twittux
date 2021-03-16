@@ -40,7 +40,7 @@ class SettingsController extends AppController
             'UPDATE settings SET type_profil = :data WHERE username = :username');
 
             $statement->bindValue('data', $data, 'string');
-            $statement->bindValue('username', $this->Auth->user('username'), 'string');
+            $statement->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
             $statement->execute();
 
             $rowCount = $statement->rowCount();
@@ -62,7 +62,7 @@ class SettingsController extends AppController
                 'UPDATE tweets SET private = :prive WHERE username = :username');
 
                 $updatetweet->bindValue('prive', $prive, 'integer');
-                $updatetweet->bindValue('username', $this->Auth->user('username'), 'string');
+                $updatetweet->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
                 $updatetweet->execute();
 
                 $rowCount = $updatetweet->rowCount();
@@ -104,7 +104,7 @@ class SettingsController extends AppController
                 'UPDATE settings SET '.$type_notif.' = :choix WHERE username = :username');
 
                 $statement->bindValue('choix', $choix, 'string');
-                $statement->bindValue('username', $this->Auth->user('username'), 'string');
+                $statement->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
                 $statement->execute();
 
                 $rowCount = $statement->rowCount();

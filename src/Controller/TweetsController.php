@@ -39,6 +39,8 @@ class TweetsController extends AppController
         $TweetsListener = new TweetsListener();
 
         $this->getEventManager()->on($TweetsListener);
+
+        $this->Authentication->allowUnauthenticated(['view', 'index']);
     }
 
     /**
@@ -60,7 +62,7 @@ class TweetsController extends AppController
       $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
   }
 
-      if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
+      if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
     {
 
           if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
@@ -115,7 +117,7 @@ class TweetsController extends AppController
 
         $tweet = $this->Tweets->get($id); // on récupère les infos du tweet
 
-          if($tweet->username != $this->Auth->user('username')) // si je ne suis pas l'auteur du tweet
+          if($tweet->username != $this->Authentication->getIdentity()->username) // si je ne suis pas l'auteur du tweet
         {
 
             if(AppController::get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // sur profil prive et non abonné
@@ -174,7 +176,7 @@ class TweetsController extends AppController
 
 
 
-    if($current_user != $this->Auth->user('username')) // si je ne suis pas sur mon profil
+    if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
   {
 
   if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
@@ -232,7 +234,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
 
 
-            if(AppController::get_type_profil($this->Auth->user('username')) == 'prive') // su profil prive et non abonné
+            if(AppController::get_type_profil($this->Authentication->getIdentity()->username) == 'prive') // su profil prive et non abonné
           {
 
             $private = 1; // tweet prive
@@ -255,7 +257,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
             $data = array(
                             'id_tweet' => $idtweet,
-                            'username' => $this->Auth->user('username'),
+                            'username' => $this->Authentication->getIdentity()->username,
                             'contenu_tweet' => AppController::linkify_content($contenu_tweet),
                             'nb_commentaire' =>0,
                             'nb_partage' =>0,
@@ -315,7 +317,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
 
             $statement->bindValue('id_tweet', $idtweet, 'integer');
-            $statement->bindValue('username', $this->Auth->user('username'), 'string');
+            $statement->bindValue('username', $this->Authentication->getIdentity()->username, 'string');
             $statement->execute();
 
             $rowCount = $statement->rowCount();
@@ -325,7 +327,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
               // suppression d'un éventuel média associé
 
-              $name = WWW_ROOT . 'img/media/'.$this->Auth->user('username').'/'.$idtweet.''; // media contenant l'id du tweet supprimé
+              $name = WWW_ROOT . 'img/media/'.$this->Authentication->getIdentity()->username.'/'.$idtweet.''; // media contenant l'id du tweet supprimé
 
               $files = glob($name . '*');
 
@@ -366,7 +368,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
     $this->viewBuilder()->setLayout('news');
 
     $this->set('title', 'Twittux | Actualités'); // titre de la page
-    
+
   }
 
         // Récupération de mes abonnements
@@ -375,7 +377,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
                                                 ->select(['suivi'])
 
-                                                ->where(['Abonnements.suiveur' =>  $this->Auth->user('username'), 'etat' => 1]);
+                                                ->where(['Abonnements.suiveur' =>  $this->Authentication->getIdentity()->username, 'etat' => 1]);
 
         // Récupération des posts ddes personnes se trouvant dans les résultats de la requête précédente
 
@@ -475,7 +477,7 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
                 {
                   $check_abo = $this->Abonnements->find()
 
-                                                    ->where(['suiveur' => $this->Auth->user('username'), 'suivi' => $username, 'etat' => 1])
+                                                    ->where(['suiveur' => $this->Authentication->getIdentity()->username, 'suivi' => $username, 'etat' => 1])
 
                                                     ->count();
 

@@ -28,7 +28,7 @@ class NotificationsController extends AppController
     // Récupération de mes notifications par odre décroissant de date
 
       $notifications = $this->Notifications->find()
-                                            ->where(['user_notif' =>  $this->Auth->user('username') ])
+                                            ->where(['user_notif' =>  $this->Authentication->getIdentity()->username ])
                                             ->order(['created'=> 'DESC']);
 
 
@@ -95,7 +95,7 @@ class NotificationsController extends AppController
                 $statement = ConnectionManager::get('default')->prepare(
                 'DELETE FROM notifications WHERE user_notif = :usernotif AND id_notif = :idnotif');
 
-                $statement->bindValue('usernotif', $this->Auth->user('username'), 'string');
+                $statement->bindValue('usernotif', $this->Authentication->getIdentity()->username, 'string');
                 $statement->bindValue('idnotif', $this->request->input('json_decode')->id_notif);
                 $statement->execute();
 
@@ -121,7 +121,7 @@ class NotificationsController extends AppController
                 $statement = ConnectionManager::get('default')->prepare(
                 'UPDATE notifications SET statut = 1 WHERE user_notif =  :usernotif');
 
-                $statement->bindValue('usernotif', $this->Auth->user('username'), 'string');
+                $statement->bindValue('usernotif', $this->Authentication->getIdentity()->username, 'string');
                 $statement->execute();
 
                 $rowCount = $statement->rowCount();
@@ -146,7 +146,7 @@ class NotificationsController extends AppController
                 $statement = ConnectionManager::get('default')->prepare(
                 'DELETE FROM notifications WHERE user_notif = :usernotif');
 
-                $statement->bindValue('usernotif', $this->Auth->user('username'), 'string');
+                $statement->bindValue('usernotif', $this->Authentication->getIdentity()->username, 'string');
                 $statement->execute();
 
                 $rowCount = $statement->rowCount();

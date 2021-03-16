@@ -54,32 +54,19 @@ class AppController extends Controller
          */
         //$this->loadComponent('FormProtection');
 
-        $this->loadComponent('Auth', [
+        // Instantiate the service
 
-            'authenticate' => [
-                'Form' => [
-                    'fields' => [
-                        'username' => 'username',
-                        'password' => 'password'
-                    ]
-                ]
-            ],
-            'authError' => 'Vous devez vous identifier pour voir cette page.',
-            'loginAction' => [
-                'controller' => 'users',
-                'action' => 'login'
-            ],
+        $this->loadComponent('Authentication.Authentication');
 
-             'logoutRedirect' => [
-                'controller' => 'Pages',
-                'action' => 'display',
-                'home'
-            ]
-        ]);
+        $this->Authentication->allowUnauthenticated(['display']); // on peut voir la page d'accueil en étant non authentifié
 
-        $this->Auth->allow(['display', 'view', 'index']);
+        if($this->Authentication->getIdentity()) // si l'utilisateur est connecté
+      {
 
-        $this->set('authName', $this->Auth->user('username')); // nom du connecté
+        $this->set('authName', $this->Authentication->getIdentity()->username); // nom du connecté
+
+      }
+
     }
 
     /**
@@ -271,7 +258,7 @@ class AppController extends Controller
 
               $upload = ''.$file_name.'.'. $extension.'';
 
-              $targetPath = 'img/media/'.$this->Auth->user('username').'/'.$upload.'';
+              $targetPath = 'img/media/'.$this->Authentication->getIdentity()->username.'/'.$upload.'';
 
             // déplacement fichier
 
@@ -279,7 +266,7 @@ class AppController extends Controller
 
             // mise à jour du contenu du tweet
 
-              $contenu = preg_replace('~\[image]([^{]*)\[/image]~i', '<img src="/twittux/img/media/'.$this->Auth->user('username').'/'.$upload.'"  width="100%" class="media_tweet" alt="image introuvable" />', $contenu);
+              $contenu = preg_replace('~\[image]([^{]*)\[/image]~i', '<img src="/twittux/img/media/'.$this->Authentication->getIdentity()->username.'/'.$upload.'"  width="100%" class="media_tweet" alt="image introuvable" />', $contenu);
 
             return $contenu;
             }

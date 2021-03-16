@@ -10,14 +10,10 @@ use \App\Model\Entity\User;
 $user = new User;
 
 ?>
-     <div class="w3-bar w3-black w3-border">
-  <a href="#" class="w3-bar-item w3-button w3-green"><i class="fa fa-globe"></i></a> 
-    <input type="text" class="w3-bar-item w3-input" placeholder="Recherche..">
-  <a href="#" class="w3-bar-item w3-button w3-green">Go</a>
-</div> 
+
  <div class="w3-row" style="border: 1px solid #e6ecf0;">
 
-<?= $this->Flash->render() ?>
+   <?= $this->Flash->render();?>
 
    <div class="w3-half w3-container">
 
@@ -53,7 +49,7 @@ $user = new User;
 
 		<p>
 
-        <a href="#">Mot de passe oublié ?</a>.
+        <a href="#">Mot de passe oublié ?</a>
 
     </p>
 
@@ -78,7 +74,7 @@ $user = new User;
       </div>
 
       <!-- formulaire inscription -->
-  
+
         <?= $this->Form->create($user, [
                                         'url' => ['controller' => 'Users', 'action' => 'add']
                                         ]);?>
@@ -118,10 +114,6 @@ $user = new User;
               <br />
   </div>
 
+</div>
+
 <!-- fin zone inscription -->
-
-
-
-
-
-  

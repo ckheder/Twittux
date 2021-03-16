@@ -35,7 +35,8 @@ class UsersController extends AppController
         public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['add', 'logout', 'delete','searchusers']);
+
+        $this->Authentication->allowUnauthenticated(['add', 'searchusers','login']);
     }
 
     /**
@@ -64,7 +65,7 @@ class UsersController extends AppController
                 if ($this->Users->save($user))
             {
 
-                $this->Auth->setUser($user); // on authentifie l'utilisateur directement
+                $this->Authentication->setIdentity($user); // connexion manuelle de l'utilisateur
 
                  // Création de la ligne settings, du dossier utilisateur, avatar par défaut
 
@@ -76,7 +77,7 @@ class UsersController extends AppController
 
                 // redirection vers le nouveau profil
 
-                return $this->redirect('/'.$this->Auth->user('username').'');
+                return $this->redirect('/'.$this->Authentication->getIdentity()->username.'');
 
             }
 
@@ -138,7 +139,7 @@ class UsersController extends AppController
                                               'notif_commentaire',
                                               'notif_abonnement'
                                           ])
-                    ->where(['username' => $this->Auth->user('username')]);
+                    ->where(['username' => $this->Authentication->getIdentity()->username]);
 
       foreach ($settings as $settings):
 
@@ -164,7 +165,7 @@ class UsersController extends AppController
 
         if ($this->request->is(['post'])) { // requête POST
 
-          $user = $this->Users->get($this->Auth->user('id')); // récupération de mes information
+          $user = $this->Users->get($this->Authentication->getIdentity()->id); // récupération de mes informations
 
           if(!empty($this->request->getData('submittedfile'))) // avatar envoyé
         {
@@ -193,7 +194,7 @@ class UsersController extends AppController
 
           $name = $avatar->getClientFilename();
 
-          $name = $this->Auth->user('username') . '.jpg';
+          $name = $this->Authentication->getIdentity()->username . '.jpg';
 
           $targetPath = 'img/avatar/'. $name.'';
 
@@ -301,15 +302,19 @@ class UsersController extends AppController
      public function delete()
     {
 
-      $user = $this->Users->get($this->Auth->user('id'));
+      // récupération de l'entité correspondant au profil courant cherchant à delete son compte
+
+      $user = $this->Users->get($this->Authentication->getIdentity()->id);
 
       // suppression avatar + suppression entité
 
-          if (unlink(WWW_ROOT . 'img/avatar/'.$this->Auth->user('username').'.jpg') AND rmdir(WWW_ROOT . 'img/media/'.$this->Auth->user('username').'') AND $this->Users->delete($user)) // suppression avatar + entitée
+          if (unlink(WWW_ROOT . 'img/avatar/'.$user->username.'.jpg') AND rmdir(WWW_ROOT . 'img/media/'.$user->username.'') AND $this->Users->delete($user)) // suppression avatar + entitée
         {
             $this->Flash->success(__('Compte supprimé avec succès.'));
 
-            return $this->redirect($this->Auth->logout()); // redirection vers l'accueuil
+            $this->Authentication->logout();
+
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
           else
@@ -330,25 +335,34 @@ class UsersController extends AppController
 
         $this->viewBuilder()->setLayout('login'); // définition du layout
 
-            if ($this->request->is('post')) // requête POST
+        $result = $this->Authentication->getResult(); // récupération du résultaty de l'authentification
+
+          if ($result->isValid()) // authentification réussie
         {
+          $user = $this->Authentication->getIdentity(); // on récupère l'identité du connecté
 
-        // Authentification
+          //  on récupère l'URL de provenance pour rediriger vers celle -ci après identification
 
-        $user = $this->Auth->identify();
+          $target = $this->Authentication->getLoginRedirect();
 
-                if ($user) // Authentification réussie
+              if (!$target) // je viens de la page d'accueil du site , je suis redirigé vers mon profil
             {
-                $this->Auth->setUser($user);
-                return $this->redirect('/'.$this->Auth->user('username').'');
-
+              return $this->redirect('/'.$user->username.'');
             }
 
-            $this->Flash->error('Votre identifiant ou votre mot de passe est incorrect.');
-
-            return $this->redirect('/');
-
+              else // je suis redirigé vers la page de provenance
+            {
+              return $this->redirect($target);
+            }
         }
+
+        //mot de passe /login incorrect
+
+          if ($this->request->is('post') && !$result->isValid())
+        {
+              $this->Flash->error('Nom d\'utilisateur ou mot de passe incorrect.');
+        }
+
     }
 
         /**
@@ -361,7 +375,9 @@ class UsersController extends AppController
     {
         $this->Flash->success('Vous avez été déconnecté.');
 
-        return $this->redirect($this->Auth->logout()); // redirection vers l'accueuil
+        $this->Authentication->logout();
+
+        return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
     }
 
     /**
@@ -376,7 +392,6 @@ class UsersController extends AppController
     {
          if ($this->request->is('ajax'))
         {
-
             $this->autoRender = false;
 
             $name = $this->request->getParam('query'); //terme tapé dans l'input de recherche
