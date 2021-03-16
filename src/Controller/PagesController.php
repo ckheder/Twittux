@@ -51,9 +51,7 @@ class PagesController extends AppController
 
         // si je suis authentifié et que je clique sur l'accueuil du site, je suis redirigé vers l'actualités
 
-        $result = $this->Authentication->getResult();
-
-          if ($result->isValid())
+          if ($this->Authentication->getIdentity())
         {
           return $this->redirect('/actualites');
         }
