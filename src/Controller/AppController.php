@@ -60,13 +60,6 @@ class AppController extends Controller
 
         $this->Authentication->allowUnauthenticated(['display']); // on peut voir la page d'accueil en étant non authentifié
 
-        if($this->Authentication->getIdentity()) // si l'utilisateur est connecté
-      {
-
-        $this->set('authName', $this->Authentication->getIdentity()->username); // nom du connecté
-
-      }
-
     }
 
     /**

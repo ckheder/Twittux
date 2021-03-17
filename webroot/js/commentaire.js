@@ -121,14 +121,14 @@ form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du
                     '<p>Impossible de commenter ce tweet.</p>'+
                     '</div>.');
     }
-      else 
+      else
     {
 
 var el = document.getElementById("list_comm"); // récupération de la div ou l'on va insérer le nouveau commentaire
 
 //insertion du nouveau commentaire au tout début de la div
 
-el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-round" id="comm'+ jsonData.id_comm+'"><br>'+
+el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-round w3-margin w3-white" id="comm'+ jsonData.id_comm+'"><br>'+
         		'<img src="/twittux/img/avatar/'+ jsonData.username+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
             '<div class="dropdown">'+
             '<button onclick="opencommoption('+ jsonData.id_comm+')" class="dropbtn">...</button>'+
