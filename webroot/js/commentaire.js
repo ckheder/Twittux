@@ -84,7 +84,7 @@ document.addEventListener('click',function(e){
 
 //ajout d'un commentaire
 
-  if(no_see == 0) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public
+  if(no_see == 0 && document.querySelector('#form_comm')) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public et que le formulaire existe (cas des tweets publics vu par un utilisateur offline)
 {
 
 let form_comm = document.querySelector('#form_comm') // récupération du formulaire

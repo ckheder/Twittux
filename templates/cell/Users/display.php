@@ -20,6 +20,9 @@
 
          <?php
 
+          if($authName) // si je suis authentifié , test de l'abonnement , envoi de message et blocage 
+         {
+
            if($this->request->getParam('username') != $authName) // si je suis pas sur mon profil
          {
 
@@ -55,6 +58,7 @@
          <?php
 
          }
+       }
 
          ?>
 

@@ -35,6 +35,9 @@
 
         <?php
 
+            if($authName) // si je suis authentifié, affichage du menu déroulant
+          {
+
         if($resultat_tweet_media->username != $authName)
       {
 
@@ -56,11 +59,13 @@
 
       }
 
+    }
+
     ?>
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $this->Html->link(''.h($resultat_tweet_media->username).'','/'.h($resultat_tweet_media->user_tweet).'') ?></h4>
+        <h4><?= $this->Html->link(''.h($resultat_tweet_media->username).'','/'.h($resultat_tweet_media->username).'') ?></h4>
 
         <!--date formatée -->
 
@@ -94,7 +99,7 @@
 
         <!-- affichage du nombre de commentaire -->
 
-  - <?= $resultat_tweet_media->nb_commentaire;?> Commentaire(s)
+  - <a href="/twittux/statut/<?= $resultat_tweet_media->id_tweet ;?>" class="w3-margin-bottom"><?= $resultat_tweet_media->nb_commentaire;?> Commentaire(s)</a>
 
         <!-- affichage du nombre de partage -->
 
@@ -102,13 +107,17 @@
 
 <hr>
 
+<?php if($authName) // si non auth, pas de comm
+{
+  ?>
+
 <!--boutons like, commentaire et partage -->
 
 <p>
 
         <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="/twittux/statut/<?= $resultat_tweet_media->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+
 
         <?php
 
@@ -122,6 +131,8 @@
       ?>
 
       </p>
+
+    <?php } ?>
 
 </div>
 

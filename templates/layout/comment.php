@@ -34,11 +34,26 @@
 
 <body>
 
-        <?= $this->element('navbar') ?>
+  <?php
 
-        <?= $this->element('modaltweet') ?>
+      if($authName) // si je suis connecté, chargement de la navbar et de la modal pour tweet
+    {
 
-    <div class="w3-container w3-content" style="margin-top:80px">
+      echo $this->element('navbar');
+
+      echo $this->element('modaltweet');
+
+    }
+      else // chargement de la navbar offline et de la modal de connexion
+    {
+      echo $this->element('offlinenavbar');
+
+      echo $this->element('modallogin') ;
+
+    }
+?>
+
+    <div class="w3-container w3-content" style="max-width:1400px;">
 
         <div class="w3-row">
 

@@ -3,24 +3,6 @@ use \App\Model\Entity\User;
 $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier de la validation du modèle User
 ?>
 
-<!-- navbar -->
-     <div class="w3-bar w3-black w3-left-align w3-large">
-
-<!-- lien affichage navbar responsive --> 
-      <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-hover-white w3-large" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a> 
-      <!-- lien actualité -->
-        <a href="#" title="Actualités" class="w3-bar-item w3-button w3-hide-small w3-padding-large"><i class="fa fa-globe"></i></a>
-<!-- lien d'ouverture de la modale login -->
-        <a onclick="document.getElementById('modallogin').style.display='block'" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right"><i class="fas fa-sign-in-alt"></i></a>
-      </div>
-<!-- Navbar on small screens -->
-      <div id="smallscreensnav" class="w3-bar-block w3-hide w3-large">
-<!-- lien actualité -->
-        <a href="#" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
-<!-- lien d'ouverture de la modale login -->
-        <a onclick="document.getElementById('modallogin').style.display='block'" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-      </div>
-
  <div class="w3-row" style="border: 1px solid #e6ecf0;">
 
    <div class="w3-half w3-container">
@@ -45,7 +27,7 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
         <h2>Inscription</h2>
 
     </div>
-<!-- formulaire d'inscription -->    
+<!-- formulaire d'inscription -->
     <?= $this->Form->create($user, [
                                     'url' => ['controller' => 'Users', 'action' => 'add']
                                   ]);?>
@@ -86,5 +68,4 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
               <!--fin zone de notification sur l'état de l'inscription -->
   </div>
 
-</div> 
-
+</div>

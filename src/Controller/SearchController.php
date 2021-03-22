@@ -28,7 +28,7 @@ use Cake\Http\Exception\NotFoundException;
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['index']); // on autorise les gens non identifiés à accéder au moteur de recherche
+        $this->Authentication->allowUnauthenticated(['index', 'media','hashtag','mediahashtag','searchusers','userhashtag']); // on autorise les gens non identifiés à accéder au moteur de recherche
     }
 
         /**

@@ -35,6 +35,9 @@
 
                <?php
 
+                if($authName) // si je suis authentifié, affichage du menu déroulant
+             {
+
         if($resultat_tweet_hashtag_media->user_tweet != $authName)
       {
 
@@ -55,6 +58,7 @@
         <?php
 
       }
+    }
 
     ?>
 
@@ -87,15 +91,13 @@
 
 <span class="w3-opacity">
 
-  <a onclick="openmodallike(<?= $resultat_tweet_hashtag_media->id_tweet ?>)" style="cursor: pointer;">
-
     <!-- affichage du nombre de like -->
 
-    <span class="nb_like_<?= $resultat_tweet_hashtag_media->id_tweet ?>"><?= $resultat_tweet_hashtag_media->nb_like ;?></span> J'aime</a>
+    <a onclick="openmodallike(<?= $resultat_tweet_hashtag_media->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $resultat_tweet_hashtag_media->id_tweet ?>"><?= $resultat_tweet_hashtag_media->nb_like ;?></span> J'aime</a>
 
     <!-- affichage du nombre de commentaire -->
 
-    - <?= $resultat_tweet_hashtag_media->nb_commentaire;?> Commentaire(s)
+    - <a href="/twittux/statut/<?= $resultat_tweet_hashtag_media->id_tweet ;?>" class="w3-margin-bottom"><?= $resultat_tweet_hashtag_media->nb_commentaire;?> Commentaire(s)</a>
 
     <!-- affichage du nombre de partage -->
 
@@ -103,13 +105,16 @@
 
 <hr>
 
-        <!--boutons like , commentaire et partage -->
+  <?php if($authName) // si je suis authentifié, affichage du bouton j'aime et de partage
+{
+  ?>
+        <!--boutons like et partage -->
 
     <p>
 
         <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet_hashtag_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="/twittux/statut/<?= $resultat_tweet_hashtag_media->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+
 
         <?php
 
@@ -119,9 +124,12 @@
         &nbsp;
               <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $resultat_tweet_hashtag_media->username ?>" data_id_tweet="<?= $resultat_tweet_hashtag_media->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
+
             }
-        ?>
-      </p>
+
+      echo '</p>';
+
+ } ?>
 
 </div>
 

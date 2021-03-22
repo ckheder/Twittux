@@ -18,7 +18,9 @@
           if(isset($no_actu)) // rien à afficher
         {
 
-         echo '<div class="w3-container w3-blue w3-round w3-margin">Vous ne suivez actuellement personne : vous trouverez quelques suggestions de personne à suivre à droite ou vous pouvez utiliser le moteur de recherche pour trouver une personne spécifique. Vous suivez aussi peut être quelqu\'un qui n\'a pas encore tweeté.</div>';
+         echo '<div class="w3-panel w3-border w3-light-grey"><p>
+
+              <i class="fas fa-info-circle"></i> Vous ne suivez actuellement personne : vous trouverez quelques suggestions de personne à suivre à droite ou vous pouvez utiliser le moteur de recherche pour trouver une personne spécifique. Vous suivez aussi peut être quelqu\'un qui n\'a pas encore tweeté.</p></div>';
 
         }
           else

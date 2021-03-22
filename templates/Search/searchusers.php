@@ -26,7 +26,7 @@
 
                     <?= $this->Html->image('/img/avatar/'.$query_users->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($query_users->username).'')) ?>
 
-                    
+
                   <!-- lien profil -->
 
                     <b><?= $this->Html->link(''.h($query_users->username).'','/'.h($query_users->username).'') ?></b>
@@ -45,12 +45,16 @@
 
                   <?php
 
+                    if($authName) // si je suis authentifié, on fais le test si je suis abonné ou non
+                  {
+
                     if($query_users->username != $authName)
                   {
 
-                    echo $this->cell('Abonnements::testabo', [$authName, $query_users->username]); 
+                    echo $this->cell('Abonnements::testabo', [$authName, $query_users->username]);
 
                   }
+                }
 
                 ?>
 

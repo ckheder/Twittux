@@ -40,7 +40,7 @@ class TweetsController extends AppController
 
         $this->getEventManager()->on($TweetsListener);
 
-        $this->Authentication->allowUnauthenticated(['view', 'index']);
+        $this->Authentication->allowUnauthenticated(['view', 'index','mediatweet']); // on autorise les gens non auth à voir les profil public
     }
 
     /**
@@ -62,6 +62,11 @@ class TweetsController extends AppController
       $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
   }
 
+  // si je suis connecter
+
+    if($this->Authentication->getIdentity())
+  {
+
       if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
     {
 
@@ -75,14 +80,23 @@ class TweetsController extends AppController
       if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
     {
       $no_see = 1; // interdiction de voir
+
       $this->set('no_see', $no_see);
     }
 
   }
+}
 
+// si je ne suis pas authentifié et que le profil est privé
+
+  elseif (!$this->Authentication->getIdentity() AND AppController::get_type_profil($current_user) == 'prive')
+{
+  $no_see = 1; // interdiction de voir
+
+  $this->set('no_see', $no_see);
+}
     if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
   {
-
         // récupération des tweets
 
         $tweets = $this->paginate($this->Tweets->find()
@@ -117,6 +131,9 @@ class TweetsController extends AppController
 
         $tweet = $this->Tweets->get($id); // on récupère les infos du tweet
 
+        if($this->Authentication->getIdentity())
+        {
+
           if($tweet->username != $this->Authentication->getIdentity()->username) // si je ne suis pas l'auteur du tweet
         {
 
@@ -130,7 +147,21 @@ class TweetsController extends AppController
 
           }
     }
+}
 
+// si je ne suis pas authentifié et que le profil est privé
+
+  elseif (!$this->Authentication->getIdentity() AND AppController::get_type_profil($tweet->username) == 'prive')
+{
+  $no_see = 1; // interdiction de voir
+
+  $this->set('no_see', $no_see);
+
+  $this->set('title','Tweet privé'); // nouveau titre
+
+  $this->set('user_tweet', $tweet->username); // renvoi du nom de l'auteur pour message personnalisé
+
+}
         if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
       {
 
@@ -162,19 +193,23 @@ class TweetsController extends AppController
 
         $current_user = $this->request->getParam('username');
 
-    if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
-{
+        if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+    {
+      $this->viewBuilder()->setLayout('ajax');
+    }
+      else
+    {
 
-    $this->viewBuilder()->setLayout('ajax');
-}
-    else
-{
+    $this->viewBuilder()->setLayout('tweet'); // sinon le layout 'tweet'
 
-    $this->viewBuilder()->setLayout('tweet'); // sinon le layout 'search'
     $this->set('title' , ''.$current_user.' | Media'); // titre de la page
-}
 
+    }
 
+// si je suis authentifié
+
+    if($this->Authentication->getIdentity())
+{
 
     if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
   {
@@ -185,15 +220,28 @@ class TweetsController extends AppController
 }
 // on vérifie si je peux voir le profil
 
-if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
+  if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
 {
-$no_see = 1; // interdiction de voir
-$this->set('no_see', $no_see);
-}
+
+  $no_see = 1; // interdiction de voir
+
+  $this->set('no_see', $no_see);
 
 }
 
-if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+}
+}
+
+// si je ne suis pas authentifié et que le profil est privé
+
+  elseif (!$this->Authentication->getIdentity() AND AppController::get_type_profil($current_user) == 'prive')
+{
+  $no_see = 1; // interdiction de voir
+
+  $this->set('no_see', $no_see);
+
+}
+  if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
 {
 
     // on récupère toutes les informations du tweets contenant #mot-clé
@@ -239,21 +287,18 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
             $private = 1; // tweet prive
           }
-          else {
+            else
+          {
             $private = 0;
           }
             $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
 
-
-
             if($this->request->getData('tweetmedia')->getError() != 4)
           {
 
-
             $contenu_tweet = AppController::uploadfiletweet($this->request->getData('tweetmedia'), $contenu_tweet,$idtweet); // traitement de l'envoi du fichier et mise à jour du contenu du tweets
 
-
-        }
+          }
 
             $data = array(
                             'id_tweet' => $idtweet,
@@ -288,7 +333,8 @@ if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la li
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($tweet));
             }
-            else {
+              else 
+            {
               return $this->response->withType('application/json')
                                       ->withStringBody(json_encode(['result' => 'notweet']));
             }

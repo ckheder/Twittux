@@ -11,7 +11,7 @@
 
 const regexp = /#(\S)/g; // expression régulière qui va servir à ôter le hashtag # sur la génération d'une URL de recherche hashtag
 
-const spinner = document.getElementById("spinner"); // div qui accueuillera le spinner de chargement des données via AJAX
+  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
 const navAnchor = document.querySelectorAll('.tablink'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 
@@ -36,8 +36,6 @@ function addActive(e) {
 document.addEventListener('click',function(e){
 
 var URL; // URL de rercherche à charger suivant l'onglet cliqué
-
-if(e.target.id){
 
   		switch(e.target.id)
   	{
@@ -98,6 +96,8 @@ if(e.target.id){
                               URL = '/twittux/search/hashtag/media/'+keyword+'';
                             }
             							break;
+
+      default: return;
   	}
 
   	document.getElementById("result_search").innerHTML = ""; // on vide la div d'affichage des résultats
@@ -127,7 +127,7 @@ if(e.target.id){
     .catch(function(err) {
   	                       console.log(err);
   	});
-}
+
 })
 
 // traitement des actions d'abonnement/demande/suppression sur les résultats utilisateurs du moteur de recherche
@@ -388,7 +388,15 @@ document.addEventListener('click',function(e){
 
   function openmodallike(idtweetlike)
 {
+
+  if(document.getElementById('modallike')) // si la modal existe car inexistante lors de recherche en étant pas auth
+{
   document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
+}
+  else
+{
+    return;
+}
 
   fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
   .then(function (data)

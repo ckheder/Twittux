@@ -34,13 +34,27 @@ use Cake\Routing\Router;
 
 <body>
 
-        <?= $this->element('navbar') ?>
+  <?php
 
-        <?= $this->element('modallike') ?>
+        if($authName) // si je suis authentifié, chargement de la navbar, de la modal de like et de la modal pour tweeter
+      {
 
-        <?= $this->element('modaltweet') ?>
+        echo $this->element('navbar');
 
-        <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px">
+        echo $this->element('modallike');
+
+        echo $this->element('modaltweet');
+
+      }
+        else // chargement de la navbar offline et de la modal de connexion
+      {
+        echo $this->element('offlinenavbar');
+
+        echo $this->element('modallogin') ;
+
+      }
+?>
+        <div class="w3-container w3-content" style="max-width:1400px;">
 
         <?= $this->Flash->render();?>
 

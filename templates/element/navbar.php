@@ -6,8 +6,6 @@
  *
  */ -->
 
-<div class="w3-top">
-
  <div class="w3-bar w3-black w3-left-align w3-large">
 
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-hover-white w3-large" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
@@ -36,7 +34,7 @@
 
       <div class="w3-dropdown-hover">
 
-        <input type="text" class="w3-bar-item w3-hide-small w3-input input-search" placeholder="Recherche sur Twittux...">
+        <input type="text" class="w3-bar-item w3-input input-search" placeholder="Recherche sur Twittux..." style="margin:1px;">
 
           <div class="w3-dropdown-content">
 
@@ -52,24 +50,22 @@
     <!-- lien de déconnexion -->
 
     <a href="/twittux/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></a>
-    <!-- tweeter -->
 
     <!-- lien vers mon profil -->
 
     <a href="/twittux/<?= $authName ?>" class="w3-hide-small w3-padding-large w3-hover-white w3-right" title="Mon profil">
          <?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'23', 'height'=>'23'));?></a>
 
-         <!-- lien pour tweeter -->
+    <!-- lien pour tweeter -->
+
     <a onclick="document.getElementById('modaltweet').style.display='block'" class="w3-bar-item w3-button w3-padding-large w3-right"><i class="fas fa-pen"></i></a>
 
   </div>
 
-</div>
+
 <!-- Navbar on small screens -->
 
 <div id="smallscreensnav" class="w3-bar-block w3-hide w3-large">
-
-  <a href="/twittux/actualites" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
 
   <a href="/twittux/actualites" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
 
@@ -80,16 +76,6 @@
   <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
 
   <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
-
-  <div class="w3-dropdown-hover">
-
-    <form class="testrest">
-
-      <input type="text" class="w3-bar-item w3-input input-search-resp" placeholder="Recherche sur Twittux...">
-
-    </form>
-
-  </div>
 
   <a href="/twittux/<?= $authName ?>" class="w3-bar-item w3-button w3-padding-large"> <i><?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'21', 'height'=>'21')); ?></i> Mon profil</a>
 

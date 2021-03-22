@@ -35,6 +35,9 @@
 
         <?php
 
+            if($authName) // si je suis authentifié, affichage du menu déroulant
+          {
+
         if($query_tweet->username != $authName)
       {
 
@@ -56,11 +59,13 @@
 
       }
 
+    }
+
     ?>
 
         <!--nom d'utilisateur -->
 
-        <h4><?= $this->Html->link(''.h($query_tweet->username).'','/'.h($query_tweet->user_tweet).'') ?></h4>
+        <h4><?= $this->Html->link(''.h($query_tweet->username).'','/'.h($query_tweet->username).'') ?></h4>
 
         <!--date formatée -->
 
@@ -86,7 +91,7 @@
 
         <!-- zone d'affichage du nombre de like, commentaire et de partage -->
 
-<span class="w3-opacity">
+<div class="w3-opacity w3-margin-bottom">
 
         <!-- affichage du nombre de like -->
 
@@ -94,21 +99,28 @@
 
         <!-- affichage du nombre de commentaire -->
 
-  - <?= $query_tweet->nb_commentaire;?> Commentaire(s)
+  - <a href="/twittux/statut/<?= $query_tweet->id_tweet ;?>" class="w3-margin-bottom"><?= $query_tweet->nb_commentaire;?> Commentaire(s)</a>
 
         <!-- affichage du nombre de partage -->
 
-  - Partagé <span class="nb_share_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_partage ;?></span> fois</span>
+  - Partagé <span class="nb_share_<?= $query_tweet->id_tweet ?> "><?= $query_tweet->nb_partage ;?></span> fois
 
-<hr>
+</div>
+
+
+
+<?php if($authName) // si je suis authentifié, affichage du bouton j'aime et de partage
+{
+  ?>
 
 <!--boutons like, commentaire et partage -->
+<hr>
 
 <p>
 
         <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="/twittux/statut/<?= $query_tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+
 
         <?php
 
@@ -118,10 +130,14 @@
         &nbsp;
                 <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $query_tweet->username ?>" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
-            }
-      ?>
 
-      </p>
+            }
+
+      echo '</p>';
+
+ }
+
+ ?>
 
 </div>
 

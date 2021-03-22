@@ -396,7 +396,14 @@ document.addEventListener('click',function(e){
 
   function openmodallike(idtweetlike)
 {
-  document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
+    if(document.getElementById('modallike')) // si la modal existe car inexistante lors de la visite d'un profil en étant pas auth
+  {
+    document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
+  }
+    else
+  {
+      return;
+  }
 
   fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
   .then(function (data)

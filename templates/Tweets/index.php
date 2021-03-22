@@ -68,6 +68,10 @@
 
         ?>
 
+        <?php if($authName) // si non auth, pas de comm
+        {
+          ?>
+
         <!-- bouton dropdown pour supprimer un tweet -->
 
           <div class="dropdown">
@@ -115,6 +119,8 @@
 
           </div>
 
+        <?php } ?>
+
 <!-- affichage différend selon partage -->
 
         <?php
@@ -161,7 +167,7 @@
 
         <!-- affichage du nombre de commentaire -->
 
-          - <?= $tweet->nb_commentaire;?> Commentaire(s)
+          - <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-bottom"><?= $tweet->nb_commentaire;?> Commentaire(s) </a>
 
         <!-- affichage du nombre de partage -->
 
@@ -169,13 +175,17 @@
 
         <hr>
 
-        <!--boutons like,commentaire et partage -->
+        <?php if($authName) // si non auth, pas de comm
+        {
+          ?>
+
+        <!--boutons like et partage -->
 
         <p>
 
         <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+
 
         <?php
 
@@ -191,6 +201,7 @@
             }
       ?>
       </p>
+    <?php } ?>
       </div>
 
  <?php

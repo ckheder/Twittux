@@ -35,9 +35,11 @@
 
         <div class="w3-row">
 
-            <?= $this->fetch('content') ?>
+          <?= $this->element('offlinenavbar') ?><!-- navbar offline -->
 
-            <?= $this->element('modallogin') ?><!-- fenêtre modale de connexion -->
+          <?= $this->fetch('content') ?>
+
+          <?= $this->element('modallogin') ?><!-- fenêtre modale de connexion -->
 
         </div>
 

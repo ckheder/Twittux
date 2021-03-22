@@ -38,7 +38,7 @@
 
         <?= $this->element('modaltweet') ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <div class="w3-container w3-content w3-margin-top" style="max-width:1400px;">
 
         <div class="w3-row">
 

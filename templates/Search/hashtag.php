@@ -35,6 +35,9 @@
 
                <?php
 
+               if($authName) // si je suis authentifié, affichage du menu déroulant
+            {
+
         if($resultat_tweet->user_tweet != $authName)
       {
 
@@ -55,6 +58,8 @@
         <?php
 
       }
+
+    }
 
     ?>
 
@@ -85,31 +90,33 @@
 
         <!-- zone d'affichage du nombre de like, commentaire et de partage -->
 
-<span class="w3-opacity">
-
-  <a onclick="openmodallike(<?= $resultat_tweet->id_tweet ?>)" style="cursor: pointer;">
+    <div class="w3-opacity w3-margin-bottom">
 
     <!-- affichage du nombre de like -->
 
-    <span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
+    <a onclick="openmodallike(<?= $resultat_tweet->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
 
     <!-- affichage du nombre de commentaire -->
 
-    - <?= $resultat_tweet->nb_commentaire;?> Commentaire(s)
+    - <a href="/twittux/statut/<?= $resultat_tweet->id_tweet ;?>" class="w3-margin-bottom"><?= $resultat_tweet->nb_commentaire;?> Commentaire(s)</a>
 
     <!-- affichage du nombre de partage -->
 
-    - Partagé <span class="nb_share_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_partage ;?></span> fois</span>
+    - Partagé <span class="nb_share_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_partage ;?></span> fois
 
-<hr>
+  </div>
 
+  <?php if($authName) // si je suis authentifié, affichage du bouton j'aime et de partage
+{
+  ?>
         <!--boutons like , commentaire et partage -->
+
+    <hr>
 
     <p>
 
         <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
-        <a href="/twittux/statut/<?= $resultat_tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
 
         <?php
 
@@ -119,9 +126,14 @@
         &nbsp;
               <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $resultat_tweet->username ?>" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
         <?php
+
             }
-        ?>
-      </p>
+
+      echo '</p>';
+
+    }
+
+    ?>
 
 </div>
 

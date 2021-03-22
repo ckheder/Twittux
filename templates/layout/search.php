@@ -35,13 +35,28 @@ use Cake\Routing\Router;
 
 <body>
 
-        <?= $this->element('navbar') ?>
+  <?php
 
-        <?= $this->element('modallike') ?>
+      if($authName) // si je suis authentifié, chargement de la navbar, de la modal de like et de la modale pour tweeter
+    {
 
-        <?= $this->element('modaltweet') ?>
+      echo $this->element('navbar');
 
-    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+      echo $this->element('modallike');
+
+      echo $this->element('modaltweet');
+
+    }
+      else // chargement de la navbar offline et de la modal de connexion
+    {
+      echo $this->element('offlinenavbar');
+
+      echo $this->element('modallogin') ;
+
+    }
+?>
+
+    <div class="w3-container w3-content w3-margin-top" style="max-width:1400px;">
 
         <div class="w3-row">
 
@@ -62,11 +77,14 @@ use Cake\Routing\Router;
   </h4>
 
 </div>
+
 <!-- lien de tri de la recherche -->
 
 <?= $this->element('searchmenu') ?>
 
-<div hidden id="spinner"></div> <!-- image de chargement des données -->
+<div hidden class="spinner"></div> <!-- image de chargement des données -->
+
+<!-- zone d'affichage des résultats -->
 
 <div id="result_search">
 

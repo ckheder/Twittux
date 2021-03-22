@@ -20,6 +20,11 @@
 
     </div>
 
+    <?php if($authName)
+    {
+
+      ?>
+
     <div class="w3-center">
 
       <span class="zone_abo">
@@ -29,6 +34,11 @@
       </span>
 
     </div>
+
+    <?php
+  }
+
+  ?>
 
   </div>
 
@@ -45,6 +55,11 @@
 
         <?=  $this->Html->image('/img/avatar/'.$tweet->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
+        <?php if($authName) // si non auth, pas de bouton
+        {
+
+          ?>
+
                         <!--bouton de désactivation des commentaires -->
     <div class="dropdown">
 
@@ -58,6 +73,10 @@
 
     </div>
 
+    <?php
+}
+
+?>
         <!--nom d'utilisateur -->
 
         <h4><?= $this->Html->link(''.h($tweet->username).'','/'.h($tweet->username).'') ?></h4>
@@ -78,17 +97,22 @@
 
       <!--fin zone de notification sur l'état de l'envoi d'un commentaire -->
 
-<!-- ZONE COMMENTAIRE -->
+      <?php if($authName) // si non auth, pas de comm
+      {
 
-<!-- formulaire de création de commentaire -->
 
-<?= $this->Form->create(null, [
+
+// ZONE COMMENTAIRE /
+
+// formulaire de création de commentaire
+
+echo $this->Form->create(null, [
                                 'id' =>'form_comm',
                                 'url' => ['controller' => 'Commentaires', 'action' => 'add']
 
-                                ]);?>
-<!--textarea -->
-                  <?= $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
+                                ]);
+//<!--textarea
+                  echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
 
                 <!--bouton dropdown -->
 
@@ -127,7 +151,11 @@
                     <?= $this->Form->button('Commenter',['class' =>'w3-button w3-blue w3-round']) ?>
             </div>
 
-            <?= $this->Form->end() ?>
+            <?= $this->Form->end(); } else {
+              echo '<div class="w3-panel w3-border w3-light-grey"><p>
+
+            <i class="fas fa-info-circle"></i> Vous devez vous connecter ou vous inscrire pour commenter ce tweet.  </p></div>';
+            }?>
 
 <!--fin formulaire -->
 
@@ -139,7 +167,7 @@
 
 <div class="w3-center">
 
-  <br />
+
 
             <h5>
 
@@ -160,6 +188,9 @@
 
         <?=  $this->Html->image('/img/avatar/'.$commentaires->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
+        <?php if($authName) // si non auth, pas de comm
+        {
+          ?>
 
                 <!--bouton dropdown -->
     <div class="dropdown">
@@ -188,6 +219,10 @@
       </div>
 
     </div>
+
+    <?php
+
+  } ?>
 
         <!--nom d'utilisateur -->
 
