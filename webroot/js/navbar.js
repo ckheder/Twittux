@@ -16,13 +16,18 @@
   }
 }
 
+// si on clique en dehors de la liste de résultat, on la masque et on la vide
 
+window.addEventListener("click", function(event) {
+  if (!event.target.matches('.resultsearch')) {
+    document.querySelector('.input-search').value='';
+autocomplete_zone.style.display='none';
+  }
+});
 
 // autocomplétion
 
 var searchInput = document.querySelector('.input-search'); // input de recherche
-
-var searchInputResp = document.querySelector('.input-search-resp'); // input de recherche mobile
 
 var autocomplete_zone = document.getElementById("autocomplete-results"); // zone des résultats
 
@@ -51,7 +56,7 @@ function displayMatches() {
 
       //ajout d'un lien vers une recherche plus complète avec hashtag
 
-        autocomplete_zone.innerHTML += '<li><strong><a href="/twittux/search/hashtag/'+urlvar+'">'+searchInput.value+'</a></strong></li>';
+        autocomplete_zone.innerHTML += '<li class="resultsearch"><strong><a href="/twittux/search/hashtag/'+urlvar+'">'+searchInput.value+'</a></strong></li>';
 
       //affichage de la liste des résultats
 
@@ -84,7 +89,7 @@ function displayMatches() {
 
     		if(jsonData == 'noresult') // si réception d'une valeur 'noresult'
     	{
-    		autocomplete_zone.innerHTML += '<li>Aucun résultat</li>'; // affichage d'un message
+    		autocomplete_zone.innerHTML += '<li class="resultsearch">Aucun résultat</li>'; // affichage d'un message
     	}
     		else
     	{
@@ -92,7 +97,7 @@ function displayMatches() {
     	   jsonData.forEach(function(item) //pour chaque résultat, on crée un nouvel element <li> avec l'avatar de la personne plus un lien vers le profil
        {
 
-    	   autocomplete_zone.innerHTML += '<li><a href="/twittux/'+item.username+'"><img src="/twittux/img/avatar/'+item.username+'.jpg" alt="image utilisateur" class="w3-circle" width="23" height="23"> '+item.username+'</a></li>';
+    	   autocomplete_zone.innerHTML += '<li class="resultsearch"><a href="/twittux/'+item.username+'"><img src="/twittux/img/avatar/'+item.username+'.jpg" alt="image utilisateur" class="w3-circle" width="23" height="23"> '+item.username+'</a></li>';
 
         }
 
@@ -100,7 +105,7 @@ function displayMatches() {
 
 //ajout à la fin d'un lien vers une recherche plus complète, notamment les tweets
 
-    	autocomplete_zone.innerHTML += '<li><a href="/twittux/search/'+searchInput.value+'">Recherche complète pour '+searchInput.value+'</a></li>';
+    	autocomplete_zone.innerHTML += '<li class="resultsearch"><a href="/twittux/search/'+searchInput.value+'">Recherche complète pour '+searchInput.value+'</a></li>';
 
 //affichage de la liste des résultats
 
@@ -119,22 +124,15 @@ function displayMatches() {
 }
 }
 
-document.querySelector('.testrest').addEventListener('submit', function (e) {
-
-  e.preventDefault();
-  });
-
 // redirection vers la page des résultats de recherche après appuie sur "entrée" (searchInput -> desktop, searchInputResp ->mobile)
 
-[searchInput, searchInputResp].forEach(item => {
-
-  item.addEventListener('keydown', function (e) {
+  searchInput.addEventListener('keydown', function (e) {
 
     if (e.keyCode === 13) {
 
  // si pression sur la touche entrée
 
-        if (item.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on affiche un message
+        if (searchInput.value.length == min_characters ) // si le nombre de caractère est égal à 0 , on affiche un message
     {
 
       alertbox.show('<div class="w3-panel w3-red">'+
@@ -142,14 +140,14 @@ document.querySelector('.testrest').addEventListener('submit', function (e) {
                     '</div>.');
 
     }
-        else if(item.value.startsWith("#")) // si la recherche commence par #
+        else if(searchInput.value.startsWith("#")) // si la recherche commence par #
 
     {
-        if(item.value.length >= 2) // 2 caractères minimum
+        if(searchInput.value.length >= 2) // 2 caractères minimum
       {
-        item.value = item.value.replace("#", "%23");
+        searchInput.value = searchInput.value.replace("#", "%23");
 
-        window.location.href = '/twittux/search/hashtag/'+item.value+''; // on redirige vers la recherche hashtag
+        window.location.href = '/twittux/search/hashtag/'+searchInput.value+''; // on redirige vers la recherche hashtag
       }
         else
       {
@@ -162,10 +160,8 @@ document.querySelector('.testrest').addEventListener('submit', function (e) {
 
     else
     {
-      window.location.href = '/twittux/search/'+item.value+''; // on redirige vers la recherche classique
+      window.location.href = '/twittux/search/'+searchInput.value+''; // on redirige vers la recherche classique
     }
   }
 
 })
-
-});

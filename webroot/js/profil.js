@@ -36,6 +36,21 @@
     document.getElementById("btntweet"+id).classList.toggle("show");
 }
 
+// Fermeture du bouton si je clique hors du menu déroulant des tweets
+
+window.addEventListener("click", function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+})
+
 // naviguer entre les tweet et les tweets avec media
 
 document.addEventListener('click',function(e){

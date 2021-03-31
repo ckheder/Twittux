@@ -56,48 +56,66 @@ use Cake\Routing\Router;
     }
 ?>
 
-    <div class="w3-container w3-content w3-margin-top" style="max-width:1400px;">
+    <div class="w3-container w3-content" style="max-width:1400px;margin-top:70px;">
 
         <div class="w3-row">
-
-              <div class="w3-rest">
 
                 <div class="w3-row-padding">
 
                   <div class="w3-round">
 
 <!--zone de notification -->
-                  <div id="alert-area" class="alert-area"></div>
+
+                    <div id="alert-area" class="alert-area"></div>
+
 <!--fin zone de notification  -->
 
-<div class="w3-container w3-center w3-light-grey">
+<!-- lien de tri de la recherche -->
+<div class="w3-col m2 menusearch">
 
-  <h4>
-      <b><?=  $this->request->getParam('query') ;?> </b>
-  </h4>
+  <div class="w3-bar-block w3-white">
+
+    <button id="searchtweets" class="w3-bar-item w3-button tablink w3-red"><i class="fas fa-pencil-alt"></i> Tweets</button>
+
+    <button id="searchusers" class="w3-bar-item w3-button tablink"><i class="fas fa-user"></i> Personnes</button>
+
+    <button id="searchmostrecent" class="w3-bar-item w3-button tablink"><i class="fas fa-clock"></i> Récent</button>
+
+    <button id="searchmediapics" class="w3-bar-item w3-button tablink"><i class="fas fa-image"></i> Média</button>
+
+  </div>
 
 </div>
 
-<!-- lien de tri de la recherche -->
+<div class="w3-col m7 contentsearch">
 
-<?= $this->element('searchmenu') ?>
-
-<div hidden class="spinner"></div> <!-- image de chargement des données -->
+  <div hidden class="spinner"></div> <!-- image de chargement des données -->
 
 <!-- zone d'affichage des résultats -->
 
-<div id="result_search">
+  <div class="w3-container w3-center w3-light-grey">
+
+    <h4>
+        <b><i class="fas fa-search"></i> <?=  $this->request->getParam('query') ;?> </b>
+    </h4>
+
+  </div>
+
+    <div id="result_search">
 
           <?= $this->fetch('content') ?>
-</div>
 
-                </div>
+    </div>
+
+</div>
 
             </div>
 
         </div>
 
-    </div>
+
+
+  </div>
 
           <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
           <?= $this->Html->scriptBlock(sprintf(

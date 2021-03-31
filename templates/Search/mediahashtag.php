@@ -79,7 +79,7 @@
           <?= Text::highlight(
                               $resultat_tweet_hashtag_media->contenu_tweet,
                               $this->request->getParam('query'),
-                              ['format' => '<b>\1</b>']
+                              ['format' => '<b>\1</b>','html' => true]
                               );
           ?>
 

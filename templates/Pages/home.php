@@ -52,8 +52,6 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
           <div class="w3-center">
 
-            <?= $this->Form->button('Inscription',['class' =>'w3-btn w3-blue-grey']) ?>
-
           </div>
 
           <p>

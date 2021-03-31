@@ -31,15 +31,15 @@
 </head>
 <body>
 
-    <div class="w3-content" style="max-width:1400px">
+    <div class="w3-content w3-container" style="max-width:1400px;">
 
         <div class="w3-row">
 
-          <?= $this->element('offlinenavbar') ?><!-- navbar offline -->
-
-          <?= $this->fetch('content') ?>
+          <?= $this->element('homenavbar') ?><!-- navbar offline -->
 
           <?= $this->element('modallogin') ?><!-- fenêtre modale de connexion -->
+
+          <?= $this->fetch('content') ?>
 
         </div>
 
@@ -51,7 +51,6 @@
 
     </div>
 
-<?= $this->Html->script('navbar.js'); ?> <!-- traitement des actions de la navbar -->
-
 </body>
+
 </html>

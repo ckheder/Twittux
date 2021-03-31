@@ -208,15 +208,24 @@ color: #737373;
 
 /* ## autocomplétion sur navbar ## */
 
+.input-search
+{
+	padding:8px;
+	display:block;
+	max-width:360px;
+	margin: 1px;
+}
+
   #autocomplete-results /* liste des résultats masquée par défaut */
 {
   display: none;
   position: absolute;
-  top : 41px;
+  top : 52px;
+	max-width:360px;
 }
   #autocomplete-results li
 {
-  width: 271px;
+
   background-color: white;
   color: black;
 }
@@ -225,6 +234,29 @@ color: #737373;
   background-color: gold;
 }
 /* ## fin autocomplétion sur navbar ## */
+
+/* ## menu de navigation des résultats de recherche ## */
+
+.menusearch
+{
+  position:fixed;
+}
+.contentsearch
+{
+	margin-left:280px;
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+  .menusearch {
+    position: relative;
+  }
+	.contentsearch
+	{
+		margin-left:0px;
+	}
+}
+
+/* ## menu de navigation des résultats de recherche ## */
 
 /* spinner de chargement des données AJAX */
 

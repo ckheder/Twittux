@@ -6,9 +6,11 @@
  *
  */ -->
 
+ <div class="w3-top">
+
  <div class="w3-bar w3-black w3-left-align w3-large">
 
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-hover-white w3-large" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-padding-large w3-hover-white" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
 
 <!-- lien vers actualités -->
 
@@ -34,15 +36,11 @@
 
       <div class="w3-dropdown-hover">
 
-        <input type="text" class="w3-bar-item w3-input input-search" placeholder="Recherche sur Twittux..." style="margin:1px;">
-
-          <div class="w3-dropdown-content">
+        <input type="text" class="input-search" placeholder="Recherche sur Twittux..." maxlength="50">
 
 <!-- liste contenant les résultats de la recherche d'utilisateurs -->
 
             <ul id="autocomplete-results" class="w3-ul w3-hoverable"></ul>
-
-          </div>
 
       </div>
 
@@ -62,7 +60,7 @@
 
   </div>
 
-
+</div>
 <!-- Navbar on small screens -->
 
 <div id="smallscreensnav" class="w3-bar-block w3-hide w3-large">

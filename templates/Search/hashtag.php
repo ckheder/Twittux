@@ -80,7 +80,7 @@
           <?= Text::highlight(
                               $resultat_tweet->contenu_tweet,
                               $this->request->getParam('query'),
-                              ['format' => '<b>\1</b>']
+                              ['format' => '<b>\1</b>','html' => true]
                               );
           ?>
 

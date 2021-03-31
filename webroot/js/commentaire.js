@@ -28,7 +28,7 @@ function opencommoption(id) {
 
 // Fermeture du bouton si je clique hors du menu déroulant
 
-window.onclick = function(event) {
+window.addEventListener("click", function(event) {
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
@@ -39,7 +39,7 @@ window.onclick = function(event) {
       }
     }
   }
-}
+})
 
 // comme le titre de page reprend le début des tweets, remplacement des médias par [media]
 

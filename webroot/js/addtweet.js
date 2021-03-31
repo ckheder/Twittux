@@ -63,21 +63,6 @@ function countCharacters(e) {
 const el = document.getElementById('textarea_tweet');
 el.addEventListener('keydown', countCharacters);
 
-// Fermeture du bouton si je clique hors du menu déroulant des tweets
-
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-
 // MEDIA
 
 //vérifier si il y'a déjà un media

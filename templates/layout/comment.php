@@ -53,7 +53,7 @@
     }
 ?>
 
-    <div class="w3-container w3-content" style="max-width:1400px;">
+    <div class="w3-container w3-content" style="max-width:1400px;margin-top:50px;">
 
         <div class="w3-row">
 
