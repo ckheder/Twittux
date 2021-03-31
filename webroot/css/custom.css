@@ -344,6 +344,8 @@ color: #737373;
 	max-height:100%;
 	max-width:100%;
 	display: block;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 /* fin mise en page des médias sur la cell user */

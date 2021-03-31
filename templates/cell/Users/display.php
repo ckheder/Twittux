@@ -20,7 +20,7 @@
 
          <?php
 
-          if($authName) // si je suis authentifié , test de l'abonnement , envoi de message et blocage 
+          if($authName) // si je suis authentifié , test de l'abonnement , envoi de message et blocage
          {
 
            if($this->request->getParam('username') != $authName) // si je suis pas sur mon profil
@@ -104,8 +104,6 @@
 
            <div class="w3-row-padding">
 
-             <br>
-
           <?php // parcours du dossier contenant les emojis et affichage dans la div
 
           $dir = WWW_ROOT . 'img/media/'.$this->request->getParam('username').''; // chemin du dossier
@@ -139,14 +137,25 @@
 
           // on affiche les médias issus du tableau précédent
 
+            if(count($array_media) > 0)
+           {
+
             foreach($array_media as $media_user)
           {
 
             $img_media_user_no_extension = substr($media_user, 0, strrpos($media_user, '.')); // on supprime l'extension du fichier pour crée un lien vers le post contenant le média
 
-            echo '<a href="./statut/'.$img_media_user_no_extension.'"><img src="/twittux/img/media/'.$this->request->getParam('username').'/'.$media_user.'" class="w3-margin-bottom media_user" /></a>';
+            echo '<a href="./statut/'.$img_media_user_no_extension.'"><img src="/twittux/img/media/'.$this->request->getParam('username').'/'.$media_user.'" class="media_user" /></a>';
 
           }
+
+        }
+          else
+        {
+          echo '<div class="w3-panel w3-border w3-light-grey"><p>
+
+               Cette utilisateur n\'a partagé aucun média.</p></div>';
+        }
 
           ?>
 
