@@ -12,7 +12,7 @@ use Cake\Routing\Router;
  * Tweet Listener
  *
  * Vérifie si un ou plusieurs utilisateurs sont mentionnés dans le post et si oui , on vérifie si il accepte les notification de citation
- *
+ * Vériication et stockage des hashtags si utilisé
  */
 
 
@@ -27,7 +27,7 @@ class TweetsListener implements EventListenerInterface {
 /**
      * Méthode afteradd
      *
-     * Extraire les username de mes posts et envoi de notification de citation si accepté pour chacun.
+     * Extraire les username de mes posts et envoi de notification de citation si accepté pour chacun, traitement des hashtag
      *
      * Paramètres : $data -> tableau contenant le nom de la persone qui vient de tweeter et le tweet en question
      *
@@ -39,24 +39,7 @@ class TweetsListener implements EventListenerInterface {
 
         $entity = TableRegistry::get('Notifications');
 
-        // fonction d'extraction des username
-
-            function getUsernames($string)
-        {
-            $at_username = FALSE;
-
-            preg_match_all("/(^|[^@\w])@(\w{1,15})\b/", $string, $matches);
-
-                if ($matches)
-            {
-                $atusernameArray = array_count_values($matches[0]);
-
-                $at_username = array_keys($atusernameArray);
-            }
-                return $at_username;
-        }
-
-        $array_username = getUsernames($data['contenu_tweet']);
+        $array_username = $this->getUsernames($data['contenu_tweet']);
 
         if(count($array_username) != 0) // si le tableau n'est pas vide
     {
@@ -89,6 +72,22 @@ class TweetsListener implements EventListenerInterface {
         }
             endforeach;
     }
+
+    // traitement hashtag
+
+    $array_hashtag = $this->getHashtags($data['contenu_tweet']);
+
+      if(count($array_hashtag) != 0) // si des hashtags sont trouvés
+    {
+      foreach ($array_hashtag as $hashtag):
+
+      $hashtag = str_replace('#', '', $hashtag); // suppression du symbole #
+
+      $this->hashtag($hashtag);
+
+      endforeach;
+
+    }
 }
 /**
      * Méthode testnotifcite
@@ -112,5 +111,83 @@ class TweetsListener implements EventListenerInterface {
                 }
 
              return $notification_citation;
+            }
+
+// fonction d'extraction des username
+
+                function getUsernames($string)
+            {
+                $at_username = FALSE;
+
+                preg_match_all("/(^|[^@\w])@(\w{1,15})\b/", $string, $matches);
+
+                    if ($matches)
+                {
+                    $atusernameArray = array_count_values($matches[0]);
+
+                    $at_username = array_keys($atusernameArray);
+                }
+                    return $at_username;
+            }
+
+// fonction d'extraction des hashtag
+
+            function getHashtags($string)
+          {
+
+            preg_match_all("/(#\w+)/u", $string, $matches);
+
+            if ($matches) {
+
+                            $hashtagArray = array_count_values($matches[0]);
+
+                            $hashtag_Array = array_keys($hashtagArray);
+                          }
+
+            return $hashtag_Array;
+
+          }
+
+            /**
+                 * Méthode hashtag
+                 *
+                 * Vérifie si le hashtag utilisé existe déjà
+                 *
+                 * Paramètres : $hashtag -> variable contenant un hashtag préalablement trouvé
+                 *
+            */
+
+              private function hashtag($hashtag)
+            {
+
+              $table_hashtag = TableRegistry::get('Hashtag');
+
+              $query = $table_hashtag->find()
+                                      ->select(['hashtag'])
+                                      ->where(['hashtag' => $hashtag ]);
+
+                    if($query->isEmpty()) // hashtag inexistant, on crée une nouvelle entitée
+                  {
+
+                    $newhashtag = $table_hashtag->newEmptyEntity();
+
+                    $newhashtag->hashtag = $hashtag;
+
+                    $newhashtag->nb_post_hashtag = 1;
+
+                    $table_hashtag->save($newhashtag);
+
+                  }
+
+                    else // incrémentation de 1 ou plus
+                  {
+                      $query = $table_hashtag->query();
+
+                      $query->update()
+                            ->set($query->newExpr('nb_post_hashtag = nb_post_hashtag + 1'))
+                            ->where(['hashtag' => $hashtag])
+                            ->execute();
+
+                    }
             }
 }

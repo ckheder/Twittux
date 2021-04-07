@@ -275,12 +275,9 @@ class TweetsController extends AppController
             if ($this->request->is('ajax')) // requête AJAX uniquement
         {
 
-
             $tweet = $this->Tweets->newEmptyEntity(); // création d'une nouvelle entité
 
             $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
-
-
 
             if(AppController::get_type_profil($this->Authentication->getIdentity()->username) == 'prive') // su profil prive et non abonné
           {
@@ -292,6 +289,8 @@ class TweetsController extends AppController
             $private = 0;
           }
             $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
+
+            // si présence d'un média , on le traite
 
             if($this->request->getData('tweetmedia')->getError() != 4)
           {
@@ -333,7 +332,7 @@ class TweetsController extends AppController
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($tweet));
             }
-              else 
+              else
             {
               return $this->response->withType('application/json')
                                       ->withStringBody(json_encode(['result' => 'notweet']));
@@ -529,4 +528,6 @@ class TweetsController extends AppController
 
                     return $check_abo;
                 }
+
+
 }

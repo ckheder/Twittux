@@ -64,7 +64,7 @@
 
            	</div>
 
-            <div class="w3-col m7">
+            <div class="w3-col m6">
 
               <div hidden class="spinner"></div> <!-- image de chargement des données -->
 
@@ -75,6 +75,35 @@
                 </div>
 
           </div>
+
+          <!-- Right Column -->
+
+          <?php
+
+            if (!$this->request->isMobile()) // si je ne suis pas sur mobile, affichage de la cell des hashtags
+          {
+          ?>
+            <div class="w3-col m3">
+
+              <div class="w3-panel w3-border w3-light-grey">
+
+                <h4 class="w3-center"><i class="fas fa-globe"></i> Tendances</h4>
+
+                  <?= $this->cell('Hashtag'); ?>
+
+              </div>
+
+            </div>
+
+          <!-- End Right Column -->
+
+          <?php
+
+          }
+
+          ?>
+
+
 
         </div>
 

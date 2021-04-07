@@ -2,10 +2,7 @@
 use \App\Model\Entity\User;
 $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier de la validation du modèle User
 ?>
-
- <div class="w3-row" style="border: 1px solid #e6ecf0;">
-
-   <div class="w3-half w3-container">
+ <div class="w3-third w3-container">
 
     <p class="home">Rejoignez Twittux aujourd'hui et découvrez ce qui se passe dans le monde en temps réel.</p>
 
@@ -18,9 +15,7 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
     </div>
 
-   <div class="w3-half w3-container">
-
-      <?= $this->Flash->render() ?>
+   <div class="w3-third w3-container">
 
      <div class="w3-center">
 
@@ -66,4 +61,51 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
               <!--fin zone de notification sur l'état de l'inscription -->
   </div>
 
-</div>
+  <div class="w3-third w3-container">
+
+<!-- zone connexion -->
+
+   <div class="w3-center">
+
+     <h2>Connexion</h2>
+
+   </div>
+
+ <!-- formulaire de connexion -->
+
+ <?= $this->Form->create(null, [
+     'url' => '/login'
+ ]);
+  ?>
+
+   <!-- nom d'utlisateur -->
+
+                <?= $this->Form->control('username',['class' =>'w3-input w3-border','label' =>'','id'=>'username','placeholder'=>'nom d\'utilisateur']) ?>
+
+             <br />
+
+   <!-- mot de passe -->
+
+                <?= $this->Form->control('password',['class' =>'w3-input w3-border','label' =>'','id'=>'password','placeholder'=>'mot de passe']) ?>
+
+   <!-- bouton d connexion -->
+
+ <div class="w3-center">
+
+   <p>
+
+     <button class="w3-btn w3-blue-grey">Connexion</button></p>
+
+   <p>
+
+       <a href="#">Mot de passe oublié ?</a>
+
+   </p>
+
+ </div>
+
+           <?= $this->Form->end() ?>
+
+   <!-- fin formulaire de connexion -->
+
+ </div>

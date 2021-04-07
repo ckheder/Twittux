@@ -31,18 +31,24 @@
 </head>
 <body>
 
-    <div class="w3-content" style="max-width:1400px">
-        <div class="w3-row">
+    <div class="w3-container">
 
-          
+         <div class="w3-row">
 
-            <?= $this->fetch('content') ?>
+            <?= $this->Flash->render() ?>
 
+          <?= $this->fetch('content') ?>
 
+        </div>
 
-</div>
+<footer class="w3-container w3-dark-grey">
 
-</div>
+    <p class="w3-center">Conditions d'utilisation - Contribuer - Contact © 2021 Christophe KHEDER. Tous droits réservés.</p>
+
+</footer>
+
+    </div>
 
 </body>
+
 </html>

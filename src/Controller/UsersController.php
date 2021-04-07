@@ -8,7 +8,6 @@ use Cake\Event\EventManager;
 use App\Event\UserListener; // listener personnel pour la création de la ligne settings à l'inscription
 use Cake\Http\Exception\NotFoundException;
 
-
 /**
  * Users Controller
  *
@@ -335,6 +334,8 @@ class UsersController extends AppController
 
         $this->viewBuilder()->setLayout('login'); // définition du layout
 
+        $this->set('title' , 'Connexion requise | Twittux'); // titre de la page
+
         $result = $this->Authentication->getResult(); // récupération du résultaty de l'authentification
 
           if ($result->isValid()) // authentification réussie
@@ -377,7 +378,9 @@ class UsersController extends AppController
 
         $this->Authentication->logout();
 
-        return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        //redirection vers l'accueuil du site
+
+        return $this->redirect('/');
     }
 
     /**

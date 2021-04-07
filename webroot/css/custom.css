@@ -8,6 +8,8 @@ body
 	font-family: 'Athiti', serif;
 }
 
+
+
 /* ## Emoji ## */
 
 .emoji
@@ -220,7 +222,7 @@ color: #737373;
 {
   display: none;
   position: absolute;
-  top : 52px;
+  top: 52px;
 	max-width:360px;
 }
   #autocomplete-results li

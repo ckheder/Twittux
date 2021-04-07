@@ -14,7 +14,7 @@
 
 <!-- lien vers actualités -->
 
-    <a href="/twittux/actualites" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Actualités"><i class="fa fa-globe"></i></a>
+    <a href="/twittux/actualites" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Actualités"><i class="far fa-newspaper"></i></a>
 
 <!-- lien vers les abonnements -->
 
@@ -54,9 +54,10 @@
     <a href="/twittux/<?= $authName ?>" class="w3-hide-small w3-padding-large w3-hover-white w3-right" title="Mon profil">
          <?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'23', 'height'=>'23'));?></a>
 
+
     <!-- lien pour tweeter -->
 
-    <a onclick="document.getElementById('modaltweet').style.display='block'" class="w3-bar-item w3-button w3-padding-large w3-right"><i class="fas fa-pen"></i></a>
+    <a onclick="document.getElementById('modaltweet').style.display='block'" class="w3-bar-item w3-button w3-padding-large w3-hover-white w3-right"><i class="fas fa-pen"></i></a>
 
   </div>
 
@@ -66,6 +67,8 @@
 <div id="smallscreensnav" class="w3-bar-block w3-hide w3-large">
 
   <a href="/twittux/actualites" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
+
+  <a href="/twittux/trending" title="Tendances" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-hashtag"></i> Tendances</a>
 
   <a href="/twittux/abonnements/<?= $authName ;?>" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-user-friends"></i> Social</a>
 

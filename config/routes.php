@@ -71,7 +71,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     //$builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
 
-    /* ROUTE USERS */
+/* ROUTE USERS */
 
     // route login
 
@@ -89,7 +89,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/settings',['controller' => 'Users', 'action' => 'edit']);
 
-    /* ROUTE TWEET */
+  /* ROUTE TWEET */
 
         // route profil
 
@@ -107,7 +107,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // voir tweet avec media sur profil
 
-        $builder->connect('/:username/media',['controller' => 'Tweets', 'action' => 'mediatweet']);
+    $builder->connect('/:username/media',['controller' => 'Tweets', 'action' => 'mediatweet']);
 
         // supprimer un tweet
 
@@ -118,7 +118,13 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/actualites',['controller' => 'Tweets', 'action' => 'actualites']);
 
-    /* ROUTE COMMENTAIRE */
+  /* ROUTE HASHTAG */
+
+        // voir la liste des hashtag les plus populaire
+
+    $builder->connect('/trending',['controller' => 'Hashtag', 'action' => 'index']);
+
+  /* ROUTE COMMENTAIRE */
 
         //ajouter un commentaire
 
@@ -129,7 +135,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/commentaire/delete',
         ['controller' => 'Commentaires', 'action' => 'delete']);
 
-    /* ROUTE ABONNEMENT */
+  /* ROUTE ABONNEMENT */
 
         //ajouter un abonnement
 
@@ -159,7 +165,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/abonnement/request',['controller' => 'Abonnements', 'action' => 'request']);
 
-    /* ROUTE RECHERCHE */
+  /* ROUTE RECHERCHE */
 
         //recherche tweet
 
@@ -175,7 +181,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     // recherche hashtag avec media
 
-$builder->connect('/search/hashtag/media/{query}',['controller' => 'Search', 'action' => 'mediahashtag']);
+    $builder->connect('/search/hashtag/media/{query}',['controller' => 'Search', 'action' => 'mediahashtag']);
 
         //recherche users hashtag (moteur de recherche)
 
@@ -183,9 +189,9 @@ $builder->connect('/search/hashtag/media/{query}',['controller' => 'Search', 'ac
 
     //recherche tweet avec média
 
-$builder->connect('/search/media/{query}',['controller' => 'Search', 'action' => 'media']);
+    $builder->connect('/search/media/{query}',['controller' => 'Search', 'action' => 'media']);
 
-    /* ROUTE LIKE */
+  /* ROUTE LIKE */
 
         // liste des personnes aimant un post (fenêtre modal)
 
@@ -195,7 +201,7 @@ $builder->connect('/search/media/{query}',['controller' => 'Search', 'action' =>
 
     $builder->connect('/likecontent',['controller' => 'Aime', 'action' => 'add']);
 
-    /* ROUTE PARTAGE */
+  /* ROUTE PARTAGE */
 
         // ajouter un partage
 
@@ -205,7 +211,7 @@ $builder->connect('/search/media/{query}',['controller' => 'Search', 'action' =>
 
     $builder->connect('/share/delete',['controller' => 'Partage', 'action' => 'delete']);
 
-    /* ROUTE SETTINGS */
+  /* ROUTE SETTINGS */
 
     // modifier type de compte : public / privé
 

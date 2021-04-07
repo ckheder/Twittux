@@ -24,9 +24,9 @@ class MessagerieController extends AppController
 
   parent::initialize();
 
-$this->loadModel('UserConversation');
-$this->loadModel('Conversation');
-$this->loadComponent('Paginator');
+  $this->loadModel('UserConversation');
+  $this->loadModel('Conversation');
+  $this->loadComponent('Paginator');
 
   //listener qui va écouté la création d'un nouveau message
 

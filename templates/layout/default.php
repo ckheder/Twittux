@@ -31,13 +31,11 @@
 </head>
 <body>
 
-    <div class="w3-content w3-container" style="max-width:1400px;">
+    <div class="w3-container">
 
-        <div class="w3-row">
+         <div class="w3-row">
 
-          <?= $this->element('homenavbar') ?><!-- navbar offline -->
-
-          <?= $this->element('modallogin') ?><!-- fenêtre modale de connexion -->
+             <?= $this->Flash->render() ?>
 
           <?= $this->fetch('content') ?>
 
