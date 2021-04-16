@@ -3,24 +3,33 @@
  *  Vue contenant l'affichage d'un tweet et de ses commentaires
  */
 ?>
-<div class="w3-col m10">
+<div class="w3-col m9">
 
   <!--zone de notification -->
+
                     <div id="alert-area" class="alert-area"></div>
+
   <!--fin zone de notification  -->
 
-    <?php if(isset($no_see)) // tweet appartenant à un profil privé
+    <?php if(isset($no_see))
   {
-    ?>
-  <div class="w3-container">
 
-    <div class="w3-panel w3-red">
+      if($no_see === 2) // si cette variable existe et vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+    {
+      ?>
+      <div class="w3-container">
 
-      <p>Ce tweet est privé, vous devez suivre <?= $user_tweet ;?> pour consulter ce tweet.</p>
+        <div class="w3-panel w3-red">
 
-    </div>
+          <p>
 
-    <?php if($authName)
+            Ce tweet est privé, vous devez suivre <?= $user_tweet ;?> pour consulter ce tweet.
+
+          </p>
+
+        </div>
+
+        <?php if($authName) // si je suis connecté, affichage d'un bouton d'abonnement
     {
 
       ?>
@@ -29,7 +38,7 @@
 
       <span class="zone_abo">
 
-    <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
+        <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
 
       </span>
 
@@ -44,8 +53,29 @@
 
 <?php
 
-  }
-  else {
+}
+
+      elseif ($no_see === 1) // si cette variable existe et vaut 1 (renvoi par le controller) je suis bloqué je ne peut pas voir le tweet
+    {
+  ?>
+      <div class="w3-container">
+
+        <div class="w3-panel w3-red">
+
+          <p>  <?=  $this->Html->image('/img/avatar/'.$user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>60, 'height'=>60)); // avatar?> <?= $user_tweet ;?> vous à bloqué.</p>
+
+        </div>
+
+      </div>
+
+  <?php
+
+    }
+
+}
+
+    else // information sur le tweet
+  {
 
   ?>
 
@@ -55,12 +85,15 @@
 
         <?=  $this->Html->image('/img/avatar/'.$tweet->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
-        <?php if($authName) // si non auth, pas de bouton
+        <?php
+
+          if($authName) // si non auth, pas de bouton
         {
 
           ?>
 
                         <!--bouton de désactivation des commentaires -->
+                        
     <div class="dropdown">
 
       <button onclick="opencommoption()" class="dropbtn">...</button>
@@ -201,12 +234,14 @@ echo $this->Form->create(null, [
 
           <?php
 
-            if($commentaires->username == $authName OR $tweet->username == $authName) // si je suis l'auteur du commentaire
+            if($commentaires->username == $authName OR $tweet->username == $authName) // si je suis l'auteur du commentaire ou l'auteur du tweet
           {
 
             ?>
 
           <a class="deletecomm" href="" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+
+          <a class="blockuser" href="" onclick="return false;" data_username="<?= $commentaires->username ?>">Bloquer <?= $commentaires->username ?></a>
 
           <?php
 

@@ -64,9 +64,11 @@
 </div>
 <!-- Navbar on small screens -->
 
-<div id="smallscreensnav" class="w3-bar-block w3-hide w3-large">
+<div id="smallscreensnav" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-large">
 
-  <a href="/twittux/actualites" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
+
+
+  <a href="/twittux/actualites" style="margin-top: 45px;" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
 
   <a href="/twittux/trending" title="Tendances" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-hashtag"></i> Tendances</a>
 

@@ -7,6 +7,8 @@
 
   const zone_abo = document.querySelector('#zone_abo'); // zone contentna t les boutons d'abonnement, suppression ou demande
 
+  const zone_blocage = document.querySelector('#zone_blocage'); // zone contentant les boutons de blocage : ajout ou suppression
+
   var URL; // URL à atteindre suivant le type de suppression d'un tweet : tweet personnel ou tweet partagé
 
   const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
@@ -508,6 +510,159 @@ document.addEventListener('click',function(e){
 })
 
 /** fin traitement des partages **/
+
+/** BLOCAGE **/
+
+// création d'un blocage
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và vérifier si je n'ai pas déjà bloquer cette personne
+// si non on crée un blocage et , si oui, on le notifie
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'blockuser') // clique sur le bouton avec la classe 'blockuser'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/blockuser', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+
+    return response.json(); // récupération des données au format JSON
+  })
+    .then(function(Data) {
+
+      // utilisateur bloqué
+
+      if(Data.Result == "addblock")
+     {
+
+       // affichage notification
+
+       alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Utilisateur bloqué.</p>'+
+                     '</div>.');
+
+      // mise à jour du bouton de blocage
+
+        zone_blocage.innerHTML = '<button class="w3-button w3-black w3-round"><a class="deblockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-unlock"></i> Débloquer </a></button>';
+
+     }
+
+       // utilisateur déjà bloqué
+
+       else if (Data.Result == "existblock")
+      {
+
+        // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Cet utilisateur est déjà bloqué.</p>'+
+                      '</div>.');
+
+      }
+        else
+      {
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                      '</div>.');
+      }
+
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                    '</div>.');
+
+    });
+
+}
+})
+// suppression d'un blocage
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và supprimer ce blocage d'utilisateur
+
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'deblockuser') // clique sur le bouton avec la classe 'deblockuser'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/deblockuser', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format JSON
+  })
+    .then(function(Data) {
+
+      // blocage supprimé
+
+      if(Data.Result == "blocagesupprime")
+     {
+
+       // affichage notification
+
+       alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Utilisateur débloqué.</p>'+
+                     '</div>.');
+
+      // mise à jour du bouton de blocage
+
+        zone_blocage.innerHTML = '<button class="w3-button w3-black w3-round"><a class="blockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-lock"></i> Bloquer </a></button>';
+
+     }
+
+       // blocage non supprimé
+
+       else if (Data.Result == "blocagenonsupprime")
+      {
+
+        // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de débloqué cet utilisateur.</p>'+
+                      '</div>.');
+
+      }
+
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de débloqué cet utilisateur</p>'+
+                      '</div>.');
+
+    });
+
+}
+})
 
 /** MESSAGERIE **/
 

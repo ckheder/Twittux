@@ -11,7 +11,7 @@
 
 const regexp = /#(\S)/g; // expression régulière qui va servir à ôter le hashtag # sur la génération d'une URL de recherche hashtag
 
-  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
+const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
 const navAnchor = document.querySelectorAll('.tablink'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 
@@ -235,6 +235,15 @@ document.addEventListener('click',function(e){
     case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
                             '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
                             '</div>.');
+
+    break;
+
+    //utilisateur bloqué
+
+    case "userblock": alertbox.show('<div class="w3-panel w3-red">'+
+                        '<p>' + data.username +' vous à bloqué.</p>'+
+                        '</div>.');
+
 
     break;
 
@@ -481,4 +490,152 @@ document.addEventListener('click',function(e){
                     '</div>.');
     });
        }
+})
+
+/** BLOCAGE **/
+
+// création d'un blocage
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và vérifier si je n'ai pas déjà bloquer cette personne
+// si non on crée un blocage et , si oui, on le notifie
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'blockuser') // clique sur le bouton avec la classe 'blockuser'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/blockuser', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format JSON
+  })
+    .then(function(Data) {
+
+      // blocage ajouté
+
+      if(Data.Result == "addblock")
+     {
+
+       // affichage notification
+
+       alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Utilisateur bloqué.</p>'+
+                     '</div>.');
+
+      // mise à jout bouton de blocage
+
+        document.querySelector('.zone_blocage[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-black w3-round"><a class="deblockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-unlock"></i> Débloquer </a></button>';
+
+     }
+
+       // blocage existant
+
+       else if (Data.Result == "existblock")
+      {
+
+        // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Cet utilisateur est déjà bloqué.</p>'+
+                    '</div>.');
+
+      }
+        else
+      {
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                    '</div>.');
+      }
+
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                    '</div>.');
+
+    });
+
+}
+})
+// suppression d'un blocage
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và supprimer ce blocage d'utilisateur
+
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'deblockuser') // clique sur le bouton avec la classe 'deblockuser'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/deblockuser', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+    return response.json(); // récupération des données au format JSON
+  })
+    .then(function(Data) {
+
+      // blocage supprimé
+
+      if(Data.Result == "blocagesupprime")
+     {
+
+       // affichage notification
+
+       alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Utilisateur débloqué.</p>'+
+                   '</div>.');
+
+        document.querySelector('.zone_blocage[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-black w3-round"><a class="blockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-lock"></i> Bloquer </a></button>';
+
+     }
+
+     // blocage non supprimé
+
+       else if (Data.Result == "blocagenonsupprime")
+      {
+
+    // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de débloqué cet utilisateur.</p>'+
+                      '</div>.');
+
+      }
+
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de débloqué cet utilisateur</p>'+
+                    '</div>.');
+
+    });
+
+}
 })

@@ -22,8 +22,6 @@ namespace App\Controller;
 {
     parent::initialize();
 
-    $this->loadComponent('Paginator');
-
     $this->Authentication->allowUnauthenticated(['index']); // on autorise les gens non auth à voir les hashtags
 
 }

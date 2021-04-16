@@ -20,7 +20,7 @@
 
                 <header class="w3-container w3-light-grey">
 
-                  <h4> <?= ''.count($abonne_valide).' abonné(s)'; ?> </h4> <!-- // nombre d'abonnés -->
+                  <h4><span class="nb_follower"><?= count($abonne_valide); ?></span> abonné(s)</h4> <!-- // nombre d'abonnés -->
 
                 </header>
 
@@ -46,7 +46,7 @@
 
                     <?= $this->Html->image('/img/avatar/'.$abonne_valide->Users['username'].'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($abonne_valide->Users['username']).'')) ?>
 
-                    
+
 
                   <!-- lien profil -->
 
@@ -62,22 +62,30 @@
 
                   <?php // si le résultat n'est pas moi, chargement de la cell de test d'abonnement
 
-                    if($abonne_valide->Users['username'] != $authName)
+                    if($abonne_valide->Users['username'] != $authName) // cas ou je visite une liste d'abonné et que je suis dedans
                   {
 
-                    echo $this->cell('Abonnements::testabo', [$authName, $abonne_valide->Users['username']]); 
+                    echo $this->cell('Abonnements::testabo', [$authName, $abonne_valide->Users['username']]);
                   }
 
                   ?>
 
                 </span>
+
                 <!-- affichage d'un bouton de blocage -->
-                  <span class="zone_blocage">
 
-                    <button class="w3-button w3-red w3-round w3-right">
+                  <span class="zone_blocage" data_username="<?= $abonne_valide->Users['username'];?>">
 
-                      <a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $abonne_valide->Users['username'] ?>"><i class="fas fa-user-lock"></i> Bloquer </a>
-                    </button>
+                    <?php
+
+                      if($abonne_valide->Users['username'] != $authName) // cas ou je visite une liste d'abonné et que je suis dedans
+                    {
+
+                      echo $this->cell('Blocage', [$authName, $abonne_valide->Users['username']]);
+
+                    }
+
+                    ?>
 
                   </span>
 
@@ -98,7 +106,7 @@
               <?= $this->Paginator->options([
                                               'url' => array('controller' => '/abonnement/'.$this->request->getParam('username').'')
                                             ]);  ?>
-             
+
             <?= $this->Paginator->next('Next page'); ?>
 
           </div>
@@ -110,5 +118,5 @@
     </div>
 
   </div>
-  
+
 </div>

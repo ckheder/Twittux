@@ -18,6 +18,8 @@
           </p>
          <hr />
 
+          <p class="w3-center">
+
          <?php
 
           if($authName) // si je suis authentifié , test de l'abonnement , envoi de message et blocage
@@ -25,18 +27,16 @@
 
            if($this->request->getParam('username') != $authName) // si je suis pas sur mon profil
          {
-
+            if($no_see != 1) // si cette variable ne vaut pas 0 (profil autorisé) ou 2 (profil privé mais non abonné)
+           {
          ?>
-         <p class="w3-center"> <!-- bouton envoyer un message -->
+         <!-- bouton envoyer un message -->
 
                  <button class="w3-button w3-indigo w3-round"><a class="sendmessage" href="" onclick="return false;" data_username="<?= $this->request->getParam('username') ?>"><i class="far fa-envelope"></i> Message </a></button>
 
-        </p>
               <hr />
 
-                  <p class="w3-center">
-
-                    <span id="zone_abo">
+                  <span id="zone_abo">
 
                       <!-- test de l'abonnement au profil visité -->
 
@@ -44,21 +44,25 @@
 
                     </span>
 
-         <!-- affichage d'un bouton de blocage -->
 
-         <span id="zone_blocage">
-
-           <button class="w3-button w3-red w3-round"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $this->request->getParam('username') ?>"><i class="fas fa-user-lock"></i> Bloquer </a></button>
-
-         </span>
-
-                </p>
-
-<hr />
          <?php
 
          }
+
+         ?>
+         <span id="zone_blocage">
+
+           <?= $this->cell('Blocage', [$authName,$this->request->getParam('username')]); ?>
+
+         </span>
+
+         <hr />
+
+       </p>
+
+         <?php
        }
+     }
 
          ?>
 
@@ -94,7 +98,11 @@
 
       <br>
 
-      <?php endforeach ;?>
+      <?php endforeach ;
+
+      if($no_see === 0) // si cette variable ne vaut pas 0 (profil autorisé) ou 2 (profil privé mais non abonné)
+     {
+   ?>
 
       <div class="w3-card w3-round">
 
@@ -164,6 +172,8 @@
         </div>
 
       </div>
+
+    <?php } ?>
 
       <br>
 

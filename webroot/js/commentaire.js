@@ -281,6 +281,8 @@ var alertbox = new AlertBox('#alert-area', {
 
 /** fin affichage des notifications **/
 
+/**ABONNEMENT **/
+
 /** abonnement si tweet privé **/
 
 document.addEventListener('click',function(e){
@@ -364,4 +366,83 @@ document.addEventListener('click',function(e){
 
    });
       }
+})
+
+/** BLOCAGE **/
+
+// création d'un blocage
+
+// au click sur le bouton, on redirige vers une action du controlleur qui và vérifier si je n'ai pas déjà bloquer cette personne
+
+// si non on crée un blocage et , si oui, on le notifie
+
+document.addEventListener('click',function(e){
+
+    if(e.target && e.target.className == 'blockuser') // clique sur le bouton avec la classe 'blockuser'
+  {
+
+    var data = {
+                "username": e.target.getAttribute('data_username') // username de la personne à qui je veut envoyer un message
+                }
+
+    let response = fetch('/twittux/blockuser', {
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+.then(function(response) {
+
+    return response.json(); // récupération des données au format JSON
+
+  })
+    .then(function(Data) {
+
+
+        if(Data.Result == "addblock") // création d'un blocage réussie
+     {
+
+       // affichage notification
+
+       alertbox.show('<div class="w3-panel w3-green">'+
+                     '<p>Utilisateur bloqué.</p>'+
+                   '</div>.');
+
+     }
+
+       else if (Data.Result == "existblock") // blocage existant
+    {
+
+      // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Cet utilisateur est déjà bloqué.</p>'+
+                    '</div>.');
+    }
+        else // problème
+
+    {
+
+      // affichage notification
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                    '</div>.');
+    }
+
+
+    }).catch(function(err) {
+
+      // notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de bloqué cet utilisateur.</p>'+
+                    '</div>.');
+
+    });
+
+}
 })

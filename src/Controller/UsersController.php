@@ -21,7 +21,6 @@ class UsersController extends AppController
         public function initialize() : void
     {
         parent::initialize();
-        $this->loadModel('Settings'); // chargement du modèle settings
 
         //listener qui va écouté la création d'un nouvelle utilisateur
 

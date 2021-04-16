@@ -46,7 +46,14 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('Paginator');
         $this->loadModel('Settings');
+        $this->loadModel('Conversation');
         $this->loadModel('UserConversation');
+        $this->loadModel('Blocage');
+        $this->loadModel('Abonnements');
+        $this->loadModel('Users');
+        $this->loadModel('Tweets');
+        $this->loadModel('Commentaires');
+        $this->loadModel('Partage');
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
@@ -152,6 +159,34 @@ class AppController extends Controller
 
           return $check_notif;
 
+        }
+
+        /**
+             * Méthode checkblock
+             *
+             * Vérifie si la personne à qui j'envoi un message, je consulte les tweets ou que je m'abonne me bloque ou non
+             *
+             * Paramètres : $bloqueur -> le bloqueur , $bloque -> le bloque
+             *
+             * Sortie : oui | non
+             *
+             *
+        */
+
+          public function checkblock($bloqueur, $bloque)
+        {
+          $query = $this->Blocage->find()->where(['bloqueur' => $bloqueur,'bloque' => $bloque]);
+
+              if ($query->isEmpty()) // si pas de résultat, je ne suis pas bloqué
+            {
+              $resultblock = 'non';
+            }
+              else
+            {
+              $resultblock = 'oui';
+            }
+
+            return $resultblock;
         }
 
         /**

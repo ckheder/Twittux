@@ -29,8 +29,6 @@ use Cake\Datasource\ConnectionManager;
 
         parent::initialize();
 
-        $this->loadModel('Settings');
-
         //listener qui va écouté la création d'un nouvel abonnement
 
         $AbonnementListener = new AbonnementListener();
@@ -119,17 +117,27 @@ use Cake\Datasource\ConnectionManager;
 
             $jsonData = $this->request->input('json_decode'); // récupération des informations envoyées en JSON
 
-            $username = $jsonData->username; //nom de la personne concerné par la demande
+            $username = $jsonData->username; //nom de la personne à ajouté
+
+            // vérification blocage : si je suis bloqué, je ne peut pas m'abonner
+
+            if(AppController::checkblock($username, $this->Authentication->getIdentity()->username) == 'oui')
+          {
+
+            return $this->response->withType('application/json')
+                                    ->withStringBody(json_encode(['Result' => 'userblock']));
+
+          }
 
             // vérification de l'existence d'un abonnement
 
             $check_abo  = $this->Abonnements->find()
-            ->where(['suiveur' => $this->Authentication->getIdentity()->username, 'suivi' => $username])
-            ->count();
+                                            ->where(['suiveur' => $this->Authentication->getIdentity()->username, 'suivi' => $username]);
+
 
             // je suis déjà abonné , renvoi d'une réponse au format JSON
 
-                if($check_abo == 1)
+                if(!$check_abo->isEmpty())
             {
 
                 return $this->response->withType('application/json')

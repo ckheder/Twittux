@@ -58,7 +58,7 @@ use Cake\Routing\Router;
 
         <?= $this->Flash->render();?>
 
-          <?= $this->cell('Users',['username' => $this->request->getParam('username'), 'authname' => $authName]); ?>
+          <?= $this->cell('Users',['username' => $this->request->getParam('username'), 'authname' => $authName,'no_see'=> $no_see]); ?>
 
           <div class="w3-col m6">
 

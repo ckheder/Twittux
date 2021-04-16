@@ -18,13 +18,6 @@ use Cake\Http\Exception\NotFoundException;
 
 
 
-            public function initialize(): void
-    {
-        parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Tweets');
-    }
-
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);

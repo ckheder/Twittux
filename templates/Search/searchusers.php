@@ -39,26 +39,38 @@
 
                   </p>
 
-                  <!-- test de mon abonnnement (uniquement si le résultat n'est pas le profil courant) -->
+                  <?php
+
+                    if($authName) // si je suis authentifié, on fais le test si je suis abonné/blloqué ou non
+                  {
+
+                    if($query_users->username != $authName) // test de mon abonnement / blocage (uniquement si le résultat n'est pas le profil courant)
+                  {
+
+                    ?>
+
+                  <!-- test abonnnement -->
 
                    <span class="zone_abo" data_username="<?= $query_users->username;?>">
 
-                  <?php
-
-                    if($authName) // si je suis authentifié, on fais le test si je suis abonné ou non
-                  {
-
-                    if($query_users->username != $authName)
-                  {
-
-                    echo $this->cell('Abonnements::testabo', [$authName, $query_users->username]);
-
-                  }
-                }
-
-                ?>
+                    <?= $this->cell('Abonnements::testabo', [$authName, $query_users->username]); ?>
 
                   </span>
+
+                  <!-- test blocage -->
+
+                   <span class="zone_blocage" data_username="<?= $query_users->username;?>">
+
+                    <?= $this->cell('Blocage', [$authName, $query_users->username]); ?>
+
+                  </span>
+
+                  <?php
+
+                    }
+                  }
+
+                                  ?>
 
                 <br />
 

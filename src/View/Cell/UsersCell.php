@@ -31,16 +31,18 @@ class UsersCell extends Cell
     /**
      * Méthode display : affiche les informations d'un utilisateur : sur tweet(index, view)
      *
+     * Paramètres : $username -> profil courant, $authname -> utilisateur connecté visitant le profil, $no_see -> (valeur 0,1 ou 2) état du blocage du username vis a vis du authname
      */
-        public function display($username, $authname = null)
+        public function display($username, $authname = null, $no_see = null)
     {
 
         $usersinfos = $this->Users->find()
                                     ->select(['description','lieu','website','created'])
                                     ->where(['username' => $username]);
 
-        $this->set('usersinfos', $usersinfos);
+        $this->set('usersinfos', $usersinfos); // infos utilisateur courant
         $this->set('username',$username);
         $this->set('authName',$authname);
+        $this->set('no_see',$no_see);
     }
 }

@@ -47,6 +47,17 @@ class CommentairesController extends AppController
 
             $auttweet = $this->request->getData('user_tweet'); // auteur du tweet
 
+            // on vérifie si je ne suis pas bloqué
+
+            if(AppController::checkblock($auttweet, $this->Authentication->getIdentity()->username) == 'oui')
+          {
+
+
+            return $this->response->withType('application/json')
+                                    ->withStringBody(json_encode(['result' => 'nocomm']));
+
+          }
+
             $data = array(
                             'id_comm' => $idcomm,
                             'commentaire' => AppController::linkify_content($this->request->getData('commentaire')),

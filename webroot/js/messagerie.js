@@ -550,14 +550,21 @@ document.addEventListener('click',function(e){
 })
   .then(function(jsonResult) {
 
-      if (jsonResult.Result == 'msgok')
+      if(jsonResult.Result == 'userblock') // utilisateur bloqué, affichage d'un message indiquant que l'envoi de message est impossible
+    {
+      alertbox.show('<div class="w3-panel w3-red">'+
+                    '<p>Cet utilisateur vous à bloqué, vous ne pouvez pas lui envoyer de message.</p>'+
+                    '</div>.');
+    }
+
+      else if (jsonResult.Result == 'msgok')
     {
 
       //envoi message réussi depuis l'index
 
       alertbox.show('<div class="w3-panel w3-green">'+
                     '<p>Message envoyé !</p>'+
-                  '</div>.');
+                    '</div>.');
 
       // réinitilisation du formulaire
 

@@ -27,12 +27,6 @@ class TweetsController extends AppController
         public function initialize() : void
     {
         parent::initialize();
-        $this->loadComponent('Paginator');
-        $this->loadModel('Commentaires');
-        $this->loadModel('Partage');
-        $this->loadModel('Abonnements');
-        $this->loadModel('Users');
-        $this->loadModel('Settings');
 
         //listener qui va écouté la création d'un nouveau tweet
 
@@ -52,6 +46,8 @@ class TweetsController extends AppController
 
       $current_user = $this->request->getParam('username'); // récupération de l'utilisateur en URL
 
+      $no_see = 0;
+
       if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
   {
       $this->viewBuilder()->setLayout('ajax');
@@ -59,7 +55,9 @@ class TweetsController extends AppController
       else
   {
       $this->viewBuilder()->setLayout('tweet'); // sinon le layout 'tweet'
+
       $this->set('title' , ''.$current_user.' | Twittux'); // titre de la page
+
   }
 
   // si je suis connecter
@@ -70,21 +68,48 @@ class TweetsController extends AppController
       if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
     {
 
-          if($this->verif_user($current_user) == 0) // on vérifie si l'utilisateur existe
+          // on vérifie si l'utilisateur existe
+
+          if($this->verif_user($current_user) == 0)
         {
           throw new NotFoundException();
         }
 
-    // on vérifie si je peux voir le profil
+        // on vérifie si je ne suis pas bloqué
+
+        if(AppController::checkblock($current_user, $this->Authentication->getIdentity()->username) == 'oui')
+      {
+        $no_see = 1; // interdiction de voir
+
+        $this->set('no_see', $no_see);
+
+        return;
+
+      }
+
+
+    // on vérifie si je peux voir un profil peut être privé
 
       if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
     {
-      $no_see = 1; // interdiction de voir
+      $no_see = 2; // interdiction de voir
 
+      $this->set('no_see', $no_see);
+
+    }
+
+      else // profil privé et j'y suis abonné, profil public
+    {
       $this->set('no_see', $no_see);
     }
 
+
   }
+    else // je suis sur mon profil : no_see reste à 0 donc je peut voir
+  {
+    $this->set('no_see', $no_see);
+  }
+
 }
 
 // si je ne suis pas authentifié et que le profil est privé
@@ -95,8 +120,12 @@ class TweetsController extends AppController
 
   $this->set('no_see', $no_see);
 }
-    if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+
+
+    if($no_see === 0) // si je suis abonné ou profil public ou non bloqué, on récupère la liste des tweets
   {
+
+
         // récupération des tweets
 
         $tweets = $this->paginate($this->Tweets->find()
@@ -113,6 +142,7 @@ class TweetsController extends AppController
                                                         );
 
         $this->set(compact('tweets'));
+
     }
   }
 
@@ -131,16 +161,30 @@ class TweetsController extends AppController
 
         $tweet = $this->Tweets->get($id); // on récupère les infos du tweet
 
-        if($this->Authentication->getIdentity())
+          if($this->Authentication->getIdentity()) // si je suis authentifié
         {
 
           if($tweet->username != $this->Authentication->getIdentity()->username) // si je ne suis pas l'auteur du tweet
         {
 
+          // test du blocage : si je suis bloqué je ne peut pas voir le tweet
+
+          if(AppController::checkblock($tweet->username, $this->Authentication->getIdentity()->username) == 'oui')
+        {
+          $no_see = 1; // interdiction de voir
+
+          $this->set('title','Tweet bloqué'); // nouveau titre
+          $this->set('no_see', $no_see); // envoi d'une varibale d'information
+          $this->set('user_tweet', $tweet->username); // renvoi du nom de l'auteur pour message personnalisé
+
+          return;
+
+        }
+
             if(AppController::get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // sur profil prive et non abonné
           {
 
-            $no_see = 1; // interdiction de voir
+            $no_see = 2; // interdiction de voir
             $this->set('title','Tweet privé'); // nouveau titre
             $this->set('no_see', $no_see); // envoi d'une varibale d'information
             $this->set('user_tweet', $tweet->username); // renvoi du nom de l'auteur pour message personnalisé
@@ -218,12 +262,24 @@ class TweetsController extends AppController
 {
   throw new NotFoundException();
 }
+
+// on vérifie si je ne suis pas bloqué
+
+    if(AppController::checkblock($current_user, $this->Authentication->getIdentity()->username) == 'oui')
+  {
+    $no_see = 1; // interdiction de voir
+
+    $this->set('no_see', $no_see);
+
+    return;
+
+}
 // on vérifie si je peux voir le profil
 
   if(AppController::get_type_profil($current_user) == 'prive' AND $this->check_abo($current_user) == 0)
 {
 
-  $no_see = 1; // interdiction de voir
+  $no_see = 2; // interdiction de voir
 
   $this->set('no_see', $no_see);
 

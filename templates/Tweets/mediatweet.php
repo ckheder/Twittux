@@ -26,16 +26,24 @@
   <div id="alert-area" class="alert-area"></div>
   <!--fin zone de notification sur l'état de l'envoi d'un tweet -->
 
-<?php
 
-    if(isset($no_see)) // si cette variable existe (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+
+
+    <?php if(isset($no_see))
   {
-    ?>
+
+  if($no_see === 1) // si cette variable existe (renvoi par le controller) et vaut 1 on est bloqué
+{
+  ?>
     <div class="w3-container">
 
       <div class="w3-panel w3-red">
 
-      <p>Ce profil est privé, vous devez suivre <?= $this->request->getParam('username') ;?> pour consulter ses tweets.</p>
+        <p>
+
+          <?=  $this->Html->image('/img/avatar/'.$this->request->getParam('username').'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>60, 'height'=>60)); // avatar?> <?= $this->request->getParam('username') ;?> vous à bloqué.
+
+        </p>
 
       </div>
 
@@ -43,7 +51,30 @@
 
 <?php
 
-  }
+}
+
+  elseif($no_see === 2) // si cette variable existe et vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+{
+?>
+
+<div class="w3-container">
+
+  <div class="w3-panel w3-red">
+
+  <p>
+
+    Ce profil est privé, vous devez suivre <?= $this->request->getParam('username') ;?> pour consulter ses tweets.
+
+  </p>
+
+  </div>
+
+</div>
+
+<?php
+
+}
+}
   else // profil public ou privé mais abonné -> affichage des tweets
   {
 

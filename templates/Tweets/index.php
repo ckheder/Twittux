@@ -4,6 +4,10 @@
  */
 ?>
 
+<!--zone de notification sur l'état de l'envoi d'un tweet -->
+<div id="alert-area" class="alert-area"></div>
+<!--fin zone de notification sur l'état de l'envoi d'un tweet -->
+
 <!--affichage des tweets de l'utilisateur et des tweets partagés-->
 
   <?php if(isset($tweets) AND count($tweets) == 0) // aucun tweet à afficher
@@ -22,22 +26,41 @@
   <?php
   }
 
-?>
 
-  <!--zone de notification sur l'état de l'envoi d'un tweet -->
-  <div id="alert-area" class="alert-area"></div>
-  <!--fin zone de notification sur l'état de l'envoi d'un tweet -->
+      if($no_see === 1) // si cette variable existe (renvoi par le controller) et vaut 1 on est bloqué
+    {
+      ?>
+        <div class="w3-container">
+
+          <div class="w3-panel w3-red">
+
+            <p>
+
+              <?=  $this->Html->image('/img/avatar/'.$this->request->getParam('username').'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>60, 'height'=>60)); // avatar?> <?= $this->request->getParam('username') ;?> vous à bloqué.
+
+            </p>
+
+          </div>
+
+        </div>
 
 <?php
 
-    if(isset($no_see)) // si cette variable existe (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+    }
+
+    elseif($no_see === 2) // si cette variable existe et vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
   {
     ?>
+
     <div class="w3-container">
 
       <div class="w3-panel w3-red">
 
-      <p>Ce profil est privé, vous devez suivre <?= $this->request->getParam('username') ;?> pour consulter ses tweets.</p>
+      <p>
+
+        Ce profil est privé, vous devez suivre <?= $this->request->getParam('username') ;?> pour consulter ses tweets.
+
+      </p>
 
       </div>
 
@@ -46,6 +69,7 @@
 <?php
 
   }
+
   else // profil public ou privé mais abonné -> affichage des tweets
   {
 
@@ -196,16 +220,26 @@
               ?>
                 &nbsp;
                   <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $tweet->username ?>" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
-        <?php
+              <?php
+
               }
+
             }
+
       ?>
       </p>
-    <?php } ?>
+
+    <?php
+
+      }
+
+  ?>
       </div>
 
  <?php
 
 endforeach;
+
 }
+
 ?>

@@ -14,14 +14,6 @@ use Cake\Datasource\ConnectionManager;
 class SettingsController extends AppController
 {
 
-  public function initialize() : void
-{
-  parent::initialize();
-
-  $this->loadModel('Tweets'); // chargement du modèle Tweets pour la mise à jour du champ private si changement de profil
-
-}
-
     /**
      * Méthode Setupprofil
      *

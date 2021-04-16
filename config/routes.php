@@ -201,6 +201,20 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/likecontent',['controller' => 'Aime', 'action' => 'add']);
 
+  /* ROUTE BLOCAGE */
+
+        // crée un blocage
+
+    $builder->connect('/blockuser',['controller' => 'Blocage', 'action' => 'add']);
+
+        // supprimer un blocage
+
+    $builder->connect('/deblockuser',['controller' => 'Blocage', 'action' => 'delete']);
+
+      // liste des utilisateurs bloqués
+
+    $builder->connect('/userblock',['controller' => 'Blocage', 'action' => 'index']);
+
   /* ROUTE PARTAGE */
 
         // ajouter un partage

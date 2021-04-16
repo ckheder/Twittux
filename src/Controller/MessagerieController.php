@@ -24,10 +24,6 @@ class MessagerieController extends AppController
 
   parent::initialize();
 
-  $this->loadModel('UserConversation');
-  $this->loadModel('Conversation');
-  $this->loadComponent('Paginator');
-
   //listener qui va écouté la création d'un nouveau message
 
   $MessagerieListener = new MessagerieListener();
@@ -114,6 +110,21 @@ class MessagerieController extends AppController
         {
 
           $destinataire = $this->request->getData('destinataire'); // destinataire
+
+          // test du blocage sur l'envoi de message : tester uniquement en conversation duo ou index de la messagerie
+
+          if(count($destinataire) === 1) // tableau des destinataires
+        {
+
+            if(AppController::checkblock($destinataire[0], $this->Authentication->getIdentity()->username) == 'oui')
+          {
+
+            return $this->response->withType('application/json')
+                                  ->withStringBody(json_encode(['Result' => 'userblock']));
+
+          }
+
+        }
 
           if($this->request->getData('conversation') == null) // je vient de la page d'accueil de la messagerie
         {
