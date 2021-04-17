@@ -51,8 +51,8 @@ class NotificationsController extends AppController
 
                 // si le statut vaut 0 ou 1 -> mise à jour du statut d'une notification (lue/non lue)
 
-                case "0":
-                case "1":
+            case "0":
+            case "1":
 
                   if($statut === "0") // la notification devient lue
                 {
@@ -90,7 +90,7 @@ class NotificationsController extends AppController
 
                     //suppression d'une notification
 
-                case "deletenotif":
+          case "deletenotif":
 
                 $statement = ConnectionManager::get('default')->prepare(
                 'DELETE FROM notifications WHERE user_notif = :usernotif AND id_notif = :idnotif');
@@ -117,7 +117,7 @@ class NotificationsController extends AppController
 
                 // marquer toutes les notifications comme lues
 
-                case "allread":
+          case "allread":
                 $statement = ConnectionManager::get('default')->prepare(
                 'UPDATE notifications SET statut = 1 WHERE user_notif =  :usernotif');
 
@@ -142,7 +142,7 @@ class NotificationsController extends AppController
 
                     //supprimer toute les notifications
 
-                case "alldelete":
+        case "alldelete":
                 $statement = ConnectionManager::get('default')->prepare(
                 'DELETE FROM notifications WHERE user_notif = :usernotif');
 

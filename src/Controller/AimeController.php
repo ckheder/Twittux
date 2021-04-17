@@ -56,7 +56,7 @@ class AimeController extends AppController
                                                                             'username' => $this->Authentication->getIdentity()->username,
                                                                             'id_tweet' => $jsonData]);
 
-                if($query_like->isEmpty()) // pas de like existant
+                if($query_like->isEmpty()) // pas de like existant, on en crée 1
             {
 
                 $aime = $this->Aime->newEmptyEntity();

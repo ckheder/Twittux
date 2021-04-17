@@ -347,7 +347,7 @@ class UsersController extends AppController
 
               if (!$target) // je viens de la page d'accueil du site , je suis redirigé vers mon profil
             {
-              return $this->redirect('/'.$user->username.'');
+              return $this->redirect('/actualites');
             }
 
               else // je suis redirigé vers la page de provenance

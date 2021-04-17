@@ -86,6 +86,8 @@ class MessagerieController extends AppController
 
             $this->set('no_see', $no_see); // envoi d'une varibale d'information
 
+            return;
+
           }
 
         }
