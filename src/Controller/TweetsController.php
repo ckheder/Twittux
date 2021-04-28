@@ -181,7 +181,7 @@ class TweetsController extends AppController
 
         }
 
-            if(AppController::get_type_profil($tweet->username) == 'prive' AND $this->check_abo($tweet->username) == 0) // sur profil prive et non abonné
+            if($tweet->private AND $this->check_abo($tweet->username) == 0) // sur profil prive et non abonné
           {
 
             $no_see = 2; // interdiction de voir
@@ -195,9 +195,9 @@ class TweetsController extends AppController
 
 // si je ne suis pas authentifié et que le profil est privé
 
-  elseif (!$this->Authentication->getIdentity() AND AppController::get_type_profil($tweet->username) == 'prive')
+  elseif (!$this->Authentication->getIdentity() AND $tweet->private)
 {
-  $no_see = 1; // interdiction de voir
+  $no_see = 2; // interdiction de voir
 
   $this->set('no_see', $no_see);
 
@@ -206,7 +206,7 @@ class TweetsController extends AppController
   $this->set('user_tweet', $tweet->username); // renvoi du nom de l'auteur pour message personnalisé
 
 }
-        if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des tweets
+        if(!isset($no_see)) // si je suis abonné ou profil public , on récupère la liste des commentaires
       {
 
         $this->set('tweet', $tweet);
@@ -222,6 +222,7 @@ class TweetsController extends AppController
                                     ->order(['created' => 'DESC']));
 
         $this->set(compact('commentaires'));
+
 
     }
   }

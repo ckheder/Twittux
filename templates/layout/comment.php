@@ -55,11 +55,44 @@
 
     <div class="w3-container w3-content" style="max-width:1400px;margin-top:50px;">
 
-        <div class="w3-row">
+<div class="w3-col m2">&nbsp;</div>
+
+      <div class="w3-col m6">
+
+        <div class="w3-container">
 
             <?= $this->fetch('content') ?>
 
+      </div>
+
+    </div>
+
+    <!-- Right Column -->
+
+    <?php
+
+      if (!$this->request->isMobile()) // si je ne suis pas sur mobile, affichage de la cell des hashtags
+    {
+    ?>
+      <div class="w3-col m3">
+
+        <div class="w3-panel w3-border w3-light-grey">
+
+          <h4 class="w3-center"><i class="fas fa-globe"></i> Tendances</h4>
+
+            <?= $this->cell('Hashtag'); ?>
+
         </div>
+
+      </div>
+
+    <!-- End Right Column -->
+
+    <?php
+
+    }
+
+    ?>
 
     </div>
 

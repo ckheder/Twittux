@@ -132,8 +132,11 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // supprimer un commentaire
 
-    $builder->connect('/commentaire/delete',
-        ['controller' => 'Commentaires', 'action' => 'delete']);
+    $builder->connect('/commentaire/delete',['controller' => 'Commentaires', 'action' => 'delete']);
+
+      //activer/Désactiver les commentaires
+
+    $builder->connect('/commentaire/actioncomm',['controller' => 'Commentaires', 'action' => 'actioncomm']);
 
   /* ROUTE ABONNEMENT */
 

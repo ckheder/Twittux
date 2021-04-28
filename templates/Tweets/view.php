@@ -3,7 +3,6 @@
  *  Vue contenant l'affichage d'un tweet et de ses commentaires
  */
 ?>
-<div class="w3-col m9">
 
   <!--zone de notification -->
 
@@ -11,51 +10,55 @@
 
   <!--fin zone de notification  -->
 
-    <?php if(isset($no_see))
-  {
-
-      if($no_see === 2) // si cette variable existe et vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
-    {
-      ?>
-      <div class="w3-container">
-
-        <div class="w3-panel w3-red">
-
-          <p>
-
-            Ce tweet est privé, vous devez suivre <?= $user_tweet ;?> pour consulter ce tweet.
-
-          </p>
-
-        </div>
-
-        <?php if($authName) // si je suis connecté, affichage d'un bouton d'abonnement
-    {
-
-      ?>
-
-    <div class="w3-center">
-
-      <span class="zone_abo">
-
-        <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
-
-      </span>
-
-    </div>
-
     <?php
-  }
 
-  ?>
+        if(isset($no_see)) // variable pour déterminer le message à afficher si je ne peut pas voir un tweet
+      {
+          if($no_see === 2) // si cette variable vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
+        {
+          ?>
+            <div class="w3-container">
 
-  </div>
+              <div class="w3-panel w3-red">
 
-<?php
+                <p>
 
-}
+                  Ce tweet est privé, vous devez suivre <?= $user_tweet ;?> pour consulter ce tweet.
 
-      elseif ($no_see === 1) // si cette variable existe et vaut 1 (renvoi par le controller) je suis bloqué je ne peut pas voir le tweet
+                </p>
+
+              </div>
+
+        <?php
+
+              if($authName) // si je suis connecté, affichage d'un bouton d'abonnement
+            {
+
+        ?>
+
+              <div class="w3-center">
+
+                <span class="zone_abo">
+
+                  <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
+
+                </span>
+
+              </div>
+
+      <?php
+
+            }
+
+      ?>
+
+          </div>
+
+      <?php
+
+    }
+
+      elseif ($no_see === 1) // si cette variable vaut 1 (renvoi par le controller) je suis bloqué je ne peut pas voir le tweet
     {
   ?>
       <div class="w3-container">
@@ -87,29 +90,31 @@
 
         <?php
 
-          if($authName) // si non auth, pas de bouton
+          if($authName AND $authName === $tweet->username) // si non auth, pas de bouton et si auth vaut l'auteur du tweet apparition du bouton
         {
 
           ?>
 
-                        <!--bouton de désactivation des commentaires -->
-                        
-    <div class="dropdown">
+            <!--bouton de désactivation des commentaires -->
 
-      <button onclick="opencommoption()" class="dropbtn">...</button>
+            <div class="dropdown">
 
-        <div id="commoption" class="dropdown-content">
+              <button onclick="opencommoption()" class="dropbtn">...</button>
 
-          <a class="optioncomm" href="#" onclick="return false;"> Désactiver les commentaires</a>
+                <div id="commoption" class="dropdown-content">
 
-        </div>
+                  <a class="optioncomm" data_idtweet ="<?= $tweet->id_tweet ;?>" data-actioncomm = "<?= ($tweet->allow_comment == 0) ? 1 : 0 ;?>" href="#" onclick="return false;"> <?= ($tweet->allow_comment == 0) ? 'Désactiver les commentaires' : 'Activer les commentaires' ;?></a>
 
-    </div>
+                </div>
 
-    <?php
-}
+            </div>
 
-?>
+        <?php
+
+        }
+
+        ?>
+
         <!--nom d'utilisateur -->
 
         <h4><?= $this->Html->link(''.h($tweet->username).'','/'.h($tweet->username).'') ?></h4>
@@ -124,71 +129,133 @@
 
         <p><?= $tweet->contenu_tweet ;?></p>
 
+        <hr />
+
       <!--zone de notification sur l'état de l'envoi d'un commentaire -->
 
       <div id="alert-area" class="alert-area"></div>
 
+
       <!--fin zone de notification sur l'état de l'envoi d'un commentaire -->
 
-      <?php if($authName) // si non auth, pas de comm
+      <?php
+
+        if($authName) // si non auth, pas de formulaire d'envoi de commentaire
       {
 
-
-
-// ZONE COMMENTAIRE /
+// ZONE COMMENTAIRE
 
 // formulaire de création de commentaire
 
-echo $this->Form->create(null, [
-                                'id' =>'form_comm',
-                                'url' => ['controller' => 'Commentaires', 'action' => 'add']
+        echo $this->Form->create(null, [
+                                        'id' =>'form_comm',
+                                        'url' => ['controller' => 'Commentaires', 'action' => 'add']
 
-                                ]);
-//<!--textarea
-                  echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
+                                      ]);
 
-                <!--bouton dropdown -->
+        echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
 
-    <div class="w3-dropdown-click">
+                <!--bouton dropdown pour les emojis -->
 
-      <a onclick="openemojimenu()" class="btnemoji">
+                <div class="w3-dropdown-click">
 
-        <img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
+                  <a onclick="openemojimenu()" class="btnemoji">
 
-          <div id="menuemojie" class="w3-dropdown-content w3-bar-block w3-border">
+                    <img src="/twittux/img/emoji/grinning.png" width="23" height="23"></a>
+
+                      <div id="menuemojie" class="w3-dropdown-content w3-bar-block w3-border">
+
 <?php // parcours du dossier contenant les emojis et affichage dans la div
 
   $dir = WWW_ROOT . 'img/emoji';
+
   $iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+
   foreach(new RecursiveIteratorIterator($iterator) as $file)
 {
   $img = $file->getFilename();
+
   echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
 }
 ?>
-    </div>
-  </div>
+                    </div>
 
-<!--champ caché contenant l'id du tweet -->
+              </div>
+
+          <!--champ caché contenant l'id du tweet -->
 
           <?= $this->Form->hidden('id_tweet',['value' => $this->request->getParam('id')]); ?>
 
+          <!--champ caché contenant l'auteur du tweet -->
+
           <?= $this->Form->hidden('user_tweet',['value' => $tweet->username]); ?>
 
-            <div class="w3-center">
+          <!--champ caché contenant l'état des commentaires : autorisé ou non -->
 
-              <br />
+          <?= $this->Form->hidden('allowcomm',['value' => $tweet->allow_comment]); ?>
 
-<!--bouton d'envoi -->
+          <!--div d'affichage de l'etat des commentaires : si désactivés -> affichage d'un message , sinon affichage du bouton d'envoi -->
 
-                    <?= $this->Form->button('Commenter',['class' =>'w3-button w3-blue w3-round']) ?>
-            </div>
+            <div id ="allow_submit_comm" class="w3-center">
 
-            <?= $this->Form->end(); } else {
-              echo '<div class="w3-panel w3-border w3-light-grey"><p>
+              <?php
 
-            <i class="fas fa-info-circle"></i> Vous devez vous connecter ou vous inscrire pour commenter ce tweet.  </p></div>';
-            }?>
+                if($tweet->allow_comment == 1)
+              {
+                ?>
+
+                <div class="w3-container w3-panel w3-border w3-red">
+
+                  <p>
+
+                    <i class="fas fa-info-circle"></i> Les commentaires sont désactivés pour ce tweet.
+
+                  </p>
+
+                </div>
+
+              <?php
+
+              }
+
+              else
+            {
+              ?>
+
+              <button class="w3-button w3-blue w3-round" type="submit">Commenter</button>
+
+              <?php
+
+            }
+
+              ?>
+
+          </div>
+
+            <?= $this->Form->end();
+
+
+          }
+
+          else // non auth, affichage d'un message
+        {
+          ?>
+
+          <div class="w3-panel w3-border w3-light-grey">
+
+              <p>
+
+                <i class="fas fa-info-circle"></i> Vous devez vous connecter ou vous inscrire pour commenter ce tweet.
+
+              </p>
+
+          </div>
+
+        <?php
+
+        }
+
+        ?>
 
 <!--fin formulaire -->
 
@@ -198,22 +265,21 @@ echo $this->Form->create(null, [
 
 <!--affichage des commentaires -->
 
-<div class="w3-center">
+  <div class="w3-center">
 
+      <h5>
 
+          <i class="fa fa-comment"></i> <span class="nbcomm"><?= $tweet->nb_commentaire;?></span>  commentaire(s)
 
-            <h5>
+      </h5>
 
-              <i class="fa fa-comment"></i> <span class="nbcomm"><?= $tweet->nb_commentaire;?></span>  commentaire(s)
-
-            </h5>
-</div>
-
-<br />
+  </div>
 
 <div id="list_comm">
 
-<?php foreach ($commentaires as $commentaires) : ?>
+<?php
+
+ foreach ($commentaires as $commentaires) : ?>
 
     <div style="word-wrap: break-word;" class="w3-container w3-card w3-round w3-margin w3-white" id="comm<?= $commentaires->id_comm ?>"><br>
 
@@ -239,17 +305,26 @@ echo $this->Form->create(null, [
 
             ?>
 
-          <a class="deletecomm" href="" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+          <a class="deletecomm" href="#" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Supprimer</a>
+
+          <?php
+
+        }
+
+        if($commentaires->username != $authName)
+        {
+
+          ?>
 
           <a class="blockuser" href="" onclick="return false;" data_username="<?= $commentaires->username ?>">Bloquer <?= $commentaires->username ?></a>
+
+          <a class="signalcomm" href="" onclick="return false;"> Signaler</a>
 
           <?php
 
         }
 
            ?>
-
-          <a class="deletecomm" href="" onclick="return false;"> Signaler</a>
 
       </div>
 
@@ -276,24 +351,17 @@ echo $this->Form->create(null, [
 
     </div>
 
-
-
 <?php endforeach; ?>
-
-</div>
 
 <br />
 
-
-
 <?php
 
-}
+echo '</div>';
 
+}
  ?>
 
 <!-- fin affichage des commentaires -->
 
 <!-- FIN ZONE COMMENTAIRE -->
-
- </div>

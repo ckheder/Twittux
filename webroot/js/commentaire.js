@@ -11,6 +11,8 @@ var menuemojie = document.getElementById("menuemojie"); //div contentant la list
 var nb_comm = document.querySelector('.nbcomm'); // récupération du nombre de commentaire afin d'incrémenter ou de décrémenter le compteur
 var textarea_comm = document.querySelector('#textarea_comm'); // textarea de rédaction d'un commentaire
 var titlepage = document.title;// titre de la page
+let form_comm = document.querySelector('#form_comm') // récupération du formulaire
+
 
 //ouverture des menu de comm : soit celui de désactivation des comm (sans id) soit celui de suppression des comms (avec id)
 
@@ -38,6 +40,102 @@ window.addEventListener("click", function(event) {
         openDropdown.classList.remove('show');
       }
     }
+  }
+})
+
+//désactivation des commentaires
+
+document.addEventListener('click',function(e){
+
+  if(e.target && e.target.className == 'optioncomm'){
+
+    var data = {
+                  "action": e.target.getAttribute('data-actioncomm'), // 0 -> activation des commentaires, 1 -> désactivation des commentaires
+                  "idtweet": e.target.getAttribute('data_idtweet') // identifiant du tweet à traité
+                }
+
+    let response = fetch('/twittux/commentaire/actioncomm', { // on ajoute l'id à l'URL
+      headers: {
+                  'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                  'X-CSRF-Token': csrfToken // envoi d'un token CSRF pour authentifier mon action
+                },
+                method: "POST",
+
+      body: JSON.stringify(data)
+    })
+    .then(function(response)
+    {
+      return response.text(); // récupération des données au format texte
+    }
+  )
+    .then(function(Data) {
+
+  if(Data == 'updatecommnotok') // impossible de mettre à jour les préférences de commentaires
+{
+
+          alertbox.show('<div class="w3-panel w3-red">'+
+                        '<p>Impossible de modifier les paramètres de ce tweet.</p>'+
+                        '</div>.');
+}
+  else if (Data == 'updatecommok') // mise à jour réussie
+{
+
+    if(e.target.getAttribute('data-actioncomm') == 0) // les commentaires sont activés
+  {
+
+    document.querySelector('.optioncomm').dataset.actioncomm = 1; // mise à jour du paramètre du lien du menu déroulant
+
+    form_comm.querySelector('input[name="allowcomm"]').value = 0; // mise à jour du champ caché du formulaire
+
+    document.querySelector('.optioncomm').textContent="Désactiver les commentaires"; // mise à jour du texte du lien du menu déroulant
+
+    document.querySelector('#allow_submit_comm').innerHTML = '<button class="w3-button w3-blue w3-round" type="submit">Commenter</button>'; // affichage du bouton d'envoi d'un commentaire
+
+    //notification de réussite
+
+    alertbox.show('<div class="w3-panel w3-green">'+
+                  '<p>Commentaires activés.</p>'+
+                  '</div>.');
+
+  }
+
+    else // les commentaires sont désactivés
+  {
+
+    document.querySelector('.optioncomm').dataset.actioncomm = 0; // mise à jour du paramètre du lien du menu déroulant
+
+    document.querySelector('.optioncomm').textContent="Activer les commentaires"; // mise à jour du texte du lien du menu déroulant
+
+    form_comm.querySelector('input[name="allowcomm"]').value = 1; // mise à jour du champ caché du formulaire
+
+    form_comm.querySelector('button[type=submit]').remove();// suppression du  bouton d'envoi de formulaire
+
+     // affichage d'un message comme quoi les commentaires sont désactivés
+
+    document.querySelector('#allow_submit_comm').innerHTML = '<div class="w3-container w3-panel w3-border w3-red">'+
+                                                              '<p>'+
+                                                              '<i class="fas fa-info-circle"></i> Les commentaires sont désactivés pour ce tweet.'+
+                                                              '</p>';
+
+    //notification de réussite
+
+    alertbox.show('<div class="w3-panel w3-green">'+
+                  '<p>Commentaires désactivés.</p>'+
+                  '</div>.');
+
+  }
+
+}
+    }).catch(function(err) {
+
+// notification d'échec : problème technique, serveur,...
+
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Impossible de supprimer ce commentaire.</p>'+
+                      '</div>.');
+
+    });
+
   }
 })
 
@@ -84,26 +182,24 @@ document.addEventListener('click',function(e){
 
 //ajout d'un commentaire
 
-  if(no_see == 0 && document.querySelector('#form_comm')) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public et que le formulaire existe (cas des tweets publics vu par un utilisateur offline)
+  if(no_see == 0) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public
 {
 
-let form_comm = document.querySelector('#form_comm') // récupération du formulaire
+  form_comm.addEventListener('submit', function (e) { // on capte l'envoi du formulaire
 
-let button_submit_comm = form_comm.querySelector('button[type=submit]') // récupération du bouton d'envoi
+  e.preventDefault();
 
-let buttonTextSubmitComm = button_submit_comm.textContent // récupération du texte du bouton
+  let button_submit_comm = form_comm.querySelector('button[type=submit]') // récupération du bouton d'envoi
 
-form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du formulaire
+  let buttonTextSubmitComm = button_submit_comm.textContent // récupération du texte du bouton
 
   button_submit_comm.disabled = true // désactivation du bouton
 
   button_submit_comm.textContent = 'Chargement...' // mise à jour du texte du bouton
 
-    e.preventDefault();
+  let data = new FormData(this) // on récupère les données du formulaire
 
-    let data = new FormData(this) // on récupère les données du formulaire
-
-    let response = await fetch(form_comm.getAttribute('action'), { // on récupère l'URL d'envoi des données
+    let response = fetch(form_comm.getAttribute('action'), { // on récupère l'URL d'envoi des données
       method: 'POST',
       headers: {
                   'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
@@ -115,7 +211,14 @@ form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du
   })
     .then(function(jsonData) {
 
-      if(jsonData.result == 'nocomm') // echec envoi du commentaire
+        if(jsonData.result == 'commblock') // commentaires désactivés
+      {
+        alertbox.show('<div class="w3-panel w3-red">'+
+                      '<p>Les commentaires sont désactivés pour ce tweet.</p>'+
+                      '</div>.');
+      }
+
+      else if(jsonData.result == 'nocomm') // echec envoi du commentaire
     {
       alertbox.show('<div class="w3-panel w3-red">'+
                     '<p>Impossible de commenter ce tweet.</p>'+
@@ -124,7 +227,7 @@ form_comm.addEventListener('submit', async function (e) { // on capte l'envoi du
       else
     {
 
-var el = document.getElementById("list_comm"); // récupération de la div ou l'on va insérer le nouveau commentaire
+      var el = document.getElementById("list_comm"); // récupération de la div ou l'on va insérer le nouveau commentaire
 
 //insertion du nouveau commentaire au tout début de la div
 
@@ -176,7 +279,11 @@ document.addEventListener('click',function(e){
 
   if(e.target && e.target.className == 'deletecomm'){
 
-  var idcomm = e.target.getAttribute('data_idcomm');// on récupère l'id du commentaire associé au lien cliqué
+    var data = {
+                  "idcomm": e.target.getAttribute('data_idcomm'), // identifiant du commentaire
+                  "idtweet": document.querySelector('#form_comm').elements['id_tweet'].value // identifiant du tweet
+                }
+
 
     let response = fetch('/twittux/commentaire/delete', { // on ajoute l'id à l'URL
       headers: {
@@ -185,25 +292,25 @@ document.addEventListener('click',function(e){
                 },
                 method: "POST",
 
-      body: idcomm
+      body: JSON.stringify(data)
     })
 .then(function(response) {
-    return response.text(); // récupération des données au format texte
+    return response.json(); // récupération des données au format JSON
   })
     .then(function(Data) {
 
 //suppression du commentaire
 
-  if(Data == 'deletecommnotok') // impossible de supprimer un commentaire : mauvais utilisateur par exemple
+  if(Data.Result == 'deletecommnotok') // impossible de supprimer un commentaire : mauvais utilisateur par exemple
 {
           alertbox.show('<div class="w3-panel w3-red">'+
-                      '<p>Impossible de supprimer ce commentaire.</p>'+
-                    '</div>.');
+                        '<p>Impossible de supprimer ce commentaire.</p>'+
+                        '</div>.');
 }
-  else if (Data == 'deletecommok') // suppression réussie du commentaire
+  else if (Data.Result == 'deletecommok') // suppression réussie du commentaire
 {
 
-var divcomm = document.querySelector('#comm'+idcomm); // on récupère la div contenant le commentaire
+var divcomm = document.querySelector('#comm'+data['idcomm']); // on récupère la div contenant le commentaire
 
 divcomm.parentNode.removeChild(divcomm); // suppression de la div contenant le commentaire
 
