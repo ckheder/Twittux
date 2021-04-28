@@ -13,6 +13,12 @@
 
 <!-- lien affichage navbar responsive -->
 
+      <!-- lien affichage page d'accueuil -->
+
+      <a href="/twittux/" title="Accueil" class="w3-bar-item w3-button w3-padding-large w3-hover-white"><i class="fas fa-home"></i></a>
+
+      <!-- lien affichage Tendances -->
+
       <a href="/twittux/trending" title="Tendances" class="w3-bar-item w3-button w3-padding-large w3-hover-white"><i class="fas fa-hashtag"></i></a>
 
       <!-- zone de recherche -->

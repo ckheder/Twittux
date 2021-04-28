@@ -218,6 +218,16 @@ color: #737373;
 	margin: 1px;
 }
 
+@media (min-width: 375px) and (max-width: 767px) {
+	.input-search
+	{
+		padding:8px;
+		display:block;
+		width:210px;
+		margin: 1px;
+	}
+}
+
   #autocomplete-results /* liste des résultats masquée par défaut */
 {
   display: none;
