@@ -6,18 +6,20 @@
 
   <!--zone de notification -->
 
-                    <div id="alert-area" class="alert-area"></div>
+<div id="alert-area" class="alert-area"></div>
 
   <!--fin zone de notification  -->
+
+  <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin">
 
     <?php
 
         if(isset($no_see)) // variable pour déterminer le message à afficher si je ne peut pas voir un tweet
       {
+
           if($no_see === 2) // si cette variable vaut 2 (renvoi par le controller) on visite un profil privé auquel on est pas abonné
         {
           ?>
-            <div class="w3-container">
 
               <div class="w3-panel w3-red">
 
@@ -35,7 +37,6 @@
             {
 
         ?>
-
               <div class="w3-center">
 
                 <span class="zone_abo">
@@ -50,26 +51,17 @@
 
             }
 
-      ?>
-
-          </div>
-
-      <?php
-
-    }
+          }
 
       elseif ($no_see === 1) // si cette variable vaut 1 (renvoi par le controller) je suis bloqué je ne peut pas voir le tweet
     {
   ?>
-      <div class="w3-container">
 
         <div class="w3-panel w3-red">
 
           <p>  <?=  $this->Html->image('/img/avatar/'.$user_tweet.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>60, 'height'=>60)); // avatar?> <?= $user_tweet ;?> vous à bloqué.</p>
 
         </div>
-
-      </div>
 
   <?php
 
@@ -82,7 +74,7 @@
 
   ?>
 
-      <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin"><br>
+      <br>
 
         <!--avatar -->
 
@@ -153,7 +145,7 @@
 
                                       ]);
 
-        echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255']);?>
+        echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255','placeholder' => 'Commenter...']);?>
 
                 <!--bouton dropdown pour les emojis -->
 
@@ -177,6 +169,7 @@
 
   echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
 }
+
 ?>
                     </div>
 
@@ -234,7 +227,6 @@
 
             <?= $this->Form->end();
 
-
           }
 
           else // non auth, affichage d'un message
@@ -259,11 +251,11 @@
 
 <!--fin formulaire -->
 
-    <br />
-
-</div>
-
 <!--affichage des commentaires -->
+
+<div id="list_comm">
+
+  <hr />
 
   <div class="w3-center">
 
@@ -275,13 +267,13 @@
 
   </div>
 
-<div id="list_comm">
+  <hr />
 
 <?php
 
  foreach ($commentaires as $commentaires) : ?>
 
-    <div style="word-wrap: break-word;" class="w3-container w3-card w3-round w3-margin w3-white" id="comm<?= $commentaires->id_comm ?>"><br>
+    <div style="word-wrap: break-word;" id="comm<?= $commentaires->id_comm ?>"><br>
 
         <!--avatar -->
 
@@ -343,25 +335,25 @@
         <span class="w3-opacity"><?= $commentaires->created->i18nformat('dd MMMM YYYY - HH:mm');?></span>
 
 
-        <hr class="w3-clear">
-
         <!--corps du commentaire -->
 
         <p><?= $commentaires->commentaire ;?></p>
+
+        <hr />
 
     </div>
 
 <?php endforeach; ?>
 
-<br />
+</div>
 
 <?php
 
-echo '</div>';
-
 }
- ?>
 
+ ?>
+ 
+</div>
 <!-- fin affichage des commentaires -->
 
 <!-- FIN ZONE COMMENTAIRE -->
