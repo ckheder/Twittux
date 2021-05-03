@@ -26,9 +26,10 @@ class BlocageController extends AppController
      */
       public function index()
     {
-      $this->viewBuilder()->setLayout('follow');
+        if ($this->request->is('ajax')) // requête AJAX uniquement
+      {
 
-      // titre de page dynamique
+      // titre de page
 
        $this->set('title', 'Utilisateurs bloqués');
 
@@ -43,6 +44,12 @@ class BlocageController extends AppController
            ->order((['bloque' => 'ASC']));
 
            $this->set('user_block', $this->Paginator->paginate($user_block, ['limit' => 30]));
+        }
+
+         else // en cas de non requête AJAX on lève une exception 404
+        {
+           throw new NotFoundException(__('Cette page n\'existe pas.'));
+        }
     }
 
 

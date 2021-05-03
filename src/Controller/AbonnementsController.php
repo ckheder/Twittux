@@ -46,11 +46,19 @@ use Cake\Datasource\ConnectionManager;
 
         public function abonnements()
     {
-           $this->viewBuilder()->setLayout('follow');
+      if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
+  {
 
-           // titre de page dynamique
+      $this->viewBuilder()->setLayout('ajax');
+  }
+      else
+  {
+      $this->viewBuilder()->setLayout('follow'); // sinon le layout 'search'
+  }
 
-            $this->set('title', ''.$this->request->getParam('username').'| Abonnements');
+           // titre de page
+
+            $this->set('title', ''.$this->request->getParam('username').'| Social');
 
         // récupération des informations sur les personnes que je suis
 
@@ -67,6 +75,7 @@ use Cake\Datasource\ConnectionManager;
             ->contain(['Users']);
 
             $this->set('abonnement_valide', $this->Paginator->paginate($abonnement_valide, ['limit' => 30]));
+
     }
 
     /**
@@ -79,9 +88,10 @@ use Cake\Datasource\ConnectionManager;
 
             public function abonnes()
         {
-            $this->viewBuilder()->setLayout('follow');
 
-            //titre de page dynamique
+          if ($this->request->is('ajax')) // requête AJAX uniquement
+      {
+        // titre de page
 
             $this->set('title', ''.$this->request->getParam('username').'| Abonnés');
 
@@ -102,6 +112,12 @@ use Cake\Datasource\ConnectionManager;
 
             $this->set('abonne_valide', $this->Paginator->paginate($abonne_valide, ['limit' => 30]));
         }
+          else // en cas de non requête AJAX on lève une exception 404
+        {
+            throw new NotFoundException(__('Cette page n\'existe pas.'));
+        }
+
+      }
 
     /**
      * Méthode add
@@ -309,7 +325,10 @@ use Cake\Datasource\ConnectionManager;
         public function demande()
     {
 
-        $this->viewBuilder()->setLayout('follow');
+        if ($this->request->is('ajax')) // requête AJAX uniquement
+      {
+
+        // titre de page
 
         $this->set('title', 'Demande(s) de suivi');
 
@@ -333,7 +352,14 @@ use Cake\Datasource\ConnectionManager;
         ->limit(10);
 
         $this->set('abonnement_attente', $this->paginate($abonnement_attente, ['limit' => 10]));
+      }
 
+        else // en cas de non requête AJAX on lève une exception 404
+      {
+
+        throw new NotFoundException(__('Cette page n\'existe pas.'));
+
+      }
 
     }
 

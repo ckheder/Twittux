@@ -40,11 +40,51 @@
 
     <div class="w3-container w3-content" style="max-width:1400px;margin-top:60px;">
 
-        <div class="w3-row">
+      <div class="w3-col m3" style="margin-top:16px">
 
-            <?= $this->element('followmenu') ?>
+        <!-- lien de navigation sur la page social -->
+
+         <div class="w3-bar-block w3-white">
+
+           <!-- lien vers la pages des abonnements d'une personne -->
+
+            <button id="following" class="w3-bar-item w3-button tabfollow w3-red"><i class="fas fa-user-circle"></i> Abonnements</button>
+
+     			<!-- lien vers la pages des abonnés d'une personne -->
+
+     			 <button id="followers" class="w3-bar-item w3-button tabfollow"><i class="far fa-user-circle"></i> Abonnés</button>
+
+          <?php
+
+            if($this->request->getParam('username') == $authName) // si l'utilisateur courant visite sa propre page de 'social' on affiche les liens de demannde et d'utilisateurs bloqué
+          {
+
+           ?>
+           <!-- lien vers la pages des demande d'abonnements -->
+
+   				 <button id="requests" class="w3-bar-item w3-button tabfollow"><i class="fas fa-user-friends"></i> Demande</button>
+
+   				<!-- lien vers la pages des utilisateurs bloqués -->
+
+   				 <button id="usersblocks" class="w3-bar-item w3-button tabfollow"><i class="fas fa-user-lock"></i> Utilisateurs bloqués</button>
+
+           <?php
+
+          }
+          
+            ?>
+
+       </div>
+
+     </div>
+
+     <div hidden class="spinner"></div> <!-- image de chargement des données -->
+
+       <div id="socialsinfos">
 
             <?= $this->fetch('content') ?>
+
+          </div>
 
         </div>
 
@@ -57,6 +97,13 @@
                                               )); ?>
 
 <!-- script JS -->
+
+<script>
+
+
+  var currentuser = "<?= $this->request->getParam('username') ?>"; // savoir sur quel "groupe" d'url je me trouve : hashtag/search
+
+</script>
 
         <?= $this->Html->script('follow.js'); ?> <!-- traitement des actions : delete un abonnement, répondre à une demande,afficher les notifications correspondantes,... -->
 

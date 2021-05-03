@@ -18,7 +18,7 @@
 
 <!-- lien vers les abonnements -->
 
-    <a href="/twittux/abonnements/<?= $authName ;?>" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Social"><i class="fas fa-user-friends"></i></a>
+    <a href="/twittux/social/<?= $authName ;?>" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Social"><i class="fas fa-user-friends"></i></a>
 
 <!-- lien vers la messagerie -->
 
@@ -72,7 +72,7 @@
 
   <a href="/twittux/trending" title="Tendances" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-hashtag"></i> Tendances</a>
 
-  <a href="/twittux/abonnements/<?= $authName ;?>" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-user-friends"></i> Social</a>
+  <a href="/twittux/social/<?= $authName ;?>" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-user-friends"></i> Social</a>
 
   <a href="/twittux/messagerie" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
 

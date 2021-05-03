@@ -58,7 +58,7 @@
 
                  <!-- lien de tri vers les plus commentés -->
 
-                    	<button id="showtmostcommentsweets" class="w3-bar-item w3-button tablinknews"><i class="fas fa-comments"></i> Les plus commentés</a>
+                    	<button id="showtmostcommentsweets" class="w3-bar-item w3-button tablinknews"><i class="fas fa-comments"></i> Les plus commentés</button>
 
            		</div>
 
@@ -102,8 +102,6 @@
           }
 
           ?>
-
-
 
         </div>
 

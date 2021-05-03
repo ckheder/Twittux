@@ -8,9 +8,92 @@
  /** variable **/
 
  var nb_following = document.querySelector('.nb_following'); // récupération du nombre d'abonnement
+
  var nb_attente = document.querySelector('.nb_attente'); // récupération du nombre de demande en attente
+
  var nb_follower = document.querySelector('.nb_follower'); // récupération du nombre d'abonné
+
  var nb_block = document.querySelector('.nb_user_block'); // récupération du nombre d'utilisateurs bloqués afin d'incrémenter ou de décrémenter le compteur
+
+ const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
+
+ const navAnchor = document.querySelectorAll('.tabfollow'); // liste de tous les liens du menu pour permettre de surligner le lien actif
+
+ navAnchor.forEach(anchor => {
+   anchor.addEventListener('click', addActive);
+ })
+
+ // on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
+
+ function addActive(e) {
+   const current = document.querySelector('.w3-red');
+   current.className = current.className.replace("w3-red", "");
+   e.target.className += " w3-red";
+ }
+
+ // chargement de donné via lien
+
+ document.addEventListener('click',function(e){
+
+ var URL; // URL de rercherche à charger suivant l'onglet cliqué
+
+   		switch(e.target.id)
+   	{
+   		case "following": // page des abonnements d'une personne
+
+                        URL = '/twittux/social/'+currentuser+'';
+
+   							break;
+
+   		case "followers": // page des abonnés d'une personne
+
+                        URL = '/twittux/abonnes/'+currentuser+'';
+
+   							break;
+
+   		case "requests": // page des demandes d'abonnement d'une personne
+
+                        URL = '/twittux/abonnement/demande';
+   							break;
+
+       case "usersblocks": // page des utilisateurs bloqués
+
+                        URL = '/twittux/userblock';
+
+             		break;
+
+       default: return;
+   	}
+
+   	document.getElementById("socialsinfos").innerHTML = ""; // on vide la div d'affichage des résultats
+
+     spinner.removeAttribute('hidden'); // affichage du spinner de chargement
+
+     fetch(URL, { // URL à charger dans la div précédente
+
+                 headers: {
+                             'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                           }
+               })
+
+     .then(function (data) {
+                             return data.text();
+                           })
+     .then(function (html) {
+
+ 	   spinner.setAttribute('hidden', ''); // disparition du spinner
+
+       document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
+
+     })
+
+     // affichage d'erreur si besoin
+
+     .catch(function(err) {
+   	                       console.log(err);
+   	});
+
+ })
 
  /** page abonnement **/
 

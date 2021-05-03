@@ -154,7 +154,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // liste des abonnements
 
-    $builder->connect('/abonnements/{username}',['controller' => 'Abonnements', 'action' => 'abonnements']);
+    $builder->connect('/social/{username}',['controller' => 'Abonnements', 'action' => 'abonnements']);
 
             // liste des abonnés
 
