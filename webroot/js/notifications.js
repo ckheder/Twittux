@@ -204,7 +204,7 @@
 
      /** fin affichage des notifications **/
 
-     /** rejoindre une conversation après notification d'un nouveau message **/
+/** rejoindre une conversation après notification d'un nouveau message **/
 
      document.addEventListener('click',function(e){
 
@@ -222,7 +222,7 @@
 
      })
 
-     /** répondre à une invitation à rejoindre une conversation **/
+/** répondre à une invitation à rejoindre une conversation **/
 
      document.addEventListener('click',function(e){
 
@@ -288,3 +288,22 @@
 
 }
 })
+
+/** accéder à la page des demandes d'abonnement depuis une notification **/
+
+if(document.querySelector(".requestlink"))
+{
+
+  document.querySelector(".requestlink").addEventListener('click',function(e)
+{
+
+// création d'un item local contenant le nom du profil en cours de visite
+
+  localStorage.setItem("requestlink", e.target.getAttribute('data_username'));
+
+// redirection vers la page social
+
+  window.location.href = '/twittux/social/'+ e.target.getAttribute('data_username')+'';
+
+})
+}

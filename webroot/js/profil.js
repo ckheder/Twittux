@@ -53,6 +53,21 @@ window.addEventListener("click", function(event) {
   }
 })
 
+// accéder à la page abonnés depuis le lien de profil
+
+  document.querySelector("#usersfollowers").addEventListener('click',function(e)
+{
+
+// création d'un item local contenant le nom du profil en cours de visite
+
+  localStorage.setItem("followlink", e.target.getAttribute('data_username'));
+
+// redirection vers la page social
+
+  window.location.href = '/twittux/social/'+ e.target.getAttribute('data_username')+'';
+
+})
+
 // naviguer entre les tweet et les tweets avec media
 
 document.addEventListener('click',function(e){

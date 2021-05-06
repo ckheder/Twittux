@@ -92,6 +92,10 @@
 
          </p>
 
+         <!-- affichage du nombre d'abonnemens et d'abonnés -->
+
+            <?= $this->cell('Abonnements::infosabo', [$this->request->getParam('username')]); ?>
+
         </div>
 
       </div>

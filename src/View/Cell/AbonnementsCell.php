@@ -56,13 +56,45 @@ class AbonnementsCell extends Cell
                     $infoabo = 'demande';
                 }
                     elseif ($etat_abo === 1) // abonnement en cours
-                { 
+                {
                     $infoabo = 'abonnement';
                 }
             }
         }
 
         $this->set('infoabo', $infoabo);
+
+        $this->set('username',$username);
+    }
+
+    /**
+     * Méthode infoabo : Récupère le nombre d'abonnement et d'abonné du profil courant
+     *
+     * Paramètres : $username -> $username -> nom du profil que je visite
+     *
+     * Renvoi du nombre d'abonnement et d'abonnés
+     */
+        public function infosabo($username)
+    {
+
+        // calcul du nombre d'abonnements du profil courant
+
+        $nb_abonnements = $this->Abonnements->find()->where(['suiveur' => $username,'etat' => 1])->count();
+
+        // renvoi du nombre d'abonnements du profil courant
+
+        $this->set('nbabonnements',$nb_abonnements);
+
+        // calcul du nombre d'abonné du profil courant
+
+        $nb_abonnes = $this->Abonnements->find()->where(['suivi' => $username,'etat' => 1])->count();
+
+        // renvoi du nombre d'abonné du profil courant
+
+        $this->set('nbabonnes',$nb_abonnes);
+
+        // renvoi du nom de l'utilisateur courant pour la génération de liens
+
         $this->set('username',$username);
     }
 }

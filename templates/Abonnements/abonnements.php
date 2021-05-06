@@ -56,7 +56,20 @@
 
                   </p>
 
-                  <button class="w3-button w3-red w3-round"><a class="unfollow" href="" onclick="return false;" data_action="delete" data_username="<?= $abonnement_valide->user['username'] ?>">Ne plus suivre</a></button>
+              <?php
+
+                    if($abonnement_valide->user['username'] != $authName) // quand je visite les abonnements d'une personne qui n'est pas moi et que j'en fais partie
+                  {
+
+              ?>
+
+                      <button class="w3-button w3-red w3-round"><a class="unfollow" href="" onclick="return false;" data_action="delete" data_username="<?= $abonnement_valide->user['username'] ?>">Ne plus suivre</a></button>
+
+              <?php
+
+                  }
+
+              ?>
 
                   <hr>
 
@@ -87,7 +100,5 @@
       </div>
 
     </div>
-    
+
 </div>
-
-

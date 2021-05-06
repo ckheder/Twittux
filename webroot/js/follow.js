@@ -31,13 +31,64 @@
    e.target.className += " w3-red";
  }
 
- // chargement de donné via lien
+ // rejoindre depuis la page abonné depuis le profil
 
- document.addEventListener('click',function(e){
+ // si l'item existe, c'est qu'on a cliqué sur le lien abonné d'un profil
 
- var URL; // URL de rercherche à charger suivant l'onglet cliqué
+  if(localStorage.getItem("followlink")!== null)
+ {
 
-   		switch(e.target.id)
+   // on appelle la fonction loadSocialItem pour charger le lien dans la div
+
+   loadSocialItem(localStorage.getItem("followlink"),'followers');
+
+   // on retire la classe w3-red au lien abonnement
+
+   document.querySelector('.w3-red').className = document.querySelector('.w3-red').className.replace("w3-red", "");
+
+   // on applique au lien abonné la classe w3-red
+
+   document.querySelector('.followlink').className += " w3-red";
+
+   // suppression de l'item local 'username'
+
+   localStorage.removeItem("followlink");
+
+ }
+
+ // rejoindre la page des demandes d'abonnement depuis une notification
+
+ // si l'item existe, c'est qu'on a cliqué sur une notification de demande d'abonnement
+
+  if(localStorage.getItem("requestlink")!== null)
+ {
+
+   // on appelle la fonction loadSocialItem pour charger le lien dans la div
+
+   loadSocialItem(localStorage.getItem("requestlink"),'requests');
+
+   // on retire la classe w3-red au lien abonnement
+
+   document.querySelector('.w3-red').className = document.querySelector('.w3-red').className.replace("w3-red", "");
+
+   // on applique au lien abonné la classe w3-red
+
+   document.querySelector('.requestlink').className += " w3-red";
+
+   // suppression de l'item local 'username'
+
+   localStorage.removeItem("requestlink");
+
+ }
+
+ // chargement des différentes page d'abonnements, abonné , demande et utilisateur bloqué au clique et par AJAX
+
+ function loadSocialItem(currentuser = null, item)
+{
+
+ var URL; // URL à charger suivant l'onglet cliqué
+
+   		switch(item)
    	{
    		case "following": // page des abonnements d'une personne
 
@@ -83,7 +134,7 @@
 
  	   spinner.setAttribute('hidden', ''); // disparition du spinner
 
-       document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
+    document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
 
      })
 
@@ -93,7 +144,7 @@
    	                       console.log(err);
    	});
 
- })
+ }
 
  /** page abonnement **/
 
