@@ -23,6 +23,7 @@ use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Http\Middleware\EncryptedCookieMiddleware;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
@@ -30,7 +31,7 @@ use Authentication\Identifier\IdentifierInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
-
+use Cake\I18n\FrozenTime;
 /**
  * Application setup class.
  *
@@ -76,6 +77,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
+
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
@@ -93,6 +95,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
             ->add(new RoutingMiddleware($this))
+
+            ->add(new EncryptedCookieMiddleware(['CookieAuth'],Configure::read('Security.cookieKey')))
 
             ->add(new AuthenticationMiddleware($this));
 
@@ -139,13 +143,30 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
   // Load identifiers
   $service->loadIdentifier('Authentication.Password', [
       'fields' => [
-          'username' => 'username',
-          'password' => 'password',
+        IdentifierInterface::CREDENTIAL_USERNAME => 'username',
+        IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
       ]
   ]);
 
+  $now = FrozenTime::now();
+  $now = $now->modify('+365 days');
+
   // Load the authenticators
   $service->loadAuthenticator('Authentication.Session');
+
+  $service->loadAuthenticator('Authentication.Cookie', [
+      'fields' => 
+    [
+        IdentifierInterface::CREDENTIAL_USERNAME => 'username',
+        IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
+    ],
+      'cookie'=>
+    [
+      'httponly' => true, // empếche l'accès aux cookies en Javascript
+      'expire' => $now,
+    ]
+
+]);
   $service->loadAuthenticator('Authentication.Form');
 
   return $service;

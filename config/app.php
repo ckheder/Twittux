@@ -397,6 +397,6 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
-        'timeout' => 1440,
+        'timeout' => 1440, // 1440 avant soit 24 minutes
     ],
 ];

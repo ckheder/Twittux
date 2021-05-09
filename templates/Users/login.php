@@ -85,6 +85,10 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
                 <?= $this->Form->control('password',['class' =>'w3-input w3-border','label' =>'','id'=>'password','placeholder'=>'mot de passe']) ?>
 
+                <br  />
+
+                    <?= $this->Form->control('remember_me', ['class' =>'w3-check','type' => 'checkbox']); ?>
+
    <!-- bouton d connexion -->
 
  <div class="w3-center">

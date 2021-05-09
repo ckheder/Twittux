@@ -1,6 +1,10 @@
 #/var/www/html/Twittux/vendor/cakephp/cakephp/i18n
 
 #: I18n/RelativeTimeFormatter.php:409
+msgid "Remember Me"
+msgstr " Rester connecté"
+
+#: I18n/RelativeTimeFormatter.php:409
 msgid "%s ago"
 msgstr " %s"
 
