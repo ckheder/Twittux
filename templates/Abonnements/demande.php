@@ -18,9 +18,9 @@
 
               <div class="w3-center">
 
-                  <header class="w3-container w3-light-grey">
+                  <header class="w3-container w3-teal">
 
-                      <h4> <span class="nb_attente"><?= count($abonnement_attente) ; ?></span> demande(s) d'abonnement en attente.</h4>           
+                      <h4> <span class="nb_attente"><?= count($abonnement_attente) ; ?></span> demande(s) d'abonnement en attente.</h4>
                   </header>
               </div>
 

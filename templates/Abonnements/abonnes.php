@@ -18,7 +18,7 @@
 
               <div class="w3-center">
 
-                <header class="w3-container w3-light-grey">
+                <header class="w3-container w3-teal">
 
                   <h4><span class="nb_follower"><?= count($abonne_valide); ?></span> abonné(s)</h4> <!-- // nombre d'abonnés -->
 

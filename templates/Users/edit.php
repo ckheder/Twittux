@@ -1,21 +1,20 @@
- <div class="w3-row">
+<div class="w3-center">
+
+  <header class="w3-container w3-border w3-teal">
+
+    <h4>Paramètres de mon compte</h4>
+
+  </header>
+
+</div>
 
  <div class="w3-container w3-white">
-   <h3>
 
-      Mon profil
-
-    </h3>
     <!--zone de notification sur l'état de l'envoi d'un tweet -->
     <div id="alert-area" class="alert-area"></div>
     <!--fin zone de notification sur l'état de l'envoi d'un tweet -->
-    <hr>
 
-    <div class="w3-center">
-
-        <span class="w3-opacity">Mes informations. </span>
-
-    </div>
+<h3>Mes informations</h3>
 
     <hr>
 
@@ -49,7 +48,9 @@
 <?= $this->Html->image('default.png', ['alt' => '','id' => 'previewHolder', 'width' =>128, 'height'=> 'auto','class'=>'w3-circle']); ?>
 
 </div>
+
 </div>
+
 </div>
 
 <!-- input mot de passe -->
@@ -163,7 +164,7 @@
 
 <!-- Paramètres -->
 
-<h3>Paramètres</h3>
+        <h3>Paramètres</h3>
 
          <hr>
 
@@ -171,24 +172,6 @@
 
                   <span class="w3-opacity">Configurer mon profil </span>
             </div>
-
-             <hr>
-
-             <strong>
-
-               <p class ="w3-text-green">
-
-                 Un profil public accepte automatiquement les demandes d'abonnements, tous les tweets sont publics (n'importe qui peut les commenter et les partager, ils sont visibles dans les résultats de recherche).
-
-               </p>
-
-               <p class ="w3-text-red">
-
-                 Un profil privé vous donne le choix de qui peut vous suivre, voir vos tweets (les tweets privés ne se partagent pas), vos tweets n'apparaîtront pas dans le moteur de recherche.
-
-               </p>
-
-              </strong>
 
             <hr>
 
@@ -210,7 +193,7 @@
 
 <!-- notifications -->
 
-<h3 >Notifications</h3>
+            <h3>Notifications</h3>
 
               <hr>
 
@@ -318,11 +301,7 @@
 
              <hr>
 
-             <div class="w3-center">
-
               <span class="w3-opacity">Effacer mon compte supprimera tous mes tweets, message, partage, commentaire,... </span>
-
-            </div>
 
              <hr>
 
@@ -335,5 +314,3 @@
              </p>
 
         </div>
-
-    </div>

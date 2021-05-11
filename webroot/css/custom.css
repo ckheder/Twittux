@@ -8,8 +8,6 @@ body
 	font-family: 'Athiti', serif;
 }
 
-
-
 /* ## Emoji ## */
 
 .emoji
@@ -361,3 +359,16 @@ color: #737373;
 }
 
 /* fin mise en page des médias sur la cell user */
+
+/* SETTINGS */
+	/* en-tête des informations */
+
+.settingsheader
+{
+	font-weight: bold;
+	text-decoration: underline;
+	margin-bottom: 15px;
+}
+
+	/* fin en-tête des informations */
+/* fin SETTINGS */

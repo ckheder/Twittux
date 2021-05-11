@@ -18,7 +18,7 @@
 
               <div class="w3-center">
 
-                <header class="w3-container w3-border w3-light-grey">
+                <header class="w3-container w3-border w3-teal">
 
                   <h4><span class="nb_user_block"><?= count($user_block) ?></span> utilisateur(s) bloqué(s)</h4><!-- // nombre d'utilisateur bloqués -->
 
