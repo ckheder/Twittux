@@ -28,6 +28,7 @@ use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\IdentifierInterface;
+use Cake\Http\Middleware\HttpsEnforcerMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
@@ -98,6 +99,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
             ->add(new EncryptedCookieMiddleware(['CookieAuth'],Configure::read('Security.cookieKey')))
 
+            // disableOnDebug' => true -> disable in local environnement
+
+            ->add(new HttpsEnforcerMiddleware(['disableOnDebug' => true])) // 'redirect' => true/false (if true 'statusCode' => 302), 'headers' => ['X-Https-Upgrade' => 1]
+
             ->add(new AuthenticationMiddleware($this));
 
         return $middlewareQueue;
@@ -155,7 +160,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
   $service->loadAuthenticator('Authentication.Session');
 
   $service->loadAuthenticator('Authentication.Cookie', [
-      'fields' => 
+      'fields' =>
     [
         IdentifierInterface::CREDENTIAL_USERNAME => 'username',
         IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
