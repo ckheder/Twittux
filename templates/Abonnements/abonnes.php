@@ -1,8 +1,8 @@
 <?php
 /**
- * Abonnement.ctp
+ * Abonne.php
  *
- * Affichage des abonnements du profil en cours de visite
+ * Affichage des abonnés du profil en cours de visite
  *
  */
 ?>
@@ -20,15 +20,11 @@
 
                 <header class="w3-container w3-teal">
 
-                  <h4><span class="nb_follower"><?= count($abonne_valide); ?></span> abonné(s)</h4> <!-- // nombre d'abonnés -->
+                  <h4><span class="nb_follower"><?= $this->Paginator->params()['count'] ?></span> abonné(s)</h4> <!-- // nombre d'abonnés -->
 
                 </header>
 
               </div>
-
-            <!-- liste d'abonnement -->
-
-            <div id="listabovalide">
 
                             <!--zone de notification -->
               <div id="alert-area" class="alert-area"></div>
@@ -36,25 +32,31 @@
 
               <br />
 
-            <?php foreach ($abonne_valide as $abonne_valide): ?>
+              <!-- liste des abonnés -->
 
-                <div class="w3-container" data-username="<?= $abonne_valide->Users['username'] ;?>">
+              <div id="list_followers">
+
+                <?php foreach ($abonne_valide as $abonne_valide): ?>
+
+                  <div class="w3-container itemsocial" data-username="<?= $abonne_valide->Users['username'] ;?>">
 
                   <!-- avatar -->
 
-                  <p>
+                    <p>
 
-                    <?= $this->Html->image('/img/avatar/'.$abonne_valide->Users['username'].'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($abonne_valide->Users['username']).'')) ?>
-
-
+                      <?= $this->Html->image('/img/avatar/'.$abonne_valide->Users['username'].'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($abonne_valide->Users['username']).'')) ?>
 
                   <!-- lien profil -->
 
-                    <b><?= $this->Html->link(''.h($abonne_valide->Users['username']).'','/'.h($abonne_valide->Users['username']).'') ?></b>
+                    <b>
+
+                      <?= $this->Html->link(''.h($abonne_valide->Users['username']).'','/'.h($abonne_valide->Users['username']).'') ?>
+
+                    </b>
 
                     <br />
 
-                  <span class="w3-opacity"><?= $abonne_valide->Users['description']; ?></span>
+                    <span class="w3-opacity"><?= $abonne_valide->Users['description']; ?></span>
 
                   </p>
 
@@ -97,19 +99,40 @@
 
           </div>
 
-        <!-- pagination -->
+            <!-- pagination -->
 
-          <div id="pagination">
+            <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-        <!-- lien personnaliser -->
+            <div hidden id="spinnerajaxscroll"></div>
 
-              <?= $this->Paginator->options([
-                                              'url' => array('controller' => '/abonnement/'.$this->request->getParam('username').'')
-                                            ]);  ?>
+            <?php
 
-            <?= $this->Paginator->next('Next page'); ?>
+              if ($this->Paginator->hasNext())
+            {
 
-          </div>
+             ?>
+
+             <div class="pagination">
+
+              <?= $this->Paginator->options(['url' => ''.$this->request->getParam('username').'']); ?> <!-- url modifiée pour la seconde page -->
+
+              <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+            </div>
+
+            <?php
+
+            }
+
+            ?>
+
+            <!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+            <div class="w3-center">
+
+              <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des abonnés</div>
+
+            </div>
 
         </div>
 

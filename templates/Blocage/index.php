@@ -20,15 +20,13 @@
 
                 <header class="w3-container w3-border w3-teal">
 
-                  <h4><span class="nb_user_block"><?= count($user_block) ?></span> utilisateur(s) bloqué(s)</h4><!-- // nombre d'utilisateur bloqués -->
+                  <h4><span class="nb_user_block"><?= $this->Paginator->params()['count'] ?></span> utilisateur(s) bloqué(s)</h4><!-- // nombre d'utilisateur bloqués -->
 
                 </header>
 
             </div>
 
             <!-- liste d'abonnement -->
-
-            <div id="userblock">
 
               <div class="w3-panel w3-border w3-light-grey">
 
@@ -51,6 +49,10 @@
 
               <!--fin zone de notification sur l'état de de la suppression d'un blocage -->
 
+              <!-- liste des utilisateurs bloqués -->
+
+              <div id="list_userblock">
+
               <?php
 
                 if(count($user_block) === 0) // aucun utilisateur bloqué pour le moment
@@ -58,7 +60,9 @@
                 echo '<div class="w3-panel w3-border w3-light-grey">
 
                         <p>
+
                             Aucun utilisateur bloqué pour le moment.
+
                         </p>
 
                      </div>';
@@ -67,11 +71,11 @@
                 else
               {
 
-                // affichage de la liste des utilisateurs bloqués
+            // affichage de la liste des utilisateurs bloqués
 
              foreach ($user_block as $user_block): ?>
 
-                <div class="w3-container" data-username="<?= $user_block->bloque ;?>">
+                <div class="w3-container itemsocial" data-username="<?= $user_block->bloque ;?>">
 
                   <!-- avatar -->
 
@@ -81,7 +85,11 @@
 
                   <!-- lien profil -->
 
-                    <b><?= $this->Html->link(''.h($user_block->bloque).'','/'.h($user_block->bloque).'') ?></b>
+                    <b>
+
+                      <?= $this->Html->link(''.h($user_block->bloque).'','/'.h($user_block->bloque).'') ?>
+
+                    </b>
 
                     <br />
 
@@ -95,23 +103,54 @@
 
             </div>
 
-          <?php endforeach; }?>
+          <?php
 
-          </div>
+                endforeach;
+
+                ?>
+
+                </div>
+
+                <?php
+
+              }
+
+        ?>
 
         <!-- pagination -->
 
-            <div id="pagination">
+        <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-        <!-- lien personnaliser -->
+        <div hidden id="spinnerajaxscroll"></div>
 
-              <?= $this->Paginator->options([
-                                              'url' => array('controller' => '/userblock/')
-                                            ]); ?>
+        <?php
 
-            <?= $this->Paginator->next('Next page'); ?>
+          if ($this->Paginator->hasNext())
+        {
 
-            </div>
+         ?>
+
+         <div class="pagination">
+
+          <?= $this->Paginator->options(['url' => array('controller' => '/userblock/')]); ?> <!-- url modifiée pour la seconde page -->
+
+          <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+        </div>
+
+        <?php
+
+        }
+
+        ?>
+
+        <!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+              <div class="w3-center">
+
+                <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des utilisateurs bloqués</div>
+
+              </div>
 
           </div>
 

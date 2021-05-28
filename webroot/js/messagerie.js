@@ -7,6 +7,8 @@
 
  /** variable **/
 
+let iasmessage; // variable contenant la construction de l'Infinite Ajax Scroll
+
 let form_message = document.querySelector('#form_message') // récupération du formulaire
 
 let form_addtoconv = document.querySelector('#form_addtoconv'); // formulaire d'jout à une conversation
@@ -201,9 +203,10 @@ navAnchor.forEach(anchor => {
 
 	   spinnerconv.setAttribute('hidden', ''); // disparition du spinner
 
-
-
      btnoptionconv.removeAttribute('hidden'); // affichage du bouton d'option dans une conversation
+
+     //IAS de chaque conversation
+
 
      // réactivation textarea_message puis autofocus
 
@@ -325,7 +328,7 @@ navAnchor.forEach(anchor => {
   else
 {
 
-  let inputconv = document.createElement("input");
+let inputconv = document.createElement("input");
  inputconv.type = "hidden";
  inputconv.name = "typeconv";
  inputconv.value = typeconv;
@@ -337,8 +340,48 @@ navAnchor.forEach(anchor => {
 
 document.getElementById("displayconv").innerHTML = html;
 
-})
+// si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre conversation), on la vide
 
+  if(iasmessage)
+{
+  iasmessage = null;
+}
+
+// création d'une nouvelle instance InfiniteAjaxScroll
+
+      iasmessage = new InfiniteAjaxScroll('.listmessage', {
+       item: '.itemmessage',
+       logger: false,
+       next: '.next',
+       spinner: {
+
+        // element qui sera le spinner de chargement des données
+
+        element: document.querySelector('#spinnerajaxscroll'),
+
+        // affichage du spinner
+
+        show: function(element) {
+           element.removeAttribute('hidden');
+         },
+
+        // effacement du spinner
+
+         hide: function(element) {
+           element.setAttribute('hidden', '');
+         }
+       },
+       pagination: '.pagination'
+     });
+
+     // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+     iasmessage.on('last', function() {
+
+       document.querySelector('.no-more').style.opacity = '1';
+     })
+
+})
     // affichage d'erreur si besoin
 
     .catch(function(err) {

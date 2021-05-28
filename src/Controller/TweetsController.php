@@ -116,9 +116,16 @@ class TweetsController extends AppController
 
   elseif (!$this->Authentication->getIdentity() AND AppController::get_type_profil($current_user) == 'prive')
 {
-  $no_see = 1; // interdiction de voir
+  $no_see = 2; // interdiction de voir
 
   $this->set('no_see', $no_see);
+}
+
+  else // je suis sur mon profil : no_see reste à 0 donc je peut voir
+{
+
+  $this->set('no_see', $no_see);
+  
 }
 
 
@@ -511,7 +518,7 @@ class TweetsController extends AppController
         }
             else // pagination des résultats
         {
-            $this->set('actu', $this->paginate($actu, ['limit' => 8]));
+            $this->set('actu', $this->paginate($actu, ['limit' => 4]));
         }
     }
 

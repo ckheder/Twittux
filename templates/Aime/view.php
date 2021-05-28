@@ -6,28 +6,45 @@
 
             <?php foreach ($username_like as $username_like): ?>
 
-                <div class="w3-container w3-round w3-margin">
-            
+                <div class="w3-container w3-round w3-margin itemlike">
+
                   <!-- avatar -->
 
                     <?= $this->Html->image('/img/avatar/'.$username_like->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>' w3-circle', 'style'=>'width:50px', 'title' => ''.h($username_like->username).'')) ?>
 
                   <!-- lien profil -->
 
-                   <strong><?= $this->Html->link(''.h($username_like->username).'','/'.h($username_like->username).'') ?></strong>
-                    
+                   <strong>
+
+                     <?= $this->Html->link(''.h($username_like->username).'','/'.h($username_like->username).'') ?>
+
+                   </strong>
+
                 </div>
 
             <?php endforeach; ?>
 
-            <!-- lien temporaire de test de la pagination -->
+            <!--lien pagination -->
 
-                <div id="pagination">
+            <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-                  <?= $this->Paginator->numbers() ?>
+            <div hidden id="spinnerajaxscroll"></div>
 
-                  <?= $this->Paginator->next('Next page'); ?>
+            <?php
 
-                  <?= $this->Paginator->counter() ?>
+                if ($this->Paginator->hasNext())
+              {
+
+            ?>
+
+                <div class="paginationlike">
+
+                  <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
 
                 </div>
+
+            <?php
+
+            }
+
+            ?>

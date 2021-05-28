@@ -2,6 +2,7 @@
 /**
  *  Vue contenant la page d'accueil après login : liste des tweets
  */
+
 ?>
 
 <!--zone de notification sur l'état de l'envoi d'un tweet -->
@@ -72,10 +73,13 @@
 
   else // profil public ou privé mais abonné -> affichage des tweets
   {
+    ?>
 
-        foreach ($tweets as $tweet):  ?>
+    <div class="usertweets">
 
-      <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin" id="tweet<?= $tweet->id_tweet ;?>">
+        <?php foreach ($tweets as $tweet):  ?>
+
+      <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin item" id="tweet<?= $tweet->id_tweet ;?>">
 
         <!-- test si c'est un tweet partagé -->
 
@@ -187,7 +191,7 @@
 
         <!-- affichage du nombre de like -->
 
-          <a onclick="openmodallike(<?= $tweet->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $tweet->id_tweet ?>"><?= $tweet->nb_like ;?></span> J'aime</a>
+          <a <?= ($tweet->nb_like > 0) ? "onclick=\"openmodallike($tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $tweet->id_tweet ?>"><?= $tweet->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 
@@ -238,7 +242,43 @@
 
  <?php
 
-endforeach;
+endforeach; ?>
+
+</div>
+
+<div hidden id="spinnerajaxscroll"></div>
+
+<?php
+
+if ($this->Paginator->hasNext())
+{
+
+ ?>
+
+ <div class="pagination">
+
+  <?= $this->Paginator->options([
+
+                                  'url' => '/'.$this->request->getParam('username').''
+
+                                ]);?>
+
+  <?= $this->Paginator->next('Next page'); ?>
+
+</div>
+
+<?php
+
+}
+
+?>
+<div class="w3-center">
+
+<div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des tweets de <?= $this->request->getParam('username') ?></div>
+
+</div>
+
+<?php
 
 }
 

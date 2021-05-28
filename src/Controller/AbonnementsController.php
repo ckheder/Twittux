@@ -74,7 +74,7 @@ use Cake\Datasource\ConnectionManager;
 
             ->contain(['Users']);
 
-            $this->set('abonnement_valide', $this->Paginator->paginate($abonnement_valide, ['limit' => 30]));
+            $this->set('abonnement_valide', $this->Paginator->paginate($abonnement_valide, ['limit' => 10]));
 
     }
 
@@ -110,7 +110,7 @@ use Cake\Datasource\ConnectionManager;
 
             ->order((['Users.username' => 'ASC']));
 
-            $this->set('abonne_valide', $this->Paginator->paginate($abonne_valide, ['limit' => 30]));
+            $this->set('abonne_valide', $this->Paginator->paginate($abonne_valide, ['limit' => 10]));
         }
           else // en cas de non requête AJAX on lève une exception 404
         {

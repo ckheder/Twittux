@@ -10,19 +10,56 @@
  var actnotif = document.querySelectorAll('.actnotif'); // on stock tous les lien qui ont une classe 'actnotif' -> mettre à jour le statut d'une notif
  var nb_notification = document.querySelector('.nb_notification'); // récupération du nombre d'abonnement
 
- // marqer une notif comme lue / non lue
+ // Infinite AJAX scroll de la liste des notifications
 
- actnotif.forEach(item => {
-     item.addEventListener('click', (e) => {
+ let ias = new InfiniteAjaxScroll('#list_notif', {
+   item: '.itemnotif',
+   logger: false,
+   next: '.next',
+   spinner: {
+
+     // element qui sera le spinner de chargement des données
+
+     element: document.querySelector('#spinnerajaxscroll'),
+
+     // affichage du spinner
+
+    show: function(element) {
+       element.removeAttribute('hidden');
+     },
+
+     // effacement du spinner
+
+     hide: function(element) {
+       element.setAttribute('hidden', ''); // default behaviour
+     }
+   },
+   pagination: '.pagination'
+ });
+
+// action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+ ias.on('last', function() {
+
+   document.querySelector('.no-more').style.opacity = '1';
+ })
+
+ // marquer une notif comme lue / non lue
+
+ document.addEventListener('click',function(e){
+
+    if(e.target && e.target.matches('.actnotif')) // si le lien cliqué possède l'attribut 'data_idconv'
+   {
+
 
        var data = {
-         "statut": item.getAttribute('data_statut') // récupération du statut
+         "statut": e.target.getAttribute('data_statut') // récupération du statut
        }
 
-          if(item.getAttribute('data_id_notif')) // si il y'a un identifiant on l'ajoute au tableau (sert pour la mmise à jour de statut lue/non lue)
+          if(e.target.getAttribute('data_id_notif')) // si il y'a un identifiant on l'ajoute au tableau (sert pour la mmise à jour de statut lue/non lue)
        {
 
-         data.id_notif = item.getAttribute('data_id_notif');
+         data.id_notif = e.target.getAttribute('data_id_notif');
        }
 
          let response = fetch('/twittux/notifications/statut', {
@@ -49,25 +86,25 @@
 
              // récupération de la div contenant la notification pour mettre à jour sa classe
 
-              var div_notif =   document.querySelector('[data_id_notif="'+ item.getAttribute('data_id_notif') +'"]');
+              var div_notif =   document.querySelector('[data_id_notif="'+ e.target.getAttribute('data_id_notif') +'"]');
 
-              if(item.getAttribute('data_statut') == "0") // on passe à une notification lue
+              if(e.target.getAttribute('data_statut') == "0") // on passe à une notification lue
             {
-              item.setAttribute('data_statut', 1); // mise à jour du statut : 1 -> lue
+              e.target.setAttribute('data_statut', 1); // mise à jour du statut : 1 -> lue
 
-              item.innerHTML = "<i class=\"fas fa-eye-slash\"></i> Marquer comme non lue</a>"; // nouveau lien
+              e.target.innerHTML = "<i class=\"fas fa-eye-slash\"></i> Marquer comme non lue</a>"; // nouveau lien
 
-              div_notif.className = div_notif.className.replace("w3-container w3-light-grey", "w3-container w3-sand"); // mise à jour du background de la div
+              div_notif.className = div_notif.className.replace("w3-container itemnotif w3-light-grey", "w3-container itemnotif w3-sand"); // mise à jour du background de la div
 
             }
-                else if (item.getAttribute('data_statut') == "1") // on passe à une notification non lue
+                else if (e.target.getAttribute('data_statut') == "1") // on passe à une notification non lue
               {
 
-                item.setAttribute('data_statut', 0); // mise à jour du statut : 0 -> non lue
+                e.target.setAttribute('data_statut', 0); // mise à jour du statut : 0 -> non lue
 
-                item.innerHTML = "<i class=\"fas fa-eye\"></i> Marquer comme lue</a>"; // nouveau lien
+                e.target.innerHTML = "<i class=\"fas fa-eye\"></i> Marquer comme lue</a>"; // nouveau lien
 
-                div_notif.className = div_notif.className.replace("w3-container w3-sand", "w3-container w3-light-grey"); // mise à jour du background de la div
+                div_notif.className = div_notif.className.replace("w3-container itemnotif w3-sand", "w3-container itemnotif w3-light-grey"); // mise à jour du background de la div
 
             }
 
@@ -81,7 +118,7 @@
 
             // suppresion du DOM de la div contenant la notification
 
-            var div_notif_delete =  document.querySelector('[data_id_notif="'+ item.getAttribute('data_id_notif') +'"]');
+            var div_notif_delete =  document.querySelector('[data_id_notif="'+ e.target.getAttribute('data_id_notif') +'"]');
 
             div_notif_delete.parentNode.removeChild(div_notif_delete);
 
@@ -99,7 +136,7 @@
 
                                            // on récupère toutes les div contenant la classe w3-container.w3-light-grey synonyme de notification non lue
 
-                                           var allnotifnoread = document.querySelectorAll(".w3-container.w3-light-grey");
+                                           var allnotifnoread = document.querySelectorAll(".w3-container.w3-light-grey.itemnotif");
 
                                            allnotifnoread.forEach(item => {
 
@@ -113,7 +150,7 @@
 
                                              // mise à jour class de la div
 
-                                             item.className = item.className.replace("w3-container w3-light-grey", "w3-container w3-sand");
+                                             item.className = item.className.replace("w3-container itemnotif w3-light-grey", "w3-container itemnotif w3-sand");
 
                                            })
 
@@ -150,7 +187,7 @@
 
          })
 
-       })
+       }
 
      })
 
@@ -291,7 +328,7 @@
 
 /** accéder à la page des demandes d'abonnement depuis une notification **/
 
-if(document.querySelector(".requestlink"))
+  if(document.querySelector(".requestlink"))
 {
 
   document.querySelector(".requestlink").addEventListener('click',function(e)

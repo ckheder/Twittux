@@ -6,6 +6,8 @@
  *
  */ -->
 
+ <div class="query_tweet">
+
  <?php
 
   use Cake\Utility\Text; // utilitaire de manipulation d'une chaîne de caractère
@@ -14,7 +16,7 @@
           if(count($query_tweet) === 0) // aucun résultat au comptage des résultats dans le tableau
         {
 
-          echo '<div class="w3-container w3-blue">Aucun tweet ne correspond à cette recherche.</div>';
+          echo '<div class="w3-container w3-blue">Aucun tweet ne correspond à cette recherche.</div></div>';
 
         }
           else
@@ -22,7 +24,7 @@
 
           foreach ($query_tweet as $query_tweet): ?>
 
-            <div style="word-wrap: break-word;" class="w3-container w3-card w3-white">
+            <div style="word-wrap: break-word;" class="w3-container w3-card w3-white itemsearch">
 
               <br>
 
@@ -95,7 +97,7 @@
 
         <!-- affichage du nombre de like -->
 
-  <a onclick="openmodallike(<?= $query_tweet->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_like ;?></span> J'aime</a>
+        <a <?= ($query_tweet->nb_like > 0) ? "onclick=\"openmodallike($query_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 
@@ -106,8 +108,6 @@
   - Partagé <span class="nb_share_<?= $query_tweet->id_tweet ?> "><?= $query_tweet->nb_partage ;?></span> fois
 
 </div>
-
-
 
 <?php if($authName) // si je suis authentifié, affichage du bouton j'aime et de partage
 {
@@ -141,28 +141,45 @@
 
 </div>
 
-            <?php endforeach; ?>
-
-            <!--lien pagination -->
-
-            <div id="pagination">
-
-              <?= $this->Paginator->numbers() ?>
-
-                        <?= $this->Paginator->options([
-
-                                          'url' => array('controller' => '/search/'.$this->request->getParam('query').'')
-
-                                        ]);?>
-
-            <?= $this->Paginator->next('Next page'); ?>
-
-            <?= $this->Paginator->counter() ?>
-
-            </div>
-
- <?php
+            <?php endforeach;
 
         }
 
   ?>
+
+  <!-- spinner de chargement des données par Infinite Ajax Scroll -->
+
+  <div hidden id="spinnerajaxscroll"></div>
+
+  <!-- pagination -->
+
+  <?php
+
+    if ($this->Paginator->hasNext())
+  {
+
+   ?>
+
+    <div class="pagination">
+
+      <?= $this->Paginator->options(['url' => array('controller' => '/search/'.$this->request->getParam('query').'')]); ?> <!-- url modifiée pour la seconde page -->
+
+      <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+  </div>
+
+  <?php
+
+  }
+
+  ?>
+
+<!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+  <div class="w3-center">
+
+    <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des résultats pour <?= $this->request->getParam('query') ?></div>
+
+  </div>
+
+</div>

@@ -20,15 +20,11 @@
 
                 <header class="w3-container w3-teal">
 
-                  <h4><span class="nb_following"><?= count($abonnement_valide) ?></span> abonnement(s)</h4><!-- // nombre d'abonnements -->
+                  <h4><span class="nb_following"><?= $this->Paginator->params()['count'] ?></span> abonnement(s)</h4><!-- // nombre d'abonnements -->
 
                 </header>
 
             </div>
-
-            <!-- liste d'abonnement -->
-
-            <div id="listabovalide">
 
               <!--zone de notification sur l'état de la suppression d'un abonnement -->
                 <div id="alert-area" class="alert-area"></div>
@@ -36,9 +32,11 @@
 
               <br />
 
-            <?php foreach ($abonnement_valide as $abonnement_valide): ?>
+              <div id="list_following">
 
-                <div class="w3-container" data-username="<?= $abonnement_valide->user['username'] ;?>">
+                <?php foreach ($abonnement_valide as $abonnement_valide): ?>
+
+                  <div class="w3-container itemsocial" data-username="<?= $abonnement_valide->user['username'] ;?>">
 
                   <!-- avatar -->
 
@@ -48,11 +46,15 @@
 
                   <!-- lien profil -->
 
-                    <b><?= $this->Html->link(''.h($abonnement_valide->user['username']).'','/'.h($abonnement_valide->user['username']).'') ?></b>
+                    <b>
 
-                    <br />
+                      <?= $this->Html->link(''.h($abonnement_valide->user['username']).'','/'.h($abonnement_valide->user['username']).'') ?>
 
-                  <span class="w3-opacity"><?= $abonnement_valide->user['description']; ?></span>
+                    </b>
+
+                      <br />
+
+                        <span class="w3-opacity"><?= $abonnement_valide->user['description']; ?></span>
 
                   </p>
 
@@ -77,19 +79,40 @@
 
             <?php endforeach; ?>
 
-          </div>
+            </div>
 
-        <!-- pagination -->
+            <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-            <div id="pagination">
+            <div hidden id="spinnerajaxscroll"></div>
 
-        <!-- lien personnaliser -->
+            <!-- pagination -->
 
-              <?= $this->Paginator->options([
-                                              'url' => array('controller' => '/abonnement/'.$this->request->getParam('username').'')
-                                            ]); ?>
+            <?php
 
-            <?= $this->Paginator->next('Next page'); ?>
+              if ($this->Paginator->hasNext())
+            {
+
+             ?>
+
+              <div class="pagination">
+
+                <?= $this->Paginator->options(['url' => ''.$this->request->getParam('username').'']); ?> <!-- url modifiée pour la seconde page -->
+
+                <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+              </div>
+
+            <?php
+
+            }
+
+            ?>
+
+            <!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+            <div class="w3-center">
+
+              <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des abonnements</div>
 
             </div>
 

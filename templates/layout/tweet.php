@@ -1,5 +1,5 @@
 <?php
-use Cake\Routing\Router;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -27,6 +27,7 @@ use Cake\Routing\Router;
     <?= $this->Html->css('w3');?>
      <?= $this->Html->css('custom');?>
      <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+     <?= $this->Html->script('//unpkg.com/@webcreate/infinite-ajax-scroll/dist/infinite-ajax-scroll.min.js'); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 
@@ -68,9 +69,9 @@ use Cake\Routing\Router;
 
                 <!-- bouton de tri sur les tweets -->
 
-                <button id="showtweets" class="w3-bar-item w3-button tablinktweet w3-red">Tweets</button>
+                <button class="w3-bar-item w3-button tablinktweet w3-red" onclick="loadTweetItem('showtweets')">Tweets</button>
 
-                <button id="showmediatweets" class="w3-bar-item w3-button tablinktweet">Média</button>
+                <button class="w3-bar-item w3-button tablinktweet" onclick="loadTweetItem('showmediatweets')">Média</button>
 
               </div>
 

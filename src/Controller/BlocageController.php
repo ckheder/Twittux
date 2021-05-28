@@ -43,7 +43,7 @@ class BlocageController extends AppController
 
            ->order((['bloque' => 'ASC']));
 
-           $this->set('user_block', $this->Paginator->paginate($user_block, ['limit' => 30]));
+           $this->set('user_block', $this->Paginator->paginate($user_block, ['limit' => 10]));
         }
 
          else // en cas de non requête AJAX on lève une exception 404

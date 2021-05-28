@@ -38,7 +38,9 @@ class AppView extends View
     public function initialize(): void
     {
         $this->loadHelper('Authentication.Identity');
-        
+
+        $this->loadHelper('Paginator',['templates' => 'template-paginator']); // template pour la paginator : affécter une classe spécifique aux liens générés par le paginator
+
         $this->set('authName', $this->Identity->get('username')); // nom du connecté
     }
 }

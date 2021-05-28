@@ -32,7 +32,7 @@ class NotificationsController extends AppController
                                             ->order(['created'=> 'DESC']);
 
 
-        $this->set('notifications', $this->Paginator->paginate($notifications, ['limit' => 30]));
+        $this->set('notifications', $this->Paginator->paginate($notifications, ['limit' => 10]));
   }
     /**
       * Méthode Statut

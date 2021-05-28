@@ -15,6 +15,10 @@
 
   const navAnchor = document.querySelectorAll('.tablinktweet'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 
+  let iastweet; // variable contenant la construction de l'Infinite Ajax Scroll pour les tweets et les like
+
+  var url_tweet; // URL de recherche à charger suivant l'onglet cliqué
+
   // surlignage
 
   // ajout d'un écouteur de clique sur chaque lien du menu
@@ -30,6 +34,10 @@
     current.className = current.className.replace("w3-red", "");
     e.target.className += " w3-red";
   }
+
+// chargement par AJAX des tweets sans média
+
+  document.querySelector("#list_tweet_"+username+"").addEventListener("load", loadTweetItem('showtweets'));
 
  //menu déroulant tweet
 
@@ -70,20 +78,16 @@ window.addEventListener("click", function(event) {
 
 // naviguer entre les tweet et les tweets avec media
 
-document.addEventListener('click',function(e){
-
-  var url_tweet; // URL de rercherche à charger suivant l'onglet cliqué
-
-  if(e.target.id)
+  function loadTweetItem(itemtweet)
 {
 
-    if(e.target.id == 'showtweets') // URL d'affichage de tous les tweets d'une personne
+    if(itemtweet == 'showtweets') // URL d'affichage de tous les tweets d'une personne
   {
 
     url_tweet = '/twittux/'+username+'';
 
   }
-    else if (e.target.id === 'showmediatweets') // URL d'affichage de tous les tweets d'une personne contenant un média uploadé
+    else if (itemtweet === 'showmediatweets') // URL d'affichage de tous les tweets d'une personne contenant un média uploadé
   {
 
     url_tweet = '/twittux/'+username+'/media';
@@ -110,9 +114,52 @@ document.addEventListener('click',function(e){
                           })
     .then(function (html) {
 
-	   spinner.setAttribute('hidden', ''); // disparition du spinner
+      // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page tweet), on la vide
+
+        if(iastweet)
+      {
+        iastweet = null;
+      }
+
+	  spinner.setAttribute('hidden', ''); // disparition du spinner
 
     document.getElementById("list_tweet_"+username+"").innerHTML = html; // chargement de la réponse dans la div précédente
+
+    // création d'une nouvelle instance InfiniteAjaxScroll
+
+    iastweet = new InfiniteAjaxScroll('.usertweets', {
+      item: '.item',
+      logger: false,
+      next: '.next',
+      spinner: {
+
+      // element qui sera le spinner de chargement des données
+
+      element: document.querySelector('#spinnerajaxscroll'),
+
+      // affichage du spinner
+
+       show: function(element) {
+          element.removeAttribute('hidden');
+        },
+
+        // effacement du spinner
+
+
+        hide: function(element) {
+          element.setAttribute('hidden', '');
+        }
+      },
+      pagination: '.pagination'
+    });
+
+    // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+    iastweet.on('last', function() {
+
+      document.querySelector('.no-more').style.opacity = '1';
+    })
+
 
     })
 
@@ -121,8 +168,8 @@ document.addEventListener('click',function(e){
     .catch(function(err) {
   	                       console.log(err);
   	});
+
 }
-})
 
 // supprimer un tweet
 
@@ -423,33 +470,6 @@ document.addEventListener('click',function(e){
     });
        }
 })
-
-// affichage modal des likes
-
-  function openmodallike(idtweetlike)
-{
-    if(document.getElementById('modallike')) // si la modal existe car inexistante lors de la visite d'un profil en étant pas auth
-  {
-    document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
-  }
-    else
-  {
-      return;
-  }
-
-  fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
-  .then(function (data)
-  {
-    return data.text();
-  })
-  .then(function (html)
-  {
-    document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
-  })
-  .catch((err) => console.log("fail" + err));
-}
-
-// fin affichage modal des like
 
 /** fin traitement des like **/
 

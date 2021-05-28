@@ -28,6 +28,7 @@ use Cake\Routing\Router;
     <?= $this->Html->css('w3');?>
     <?= $this->Html->css('custom');?>
     <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+    <?= $this->Html->script('//unpkg.com/@webcreate/infinite-ajax-scroll/dist/infinite-ajax-scroll.min.js'); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 
@@ -75,13 +76,13 @@ use Cake\Routing\Router;
 
   <div class="w3-bar-block w3-white">
 
-    <button id="searchtweets" class="w3-bar-item w3-button tablink w3-red"><i class="fas fa-pencil-alt"></i> Tweets</button>
+    <button class="w3-bar-item w3-button tablink w3-red" onclick="loadSearchItem('searchtweets')"><i class="fas fa-pencil-alt"></i> Tweets</button>
 
-    <button id="searchusers" class="w3-bar-item w3-button tablink"><i class="fas fa-user"></i> Personnes</button>
+    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchusers')"><i class="fas fa-user"></i> Personnes</button>
 
-    <button id="searchmostrecent" class="w3-bar-item w3-button tablink"><i class="fas fa-clock"></i> Récent</button>
+    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchmostrecent')"><i class="fas fa-clock"></i> Récent</button>
 
-    <button id="searchmediapics" class="w3-bar-item w3-button tablink"><i class="fas fa-image"></i> Média</button>
+    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchmediapics')"><i class="fas fa-image"></i> Média</button>
 
   </div>
 
@@ -112,8 +113,6 @@ use Cake\Routing\Router;
             </div>
 
         </div>
-
-
 
   </div>
 

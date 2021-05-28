@@ -7,6 +7,12 @@
 
  /** variable **/
 
+ var iasfollow; // variable contenant la construction de l'Infinite Ajax Scroll
+
+ var URL; // URL à charger suivant l'onglet cliqué
+
+ var DIVIAS; // Div ou sera chargé les données IAS suivant la page
+
  var nb_following = document.querySelector('.nb_following'); // récupération du nombre d'abonnement
 
  var nb_attente = document.querySelector('.nb_attente'); // récupération du nombre de demande en attente
@@ -30,6 +36,10 @@
    current.className = current.className.replace("w3-red", "");
    e.target.className += " w3-red";
  }
+
+ //à l'ouverture de la page on charge la page des abonnements en AJAX
+
+ document.querySelector("#list_following").addEventListener("load", loadSocialItem(currentuser,'following'));
 
  // rejoindre depuis la page abonné depuis le profil
 
@@ -83,10 +93,8 @@
 
  // chargement des différentes page d'abonnements, abonné , demande et utilisateur bloqué au clique et par AJAX
 
- function loadSocialItem(currentuser = null, item)
+ function loadSocialItem(currentuser = null, item) // currentuser : utilisateur actuel (soit le connecté soit u profil qu'on visitait et on a cliqué sur le lien de ses abonnements et abonnés),item : page à charger
 {
-
- var URL; // URL à charger suivant l'onglet cliqué
 
    		switch(item)
    	{
@@ -94,22 +102,31 @@
 
                         URL = '/twittux/social/'+currentuser+'';
 
+                        DIVIAS = 'list_following'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
+
+
    							break;
 
    		case "followers": // page des abonnés d'une personne
 
                         URL = '/twittux/abonnes/'+currentuser+'';
 
+                        DIVIAS = 'list_followers'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
+
    							break;
 
    		case "requests": // page des demandes d'abonnement d'une personne
 
                         URL = '/twittux/abonnement/demande';
+
+                        DIVIAS = 'list_request'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
    							break;
 
        case "usersblocks": // page des utilisateurs bloqués
 
                         URL = '/twittux/userblock';
+
+                        DIVIAS = 'list_userblock'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
 
              		break;
 
@@ -136,7 +153,47 @@
 
     document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
 
-     })
+    // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page social), on la vide
+
+      if(iasfollow)
+    {
+      iasfollow = null;
+    }
+
+    // création d'une nouvelle instance InfiniteAjaxScroll
+
+          iasfollow = new InfiniteAjaxScroll('#'+DIVIAS+'', {
+           item: '.itemsocial',
+           logger: false,
+           next: '.next',
+           spinner: {
+
+            // element qui sera le spinner de chargement des données
+
+            element: document.querySelector('#spinnerajaxscroll'),
+
+            // affichage du spinner
+
+            show: function(element) {
+               element.removeAttribute('hidden');
+             },
+
+             // effacement du spinner
+
+             hide: function(element) {
+               element.setAttribute('hidden', '');
+             }
+           },
+           pagination: '.pagination'
+         });
+
+         // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+         iasfollow.on('last', function() {
+
+           document.querySelector('.no-more').style.opacity = '1';
+         })
+  })
 
      // affichage d'erreur si besoin
 

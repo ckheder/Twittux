@@ -93,7 +93,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // route profil
 
-    $builder->connect('/:username',['controller' => 'Tweets', 'action' => 'index'],['_name' => 'profil']);
+    $builder->connect('/:username',['controller' => 'Tweets', 'action' => 'index'],['_name' => 'profil'])->setPass(['username']);
 
         // ajouter un tweet
 
@@ -107,7 +107,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // voir tweet avec media sur profil
 
-    $builder->connect('/:username/media',['controller' => 'Tweets', 'action' => 'mediatweet']);
+    $builder->connect('/:username/media',['controller' => 'Tweets', 'action' => 'mediatweet'],['_name' => 'mediatweet'])->setPass(['username']);
 
         // supprimer un tweet
 
@@ -154,11 +154,11 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
         // liste des abonnements
 
-    $builder->connect('/social/{username}',['controller' => 'Abonnements', 'action' => 'abonnements']);
+    $builder->connect('/social/{username}',['controller' => 'Abonnements', 'action' => 'abonnements'])->setPass(['username']);
 
             // liste des abonnés
 
-    $builder->connect('/abonnes/{username}',['controller' => 'Abonnements', 'action' => 'abonnes']);
+    $builder->connect('/abonnes/{username}',['controller' => 'Abonnements', 'action' => 'abonnes'])->setPass(['username']);
 
             // liste des demande d'abonnement
 

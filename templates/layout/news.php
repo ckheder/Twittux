@@ -27,6 +27,7 @@
     <?= $this->Html->css('w3');?>
      <?= $this->Html->css('custom');?>
      <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+     <?= $this->Html->script('//unpkg.com/@webcreate/infinite-ajax-scroll/dist/infinite-ajax-scroll.min.js'); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 
@@ -54,27 +55,23 @@
 
             			<!-- lien de tri vers les plus récents -->
 
-                     <button id="showtmostrecentweets" class="w3-bar-item w3-button tablinknews w3-red"><i class="fas fa-clock"></i> Les plus récents</button>
+                     <button class="w3-bar-item w3-button tablinknews w3-red" onclick="loadNewsItem('showtmostrecentweets')"><i class="fas fa-clock"></i> Les plus récents</button>
 
                  <!-- lien de tri vers les plus commentés -->
 
-                    	<button id="showtmostcommentsweets" class="w3-bar-item w3-button tablinknews"><i class="fas fa-comments"></i> Les plus commentés</button>
+                    	<button class="w3-bar-item w3-button tablinknews" onclick="loadNewsItem('showtmostcommentsweets')"><i class="fas fa-comments"></i> Les plus commentés</button>
 
            		</div>
 
            	</div>
 
-            <div class="w3-col m6">
-
               <div hidden class="spinner"></div> <!-- image de chargement des données -->
 
-                <div id="list_actu_online">
+              <div id="news">
 
                   <?= $this->fetch('content') ?>
 
-                </div>
-
-          </div>
+              </div>
 
           <!-- Right Column -->
 
@@ -113,7 +110,7 @@
 
 <!-- script JS -->
 
-        <?= $this->Html->script('news.js'); ?> <!-- traitement des actions : delete un abonnement, répondre à une demande,afficher les notifications correspondantes,... -->
+        <?= $this->Html->script('news.js'); ?> <!-- traitement des actions : delete un abonnement,changer le tri des news,... -->
 
 </body>
 

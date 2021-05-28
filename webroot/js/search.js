@@ -15,6 +15,12 @@ const spinner = document.querySelector('.spinner'); // div qui accueuillera le s
 
 const navAnchor = document.querySelectorAll('.tablink'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 
+var URL; // URL de rercherche à charger suivant l'onglet cliqué
+
+var iassearch; // variable contenant la construction de l'Infinite Ajax Scroll
+
+var DIVIAS; // Div ou sera chargé les données IAS suivant la page
+
 // surlignage
 
 // ajout d'un écouteur de clique sur chaque lien du menu
@@ -31,18 +37,22 @@ function addActive(e) {
   e.target.className += " w3-red";
 }
 
+// chargement par AJAX des tweets sans média
+
+document.querySelector("#result_search").addEventListener("load", loadSearchItem('searchtweets'));
+
 // chargement de donné via lien
 
-document.addEventListener('click',function(e){
+    function loadSearchItem(itemsearch)
+  {
 
-var URL; // URL de rercherche à charger suivant l'onglet cliqué
-
-  		switch(e.target.id)
+  		switch(itemsearch)
   	{
   		case "searchusers": // recherche d'utilisateurs
                           if(currenturl === 'search') // page de recherche classiqie
                         {
   							           URL = '/twittux/search/users/'+keyword+'';
+                           DIVIAS = 'query_users'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                         }
                           else // page de recherche hashtag sur la description
                         {
@@ -50,8 +60,11 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
                           keyword = keyword.replace(regexp, '$1');
 
                           URL = '/twittux/search/hashtag/users/'+keyword+'';
+                          DIVIAS = 'resultat_users'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
 
                         }
+
+
 
   							break;
 
@@ -59,6 +72,7 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
                           if(currenturl === 'search') // page de recherche classiqie
                         {
   							           URL = '/twittux/search/'+keyword+'';
+                           DIVIAS = 'query_tweet'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                         }
                           else // page de recherche hashtag sur le contenu des tweets
                         {
@@ -66,8 +80,11 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
                           keyword = keyword.replace(regexp, '$1');
 
                           URL = '/twittux/search/hashtag/'+keyword+'';
+                          DIVIAS = 'resultat_tweet'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
 
                         }
+
+
 
   							break;
 
@@ -75,26 +92,34 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
                               if(currenturl === 'search') // page de recherche classiqie
                             {
   							               URL = '/twittux/search/'+keyword+'?sort=created&direction=desc';
+                               DIVIAS = 'query_tweet'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                             }
                               else // page de recherche hashtag sur le contenu des tweets
                             {
                               keyword = keyword.replace(regexp, '$1');
 
                               URL = '/twittux/search/hashtag/'+keyword+'?sort=created&direction=desc';
+                              DIVIAS = 'resultat_tweet'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                             }
+
+
   							break;
 
       case "searchmediapics": // tweets avec média
                               if(currenturl === 'search') // page de recherche classiqie
                             {
             							      URL = '/twittux/search/media/'+keyword+'';
+                                DIVIAS = 'resultat_tweet_media'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                             }
-                              else // page de recherche hashtag sur le contenu des tweets
+                              else // page de recherche hashtag sur le contenu des tweets avec media
                             {
                               keyword = keyword.replace(regexp, '$1');
 
                               URL = '/twittux/search/hashtag/media/'+keyword+'';
+                              DIVIAS = 'resultat_tweet_hashtag_media'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
                             }
+
+
             							break;
 
       default: return;
@@ -120,6 +145,45 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
 
       document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
 
+      if(iassearch)
+    {
+      iassearch = null;
+    }
+
+    // création d'une nouvelle instance InfiniteAjaxScroll
+
+          iassearch = new InfiniteAjaxScroll('.'+DIVIAS+'', {
+           item: '.itemsearch',
+           next: '.next',
+           logger: false,
+           spinner: {
+
+            // element qui sera le spinner de chargement des données
+
+            element: document.querySelector('#spinnerajaxscroll'),
+
+            // affichage du spinner
+
+            show: function(element) {
+               element.removeAttribute('hidden');
+             },
+
+             // effacement du spinner
+
+             hide: function(element) {
+               element.setAttribute('hidden', '');
+             }
+           },
+           pagination: '.pagination'
+         });
+
+         // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+         iassearch.on('last', function() {
+
+           document.querySelector('.no-more').style.opacity = '1';
+         })
+
     })
 
     // affichage d'erreur si besoin
@@ -128,7 +192,7 @@ var URL; // URL de rercherche à charger suivant l'onglet cliqué
   	                       console.log(err);
   	});
 
-})
+}
 
 // traitement des actions d'abonnement/demande/suppression sur les résultats utilisateurs du moteur de recherche
 
@@ -393,31 +457,7 @@ document.addEventListener('click',function(e){
        }
 })
 
-// affichage modal des likes
 
-  function openmodallike(idtweetlike)
-{
-
-  if(document.getElementById('modallike')) // si la modal existe car inexistante lors de recherche en étant pas auth
-{
-  document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
-}
-  else
-{
-    return;
-}
-
-  fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
-  .then(function (data)
-  {
-    return data.text();
-  })
-  .then(function (html)
-  {
-    document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
-  })
-  .catch((err) => console.log("fail" + err));
-}
 
 // fin affichage modal des like
 

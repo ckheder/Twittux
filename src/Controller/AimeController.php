@@ -34,7 +34,7 @@ class AimeController extends AppController
 
             ->where(['id_tweet' =>  $this->request->getParam('idtweet')]);
 
-            $this->set('username_like', $this->Paginator->paginate($username_like, ['limit' => 30]));
+            $this->set('username_like', $this->Paginator->paginate($username_like, ['limit' => 4]));
     }
 
     /**

@@ -372,3 +372,42 @@ color: #737373;
 
 	/* fin en-tête des informations */
 /* fin SETTINGS */
+
+/* INFINITE AJAX SCROLL */
+
+/* spinner chargement des données IAS pour tous */
+
+#spinnerajaxscroll::after {
+  content: "";
+  width: 60px;
+  height: 60px;
+  border: 2px solid #f3f3f3;
+  border-top: 3px solid #713ff2;
+  border-radius: 100%;
+  will-change: transform;
+  animation: spin 1s infinite linear
+}
+
+#spinnerajaxscroll:not([hidden]) {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* div de fin d'IAS pour tous invisible par défaut*/
+
+/* div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
+
+.no-more
+{
+  opacity: 0;
+}
+
+/* fin div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
+
+/* FIN INFINITE AJAX SCROLL */

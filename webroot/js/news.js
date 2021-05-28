@@ -8,6 +8,10 @@ const navAnchor = document.querySelectorAll('.tablinknews'); // liste de tous le
 
 const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
+let iasnews; // variable contenant la construction de l'Infinite Ajax Scroll
+
+var url_news; // URL charger suivant l'onglet cliqué : news les plus récentes ou news les plus commentés
+
 //**NAVIGATION **//
 
 // surlignage
@@ -26,19 +30,25 @@ function addActive(e) {
   e.target.className += " w3-red";
 }
 
+  if(document.querySelector(".onlinenews"))
+{
+
+document.querySelector(".onlinenews").addEventListener("load", loadNewsItem('showtmostrecentweets'));
+
+}
+
 // naviguer entre les tweet et les tweets avec media
 
-document.addEventListener('click',function(e){
+  function loadNewsItem(item)
+{
 
-  var url_news; // URL de rercherche à charger suivant l'onglet cliqué
-
-    if(e.target.id == 'showtmostrecentweets') // URL d'affichage de tous les tweets les plus récents
+    if(item == 'showtmostrecentweets') // URL d'affichage de tous les tweets les plus récents
   {
 
     url_news = '/twittux/actualites?sort=created&direction=desc';
 
   }
-    else if (e.target.id === 'showtmostcommentsweets') // URL d'affichage de tous les tweets les plus commenté
+    else if (item === 'showtmostcommentsweets') // URL d'affichage de tous les tweets les plus commenté
   {
 
     url_news = '/twittux/actualites?sort=nb_commentaire&direction=desc';
@@ -46,10 +56,10 @@ document.addEventListener('click',function(e){
   }
     else
   {
-      return;
-  }
 
-  	document.getElementById("list_actu_online").innerHTML = ""; // on vide la div d'affichage des tweets
+    return;
+
+  }
 
     spinner.removeAttribute('hidden'); // affichage du spinner de chargement
 
@@ -67,7 +77,48 @@ document.addEventListener('click',function(e){
 
 	   spinner.setAttribute('hidden', ''); // disparition du spinner
 
-    document.getElementById("list_actu_online").innerHTML = html; // chargement de la réponse dans la div précédente
+    document.querySelector("#news").innerHTML = html; // chargement de la réponse dans la div précédente
+
+    // si il y'a déjà une instance InfiniteAjaxScroll (visite de l'autre page de news), on la vide
+
+      if(iasnews)
+    {
+      iasnews = null;
+    }
+
+    // création d'une nouvelle instance InfiniteAjaxScroll
+
+    iasnews = new InfiniteAjaxScroll('.onlinenews', {
+      item: '.itemnews',
+      logger: false,
+      next: '.next',
+      spinner: {
+
+        // element qui sera le spinner de chargement des données
+
+        element: document.querySelector('#spinnerajaxscroll'),
+
+        // affichage du spinner
+
+       show: function(element) {
+          element.removeAttribute('hidden');
+        },
+
+        // effacement du spinner
+
+        hide: function(element) {
+          element.setAttribute('hidden', ''); // default behaviour
+        }
+      },
+      pagination: '.pagination'
+    });
+
+     // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+    iasnews.on('last', function() {
+
+      document.querySelector('.no-more').style.opacity = '1';
+    })
 
     })
 
@@ -76,7 +127,7 @@ document.addEventListener('click',function(e){
     .catch(function(err) {
   	                       console.log(err);
   	});
-})
+}
 
 //** TWEET **//
 
@@ -101,6 +152,7 @@ window.onclick = function(event) {
     }
   }
 }
+
 
 // ** NOTIFICATIONS ** //
 
@@ -273,25 +325,6 @@ document.addEventListener('click',function(e){
        }
 })
 
-// affichage modal des likes
-
-  function openmodallike(idtweetlike)
-{
-  document.getElementById('modallike').style.display='block'; // affichage de la fenêtre modale
-
-  fetch('/twittux/like/'+idtweetlike+'') // chargement de l'URL
-  .then(function (data)
-  {
-    return data.text();
-  })
-  .then(function (html)
-  {
-    document.getElementById("contentlike").innerHTML = html; // affichage du contenu de la page dans la div prévue
-  })
-  .catch((err) => console.log("fail" + err));
-}
-
-// fin affichage modal des like
 
 /** fin traitement des like **/
 

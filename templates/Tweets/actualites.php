@@ -7,7 +7,7 @@
  */ -->
 
 
-
+<div class="w3-col m6">
 
 
 <!--zone de notification -->
@@ -26,9 +26,13 @@
           else
         {
 
-          foreach ($actu as $actu): ?>
+          ?>
 
-<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin">
+          <div class="onlinenews">
+
+          <?php foreach ($actu as $actu): ?>
+
+<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin itemnews">
 
 <!-- bouton de dropdown  : signaler un post, ne plus suivre -->
 
@@ -98,7 +102,7 @@
 
         <!-- affichage du nombre de like -->
 
-          <a onclick="openmodallike(<?= $actu->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>
+        <a <?= ($actu->nb_like > 0) ? "onclick=\"openmodallike($actu->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 
@@ -143,14 +147,36 @@
 
             <?php endforeach; ?>
 
+            </div>
+
+            <div hidden id="spinnerajaxscroll"></div>
+
             <!--lien pagination -->
 
-            <div id="pagination">
+              <?php
 
-            <?= $this->Paginator->next('Next page'); ?>
+              if ($this->Paginator->hasNext())
+              {
+               ?>
 
-            </div>
+               <div class="pagination">
+
+              <?= $this->Paginator->next('Next page'); ?>
+
+              </div>
+
+              <?php
+
+            }
+
+?>
+<div class="w3-center">
+
+  <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin de l'actualités</div>
+
+</div>
 
  <?php
 
         } ?>
+</div>

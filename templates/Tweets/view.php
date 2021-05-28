@@ -273,7 +273,7 @@
 
  foreach ($commentaires as $commentaires) : ?>
 
-    <div style="word-wrap: break-word;" id="comm<?= $commentaires->id_comm ?>"><br>
+    <div style="word-wrap: break-word;" class="itemcomm" id="comm<?= $commentaires->id_comm ?>"><br>
 
         <!--avatar -->
 
@@ -347,12 +347,41 @@
 
 </div>
 
+<!-- pagination -->
+
+<div hidden id="spinnerajaxscroll"></div>
+
+<!--lien pagination -->
+
+  <?php
+
+  if ($this->Paginator->hasNext())
+  {
+   ?>
+
+   <div class="pagination">
+
+  <?= $this->Paginator->next('Next page'); ?>
+
+  </div>
+
+  <?php
+
+}
+
+?>
+<div class="w3-center">
+
+<div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des commentaires</div>
+
+</div>
+
 <?php
 
 }
 
  ?>
- 
+<br />
 </div>
 <!-- fin affichage des commentaires -->
 

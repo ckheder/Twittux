@@ -55,9 +55,13 @@ use Cake\I18n\Time;
   else
 {
 
- foreach ($message as $message): ?>
+  ?>
 
-    <div style="word-wrap: break-word;margin-bottom : 15px;" class="w3-container w3-white">
+  <div class="listmessage">
+
+ <?php foreach ($message as $message): ?>
+
+    <div style="word-wrap: break-word;margin-bottom : 15px;" class="w3-container w3-white itemmessage">
 
   <br />
 
@@ -99,17 +103,31 @@ endforeach;
 
 ?>
 
-<!-- pagination -->
+</div>
 
-<div id="pagination">
+<div hidden id="spinnerajaxscroll"></div>
 
-  <?= $this->Paginator->numbers() ?>
+<?php
+
+if ($this->Paginator->hasNext())
+{
+
+ ?>
+
+ <div class="pagination">
 
   <?= $this->Paginator->next('Next page'); ?>
 
-  <?= $this->Paginator->counter() ?>
-
 </div>
+
+<?php
+
+}
+
+?>
+<div class="w3-center">
+
+<div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des message</div>
 
 </div>
 
@@ -118,3 +136,4 @@ endforeach;
 }
 
  ?>
+</div>

@@ -78,9 +78,15 @@
   else // profil public ou privé mais abonné -> affichage des tweets
   {
 
+    ?>
+
+    <div class="usertweets">
+
+      <?php
+
         foreach ($media_tweet as $tweet):  ?>
 
-      <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin" id="tweet<?= $tweet->id_tweet ;?>">
+      <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin item" id="tweet<?= $tweet->id_tweet ;?>">
 
         <!-- test si c'est un tweet partagé -->
 
@@ -220,11 +226,53 @@
             }
       ?>
       </p>
+
       </div>
 
  <?php
 
-endforeach;
+        endforeach;
+
+        ?>
+
+        </div>
+
+        <div hidden id="spinnerajaxscroll"></div>
+
+        <?php
+
+        if ($this->Paginator->hasNext())
+        {
+
+         ?>
+
+         <div class="pagination">
+
+          <?= $this->Paginator->options([
+
+                                          'url' => '/'.$this->request->getParam('username').'/'
+
+                                        ]);?>
+
+          <?= $this->Paginator->next('Next page'); ?>
+
+        </div>
+
+        <?php
+
+        }
+
+        ?>
+        <div class="w3-center">
+
+        <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des tweets de <?= $this->request->getParam('username') ?></div>
+
+        </div>
+
+        <?php
+
 }
+
 ?>
+
  </div>

@@ -27,6 +27,7 @@
     <?= $this->Html->css('w3');?>
      <?= $this->Html->css('custom');?>
      <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+     <?= $this->Html->script('//unpkg.com/@webcreate/infinite-ajax-scroll/dist/infinite-ajax-scroll.min.js'); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 

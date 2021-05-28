@@ -6,6 +6,8 @@
  *
  */ -->
 
+<div class="resultat_tweet">
+
  <?php
 
  use Cake\Utility\Text; // utilitaire de manipulation d'une chaîne de caractère
@@ -14,16 +16,17 @@
           if(count($resultat_tweet) === 0) // aucun résultat au comptage des résultats dans le tableau
         {
 
-         echo '<div class="w3-container w3-blue">Aucun tweet ne correspond à cette recherche.</div>';
+         echo '<div class="w3-container w3-blue">Aucun tweet ne correspond à cette recherche.</div></div>';
 
         }
 
           else
         {
 
+
           foreach ($resultat_tweet as $resultat_tweet): ?>
 
-            <div style="word-wrap: break-word;" class="w3-container w3-card w3-white" id="tweet<?= $resultat_tweet->id_tweet ;?>">
+            <div style="word-wrap: break-word;" class="w3-container w3-card w3-white itemsearch" id="tweet<?= $resultat_tweet->id_tweet ;?>">
 
               <br>
 
@@ -94,7 +97,7 @@
 
     <!-- affichage du nombre de like -->
 
-    <a onclick="openmodallike(<?= $resultat_tweet->id_tweet ?>)" style="cursor: pointer;"><span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
+    <a <?= ($resultat_tweet->nb_like > 0) ? "onclick=\"openmodallike($resultat_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
 
     <!-- affichage du nombre de commentaire -->
 
@@ -137,22 +140,43 @@
 
 </div>
 
-            <?php endforeach; ?>
-
-            <!--lien pagination -->
-
-            <div id="pagination">
-
-              <?= $this->Paginator->options([
-
-                                          'url' => array('controller' => '/search/hashtag/'.$this->request->getParam('query').'')
-
-                                        ]);?>
-
-            <?= $this->Paginator->next('Next page'); ?>
-
-            </div>
-
- <?php
+      <?php endforeach;
 
         } ?>
+
+        <!-- spinner de chargement des données par Infinite Ajax Scroll -->
+
+        <div hidden id="spinnerajaxscroll"></div>
+
+        <!-- pagination -->
+
+        <?php
+
+          if ($this->Paginator->hasNext())
+        {
+
+         ?>
+
+          <div class="pagination">
+
+            <?= $this->Paginator->options(['url' => array('controller' => '/search/hashtag/'.$this->request->getParam('query').'')]);?> <!-- url modifiée pour la seconde page -->
+
+            <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+         </div>
+
+        <?php
+
+        }
+
+        ?>
+
+<!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+        <div class="w3-center">
+
+          <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des résultats pour le hashtag <?= $this->request->getParam('query') ?></div>
+
+        </div>
+
+</div>

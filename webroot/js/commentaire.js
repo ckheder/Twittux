@@ -180,6 +180,41 @@ document.addEventListener('click',function(e){
 }
 });
 
+// Infinite AJAX scroll de la liste des commentaires
+
+let ias = new InfiniteAjaxScroll('#list_comm', {
+  item: '.itemcomm',
+  next: '.next',
+  logger: false,
+  spinner: {
+
+    // element qui sera le spinner de chargement des données
+
+    element: document.querySelector('#spinnerajaxscroll'),
+
+    // affichage du spinner
+
+    show: function(element) {
+      element.removeAttribute('hidden');
+    },
+
+    // effacement du spinner
+
+    hide: function(element) {
+      element.setAttribute('hidden', ''); // default behaviour
+    }
+  },
+  pagination: '.pagination'
+});
+
+// action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+
+ias.on('last', function() {
+
+  document.querySelector('.no-more').style.opacity = '1';
+
+})
+
 //ajout d'un commentaire
 
   if(no_see == 0) // variable envoyée depuis le layout pour le test ou non d'un tweet privé si 0 -> tweet public

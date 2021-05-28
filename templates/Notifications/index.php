@@ -20,7 +20,7 @@
 
                 <header class="w3-container w3-teal">
 
-                  <h4><span class="nb_notification"><?= count($notifications) ?></span> notification(s)</h4><!-- // nombre de notification -->
+                  <h4><span class="nb_notification"><?= $this->Paginator->params()['count'] ?></span> notification(s)</h4><!-- // nombre de notification -->
 
                 </header>
 
@@ -36,7 +36,7 @@
 
             <?php foreach ($notifications as $notifications): ?>
 
-                <div style="margin-bottom: 20px" data_id_notif="<?= $notifications->id_notif ;?>" <?= ($notifications->statut == 0) ? "class=\"w3-container w3-light-grey\">" : "class=\"w3-container w3-sand\">" ;?>
+                <div style="margin-bottom: 20px" data_id_notif="<?= $notifications->id_notif ;?>" <?= ($notifications->statut == 0) ? "class=\"w3-container itemnotif w3-light-grey\">" : "class=\"w3-container itemnotif w3-sand\">" ;?>
 
                     <p>
 
@@ -64,7 +64,7 @@
 
                         <!-- lien de suppression de la notification -->
 
-                        <a href="" onclick="return false;" class="w3-margin-bottom actnotif" data_statut="deletenotif" data_id_notif="<?= $notifications->id_notif ?>"><i class="fas fa-trash-alt"></i> Effacer</a>
+                        <a href="#" onclick="return false;" class="actnotif" data_statut="deletenotif" data_id_notif="<?= $notifications->id_notif ?>"><i class="fas fa-trash-alt"></i> Effacer</a>
 
                       </p>
 
@@ -78,13 +78,32 @@
 
         <!-- pagination -->
 
-            <div id="pagination">
+        <div hidden id="spinnerajaxscroll"></div>
 
-        <!-- lien personnaliser -->
+        <!--lien pagination -->
 
-            <?= $this->Paginator->next('Next page'); ?>
+          <?php
 
-            </div>
+          if ($this->Paginator->hasNext())
+          {
+           ?>
+
+           <div class="pagination">
+
+          <?= $this->Paginator->next('Next page'); ?>
+
+          </div>
+
+          <?php
+
+        }
+
+?>
+<div class="w3-center">
+
+<div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des notifications</div>
+
+</div>
 
           </div>
 

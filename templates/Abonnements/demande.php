@@ -20,37 +20,49 @@
 
                   <header class="w3-container w3-teal">
 
-                      <h4> <span class="nb_attente"><?= count($abonnement_attente) ; ?></span> demande(s) d'abonnement en attente.</h4>
+                      <h4>
+
+                        <span class="nb_attente"><?= $this->Paginator->params()['count'] ?></span> demande(s) d'abonnement en attente.
+
+                      </h4>
+
                   </header>
+
               </div>
 
-            <!-- liste d'abonnement -->
+            <!--zone de notification-->
 
-            <div id="listabovalide">
-
-                            <!--zone de notification-->
                 <div id="alert-area" class="alert-area"></div>
-                            <!--fin zone de notification-->
+
+            <!--fin zone de notification-->
 
               <br />
 
-            <?php foreach ($abonnement_attente as $abonnement_attente): ?>
+            <!-- liste des demandes -->
 
-                <div class="w3-container" data-username="<?= $abonnement_attente->Users['username'] ;?>">
+                <div id="list_request">
+
+                  <?php foreach ($abonnement_attente as $abonnement_attente): ?>
+
+                    <div class="w3-container itemsocial" data-username="<?= $abonnement_attente->Users['username'] ;?>">
 
                   <!-- avatar -->
 
                   <p>
 
-                    <?= $this->Html->image('/img/avatar/'.$abonnement_attente->Users['username'].'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($abonnement_attente->Users['username']).'')) ?>
+                      <?= $this->Html->image('/img/avatar/'.$abonnement_attente->Users['username'].'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-margin-right', 'style'=>'width:60px', 'title' => ''.h($abonnement_attente->Users['username']).'')) ?>
 
                   <!-- lien profil -->
 
-                    <b><?= $this->Html->link(''.h($abonnement_attente->Users['username']).'','/'.h($abonnement_attente->Users['username']).'') ?></b>
+                    <b>
+
+                      <?= $this->Html->link(''.h($abonnement_attente->Users['username']).'','/'.h($abonnement_attente->Users['username']).'') ?>
+
+                    </b>
 
                     <br />
 
-                  <span class="w3-opacity"><?= $abonnement_attente->Users['description']; ?></span>
+                    <span class="w3-opacity"><?= $abonnement_attente->Users['description']; ?></span>
 
                   </p>
 
@@ -70,19 +82,38 @@
 
           </div>
 
-        <!-- pagination -->
+          <!-- pagination -->
 
-          <div id="pagination">
+          <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-        <!-- lien personnaliser -->
+          <div hidden id="spinnerajaxscroll"></div>
 
-              <?= $this->Paginator->options([
-                                              'url' => array('controller' => '/abonnement/'.$this->request->getParam('username').'')
-                                            ]);
+          <?php
 
-              ?>
+            if ($this->Paginator->hasNext())
+          {
 
-            <?= $this->Paginator->next('Next page'); ?>
+          ?>
+
+          <div class="pagination">
+
+            <?= $this->Paginator->options(['url' => array('controller' => '/abonnement/demande')]); ?> <!-- url modifiée pour la seconde page -->
+
+            <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+          </div>
+
+        <?php
+
+          }
+
+        ?>
+
+        <!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+          <div class="w3-center">
+
+            <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des demandes d'abonnements</div>
 
           </div>
 
