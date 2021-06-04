@@ -11,7 +11,9 @@
 
 <!--affichage des tweets de l'utilisateur et des tweets partagés-->
 
-  <?php if(isset($tweets) AND count($tweets) == 0) // aucun tweet à afficher
+  <?php
+
+    if(isset($tweets) AND count($tweets) == 0) // aucun tweet à afficher
   {
     ?>
       <div class="w3-container">
@@ -25,11 +27,11 @@
       </div>
 
   <?php
+
   }
 
-
-      if($no_see === 1) // si cette variable existe (renvoi par le controller) et vaut 1 on est bloqué
-    {
+    if($no_see === 1) // si cette variable existe (renvoi par le controller) et vaut 1 on est bloqué
+  {
       ?>
         <div class="w3-container">
 
@@ -191,7 +193,7 @@
 
         <!-- affichage du nombre de like -->
 
-          <a <?= ($tweet->nb_like > 0) ? "onclick=\"openmodallike($tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $tweet->id_tweet ?>"><?= $tweet->nb_like ;?></span> J'aime</a>
+          <a <?= ($tweet->nb_like > 0) ? "onclick=\"openmodallike($tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> class="modallike_<?= $tweet->id_tweet ?>"><span class="nb_like_<?= $tweet->id_tweet ?>"><?= $tweet->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 

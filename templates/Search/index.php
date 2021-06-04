@@ -97,7 +97,7 @@
 
         <!-- affichage du nombre de like -->
 
-        <a <?= ($query_tweet->nb_like > 0) ? "onclick=\"openmodallike($query_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_like ;?></span> J'aime</a>
+        <a <?= ($query_tweet->nb_like > 0) ? "onclick=\"openmodallike($query_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> class="modallike_<?= $query_tweet->id_tweet ?>" ><span class="nb_like_<?= $query_tweet->id_tweet ?>"><?= $query_tweet->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 

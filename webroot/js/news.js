@@ -4,13 +4,16 @@
 
 //** VARIABLE **//
 
+
 const navAnchor = document.querySelectorAll('.tablinknews'); // liste de tous les liens du menu pour permettre de surligner le lien actif
 
 const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
 let iasnews; // variable contenant la construction de l'Infinite Ajax Scroll
 
-var url_news; // URL charger suivant l'onglet cliqué : news les plus récentes ou news les plus commentés
+let url_news; // URL charger suivant l'onglet cliqué : news les plus récentes ou news les plus commentés
+
+let zone_abo; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
 
 //**NAVIGATION **//
 
@@ -30,12 +33,9 @@ function addActive(e) {
   e.target.className += " w3-red";
 }
 
-  if(document.querySelector(".onlinenews"))
-{
+// chargement de la page d'actualites au clique sur la page
 
-document.querySelector(".onlinenews").addEventListener("load", loadNewsItem('showtmostrecentweets'));
-
-}
+  document.querySelector(".onlinenews").addEventListener("load", loadNewsItem('showtmostrecentweets'));
 
 // naviguer entre les tweet et les tweets avec media
 
@@ -77,14 +77,16 @@ document.querySelector(".onlinenews").addEventListener("load", loadNewsItem('sho
 
 	   spinner.setAttribute('hidden', ''); // disparition du spinner
 
-    document.querySelector("#news").innerHTML = html; // chargement de la réponse dans la div précédente
+     window.scrollTo(0,0); // on retourne en haut de la page
 
-    // si il y'a déjà une instance InfiniteAjaxScroll (visite de l'autre page de news), on la vide
+     document.querySelector("#news").innerHTML = html; // chargement de la réponse dans la div précédente
 
-      if(iasnews)
-    {
-      iasnews = null;
-    }
+    // Création de l'instance IAS si il y'a des résultats dans les news
+
+    if(document.querySelector('.itemnews'))
+  {
+
+    iasnews = null;
 
     // création d'une nouvelle instance InfiniteAjaxScroll
 
@@ -119,6 +121,8 @@ document.querySelector(".onlinenews").addEventListener("load", loadNewsItem('sho
 
       document.querySelector('.no-more').style.opacity = '1';
     })
+
+  }
 
     })
 
@@ -207,13 +211,16 @@ var alertbox = new AlertBox('#alert-area', {
 
 document.addEventListener('click',function(e){
 
-    if(e.target && e.target.className == 'unfollow') // clique sur un bouton pour ne plus usivre une personne
+    if(e.target && e.target.className == 'follow') // clique sur un bouton pour ne plus suivre une personne
   {
+
+        var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
+
         var data = {
                     "username": e.target.getAttribute('data_username') // username de la personne que je ne veut plus suivre
                     }
 
-    let response = fetch('/twittux/abonnement/delete', {
+    let response = fetch('/twittux/abonnement/'+action+'', {
 
       headers: {
                   'X-Requested-With': 'XMLHttpRequest', // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
@@ -228,14 +235,54 @@ document.addEventListener('click',function(e){
   })
     .then(function(Data) {
 
+      if(document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]')) // traitement abonnement depuis la modale like
+    {
+      zone_abo = document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]');
+    }
+
   switch(Data.Result)
 {
 
+  // ajout d'un abonnement
+
+    case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
+                                      '<p>Abonnement ajouté.</p>'+
+                                      '</div>.');
+  // nouveau bouton
+
+    if(zone_abo)
+  {
+    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
+  }
+
+
+    break;
+
+  // impossible d'ajouter un nouvel abonnement
+
+    case "abonnementnonajoute": alertbox.show('<div class="w3-panel w3-red">'+ // notification
+                                      '<p>Impossible d\'ajouter cet abonnement.</p>'+
+                                      '</div>.');
+
+    break;
+
     //abonnement supprimé
 
-    case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
-                              '<p>Abonnement supprimer. Les posts de '+ data.username+' ne s\'afficheront plus.</p>'+
+    case "abonnementsupprime":
+
+    if(zone_abo) // suppression d'un abonnement depuis la fenêtre modale des like
+  {
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+  }
+    else // affichage d'une alerte si on supprime depuis le menu déroulannt de l'actualitée avec bouton d'actualisation
+  {
+    alertbox.show('<div class="w3-panel w3-green">'+
+                              '<p>Abonnement supprimé.<br /></p>'+
+                              '<div class="w3-center w3-margin">'+
+                              '<button class="w3-button w3-blue w3-round-large" onclick="loadNewsItem(\'showtmostrecentweets\')">Actualiser</button></div>'+
                               '</div>.');
+  }
+
 
     break;
 
@@ -244,6 +291,63 @@ document.addEventListener('click',function(e){
     case "abonnementnonsupprime": alertbox.show('<div class="w3-panel w3-red">'+
                                   '<p>Impossible de supprimer cet abonnement.</p>'+
                                   '</div>.');
+
+    break;
+
+    //abonnement existant
+
+    case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
+                        '<p>Vous suivez déjà ' + data.username +' .</p>'+
+                        '</div>.');
+
+
+    break;
+
+    // envoi d'une demande d'abonnement
+
+    case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
+                      '<p>Demande d\'abonnement envoyée.</p>'+
+                      '</div>.');
+
+    // bouton pour annuler ma demande d'abonnement
+
+      if(zone_abo)
+    {
+      zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+    }
+
+    break;
+
+    //annulation d'une demande d'abonnement
+
+    case "demandeannule": alertbox.show('<div class="w3-panel w3-green">'+
+                          '<p>Demande d\'abonnemment annulée.</p>'+
+                          '</div>.');
+
+    // bouton pour suivre ultérieurement
+
+      if(zone_abo)
+    {
+      zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    }
+
+
+    break;
+
+    //impossible d'annuler une demande d'abonnement
+
+    case "demandenonannule": alertbox.show('<div class="w3-panel w3-red">'+
+                            '<p>Impossible d\'annuler la demande d\'abonnement.</p>'+
+                            '</div>.');
+
+    break;
+
+    //utilisateur bloqué
+
+    case "userblock": alertbox.show('<div class="w3-panel w3-red">'+
+                        '<p>' + data.username +' vous à bloqué.</p>'+
+                        '</div>.');
+
 
     break;
 
@@ -296,11 +400,29 @@ document.addEventListener('click',function(e){
 
     case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
 
+    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+    if( document.querySelector('.modallike_'+idtweet).onclick == null )
+{
+   document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
+}
+
     break;
 
     // suppression d'un like -> mise à jour du nombre de like
 
     case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
+
+    // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
+
+    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
+{
+   document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = null;
+}
 
     break;
 

@@ -9,6 +9,8 @@
 
 <div class="w3-col m6">
 
+  <div class="onlinenews">
+
 
 <!--zone de notification -->
                   <div id="alert-area" class="alert-area"></div>
@@ -20,23 +22,19 @@
 
          echo '<div class="w3-panel w3-border w3-light-grey"><p>
 
-              <i class="fas fa-info-circle"></i> Vous ne suivez actuellement personne : vous trouverez quelques suggestions de personne à suivre à droite ou vous pouvez utiliser le moteur de recherche pour trouver une personne spécifique. Vous suivez aussi peut être quelqu\'un qui n\'a pas encore tweeté.</p></div>';
+              <i class="fas fa-info-circle"></i> Vous ne suivez actuellement personne : vous trouverez quelques suggestions de personne à suivre à droite ou vous pouvez utiliser le moteur de recherche pour trouver une personne spécifique. Vous suivez aussi peut être quelqu\'un qui n\'a pas encore tweeté.</p></div></div>';
 
         }
           else
         {
 
-          ?>
+ foreach ($actu as $actu): ?>
 
-          <div class="onlinenews">
-
-          <?php foreach ($actu as $actu): ?>
-
-<div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin itemnews">
+  <div style="word-wrap: break-word;" class="w3-container w3-card w3-white w3-round w3-margin itemnews">
 
 <!-- bouton de dropdown  : signaler un post, ne plus suivre -->
 
-  <div class="dropdown">
+    <div class="dropdown">
 
     <br />
 
@@ -44,13 +42,13 @@
 
         <div id="btntweet<?= $actu->id_tweet ?>" class="dropdown-content">
 
-          <a class="unfollow" href="" onclick="return false;" data_action="delete" data_username="<?= $actu->username ?>">Ne plus suivre <?= $actu->username ?></a>
+          <a class="follow" href="" onclick="return false;" data_action="delete" data_username="<?= $actu->username ?>">Ne plus suivre <?= $actu->username ?></a>
 
           <a href="#">Signaler ce post </a>
 
         </div>
 
-  </div>
+      </div>
 
   <?php
 
@@ -59,7 +57,7 @@
           if(!is_null($actu->Partage['username']) AND $actu->Partage['username'] != $actu->username)
         {
 
-            if($actu->Partage['username'] == $authName) // si c''est moi qui ais partagé
+            if($actu->Partage['username'] == $authName) // si c'est moi qui ais partagé
           {
             echo '<p><span class="w3-opacity"><i class="fas fa-retweet"></i> Vous avez partagé ce post.</span></p>';
           }
@@ -102,7 +100,7 @@
 
         <!-- affichage du nombre de like -->
 
-        <a <?= ($actu->nb_like > 0) ? "onclick=\"openmodallike($actu->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> ><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>
+        <a <?= ($actu->nb_like > 0) ? "onclick=\"openmodallike($actu->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> class="modallike_<?= $actu->id_tweet ?>" ><span class="nb_like_<?= $actu->id_tweet ?>"><?= $actu->nb_like ;?></span> J'aime</a>
 
         <!-- affichage du nombre de commentaire -->
 

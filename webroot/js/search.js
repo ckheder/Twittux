@@ -21,6 +21,8 @@ var iassearch; // variable contenant la construction de l'Infinite Ajax Scroll
 
 var DIVIAS; // Div ou sera chargé les données IAS suivant la page
 
+let zone_abo; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
+
 // surlignage
 
 // ajout d'un écouteur de clique sur chaque lien du menu
@@ -145,10 +147,7 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
 
       document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
 
-      if(iassearch)
-    {
       iassearch = null;
-    }
 
     // création d'une nouvelle instance InfiniteAjaxScroll
 
@@ -221,6 +220,15 @@ document.addEventListener('click',function(e){
   })
     .then(function(Data) {
 
+      if(document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]')) // traitement abonnement depuis la modale like
+    {
+      zone_abo = document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]');
+    }
+      else
+    {
+      zone_abo = document.querySelector('.zone_abo[data_username="'+ data.username+'"]'); // traitement abonnement depuis la page search user
+    }
+
   switch(Data.Result)
 {
 
@@ -231,7 +239,7 @@ document.addEventListener('click',function(e){
                                         '</div>.');
     // nouveau bouton
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
     break;
 
@@ -249,7 +257,7 @@ document.addEventListener('click',function(e){
                               '<p>Abonnement supprimer.</p>'+
                               '</div>.');
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
@@ -278,7 +286,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour annuler ma demande d'abonnement
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
 
     break;
 
@@ -290,7 +298,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour suivre ultérieurement
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
@@ -428,11 +436,29 @@ document.addEventListener('click',function(e){
 
     case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
 
+  // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+    if( document.querySelector('.modallike_'+idtweet).onclick == null )
+{
+   document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
+}
+
     break;
 
     // suppression d'un like -> mise à jour du nombre de like
 
     case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
+
+  // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
+
+    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
+{
+   document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = null;
+}
 
     break;
 

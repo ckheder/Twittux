@@ -5,7 +5,7 @@
  *
  */
 
-  const zone_abo = document.querySelector('#zone_abo'); // zone contentna t les boutons d'abonnement, suppression ou demande
+  var zone_abo = document.querySelector('#zone_abo'); // zone contenant les boutons d'abonnement, suppression ou demande
 
   const zone_blocage = document.querySelector('#zone_blocage'); // zone contentant les boutons de blocage : ajout ou suppression
 
@@ -262,6 +262,11 @@ document.addEventListener('click',function(e){
   })
     .then(function(Data) {
 
+        if(document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]')) // traitement abonnement depuis la modale like
+      {
+        zone_abo = document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]')
+      }
+
   switch(Data.Result)
 {
 
@@ -442,11 +447,31 @@ document.addEventListener('click',function(e){
 
     case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
 
+    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+    if( document.querySelector('.modallike_'+idtweet).onclick == null )
+{
+   document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
+}
+
+
+
     break;
 
     // suppression d'un like -> mise à jour du nombre de like
 
     case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
+
+    // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
+
+    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
+{
+   document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
+
+   document.querySelector('.modallike_'+idtweet).style.cursor = null;
+}
 
     break;
 
