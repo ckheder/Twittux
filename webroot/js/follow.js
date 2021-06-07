@@ -13,14 +13,6 @@
 
  var DIVIAS; // Div ou sera chargé les données IAS suivant la page
 
- var nb_following = document.querySelector('.nb_following'); // récupération du nombre d'abonnement
-
- var nb_attente = document.querySelector('.nb_attente'); // récupération du nombre de demande en attente
-
- var nb_follower = document.querySelector('.nb_follower'); // récupération du nombre d'abonné
-
- var nb_block = document.querySelector('.nb_user_block'); // récupération du nombre d'utilisateurs bloqués afin d'incrémenter ou de décrémenter le compteur
-
  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
  const navAnchor = document.querySelectorAll('.tabfollow'); // liste de tous les liens du menu pour permettre de surligner le lien actif
@@ -243,7 +235,7 @@ document.addEventListener('click',function(e){
 
 		// décrémentation du nombre d'abonnement
 
-		nb_following.textContent --;
+		document.querySelector('.nb_following').textContent --;
 
     break;
 
@@ -443,7 +435,7 @@ document.addEventListener('click',function(e){
 
   // décrémentation du nombre de demande
 
-  nb_attente.textContent --;
+  document.querySelector('.nb_attente').textContent --;
 
   break;
 
@@ -467,7 +459,7 @@ document.addEventListener('click',function(e){
 
   // décrémentation du nombre de demande
 
-  nb_attente.textContent --;
+  document.querySelector('.nb_attente').textContent --;
 
   break;
 
@@ -596,7 +588,7 @@ document.addEventListener('click',function(e){
 
       // décrémentation du nombre d'abonné
 
-          nb_follower.textContent --
+          document.querySelector('.nb_follower').textContent --;
         }
           else // mise à jour du bouton de blocage
         {
@@ -685,15 +677,16 @@ document.addEventListener('click',function(e){
             document.querySelector('.zone_blocage[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-black w3-round"><a class="blockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-lock"></i> Bloquer </a></button>';
           }
 
-    //déblocage depuis la page des utilisateurs bloqués -> suppression de la div utilisateur
+    // déblocage depuis la page des utilisateurs bloqués -> suppression de la div utilisateur
 
             else if (document.querySelector('div[data-username="'+ data.username+'"]'))
           {
+
             document.querySelector('div[data-username="'+ data.username+'"]').parentNode.removeChild(document.querySelector('div[data-username="'+ data.username+'"]'));
 
     // décrémentation du nombre d'utilisateur bloqué
 
-            nb_block.textContent --;
+            document.querySelector('.nb_user_block').textContent --;
 
           }
 

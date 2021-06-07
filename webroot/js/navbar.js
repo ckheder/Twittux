@@ -89,7 +89,7 @@ function displayMatches() {
 
     		if(jsonData == 'noresult') // si réception d'une valeur 'noresult'
     	{
-    		autocomplete_zone.innerHTML += '<li class="resultsearch">Aucun résultat</li>'; // affichage d'un message
+    		autocomplete_zone.innerHTML += '<li class="resultsearch"><img src="/twittux/img/default.png" alt="image utilisateur" class="w3-circle" width="23" height="23"> Aucun utilisateur trouvé</li>'; // affichage d'un message
     	}
     		else
     	{
