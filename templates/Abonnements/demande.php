@@ -66,13 +66,17 @@
 
                   </p>
 
-                  <!-- Bouton d'accepatin ou de refus d'une demande d'abonnement -->
+                  <!-- Bouton d'accepatin ou de refus d'une demande d'abonnement ainsi qu'un bouton de blocage-->
 
-                  <button class="w3-button w3-green w3-round"><a class="followrequest" href="" onclick="return false;" data_action="accept" data_username="<?= $abonnement_attente->Users['username'] ?>">Accepter</a></button>
+                  <button class="w3-button w3-green w3-round"><a class="followrequest" href="" onclick="return false;" data_action="accept" data_username="<?= $abonnement_attente->Users['username'] ?>"><i class="fas fa-check"></i> Accepter</a></button>
 
                   &nbsp;&nbsp;
 
-                  <button class="w3-button w3-red w3-round"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $abonnement_attente->Users['username'] ?>">Refuser </a></button>
+                  <button class="w3-button w3-red w3-round"><a class="followrequest" href="" onclick="return false;" data_action="refuse" data_username="<?= $abonnement_attente->Users['username'] ?>"><i class="fas fa-times"></i> Refuser </a></button>
+
+                  &nbsp;&nbsp;
+
+                  <button class="w3-button w3-black w3-round"><a class="blockuser" href="" onclick="return false;" data_username="<?= $abonnement_attente->Users['username'] ?>"><i class="fas fa-lock"></i> Bloquer </a></button>
 
                      <hr>
 

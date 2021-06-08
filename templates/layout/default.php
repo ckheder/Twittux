@@ -49,6 +49,21 @@
 
     </div>
 
+    <script>
+
+    // test préliminaire des cookies
+
+    if(navigator.cookieEnabled)
+{
+  console.log('accepte')
+}
+  else
+{
+  console.log('refuse')
+}
+
+    </script>
+
 </body>
 
 </html>

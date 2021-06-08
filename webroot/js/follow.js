@@ -580,20 +580,31 @@ document.addEventListener('click',function(e){
                      '<p>Utilisateur bloqué.</p>'+
                      '</div>.');
 
-      // si je block depuis la page abonné, je supprime l'abonné
+      // si je block depuis la page abonné ou demande, je supprime l'item
 
-          if(document.querySelector('.w3-container[data-username="'+ data.username+'"]'))
-        {
-          document.querySelector('.w3-container[data-username="'+ data.username+'"]').parentNode.removeChild(document.querySelector('.w3-container[data-username="'+ data.username+'"]')); // suppression de la div contenant la personne à ne plus suivre
+      if(document.querySelector('.w3-container[data-username="'+ data.username+'"]'))
+    {
+      document.querySelector('.w3-container[data-username="'+ data.username+'"]').parentNode.removeChild(document.querySelector('.w3-container[data-username="'+ data.username+'"]')); // suppression de la div contenant la personne à ne plus suivre
 
-      // décrémentation du nombre d'abonné
+      // décrémentation du nombre d'abonné si je bloque depuis la page abonné
 
-          document.querySelector('.nb_follower').textContent --;
-        }
-          else // mise à jour du bouton de blocage
-        {
-            document.querySelector('.zone_blocage[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-black w3-round"><a class="deblockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-unlock"></i> Débloquer </a></button>';
-        }
+        if(document.querySelector('.nb_follower'))
+      {
+        document.querySelector('.nb_follower').textContent --;
+      }
+
+      // décrémentation du nombre de demande d'abonnement si je bloque depuis la page demande
+
+        else if (document.querySelector('.nb_attente'))
+      {
+        document.querySelector('.nb_attente').textContent --;
+      }
+
+    }
+      else // mise à jour du bouton de blocage
+    {
+      document.querySelector('.zone_blocage[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-black w3-round"><a class="deblockuser" href="" onclick="return false;" data_username="'+ data.username+'"><i class="fas fa-unlock"></i> Débloquer </a></button>';
+    }
 
      }
 
@@ -689,8 +700,6 @@ document.addEventListener('click',function(e){
             document.querySelector('.nb_user_block').textContent --;
 
           }
-
-
 
      }
 

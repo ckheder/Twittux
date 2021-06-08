@@ -169,6 +169,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     [
       'httponly' => true, // empếche l'accès aux cookies en Javascript
       'expire' => $now,
+      'secure' => true, // cookie crée uniquement dans le cas d'une connection https
     ]
 
 ]);
