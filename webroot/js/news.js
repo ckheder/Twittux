@@ -13,7 +13,7 @@ let iasnews; // variable contenant la construction de l'Infinite Ajax Scroll
 
 let url_news; // URL charger suivant l'onglet cliqué : news les plus récentes ou news les plus commentés
 
-let zone_abo; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
+let zone_abo = null; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
 
 //**NAVIGATION **//
 
@@ -240,21 +240,17 @@ document.addEventListener('click',function(e){
       zone_abo = document.querySelector('.zone_abo_like[data_username="'+ data['username']+'"]');
     }
 
+
   switch(Data.Result)
 {
 
   // ajout d'un abonnement
 
-    case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
-                                      '<p>Abonnement ajouté.</p>'+
-                                      '</div>.');
+    case "abonnementajoute":
+
   // nouveau bouton
 
-    if(zone_abo)
-  {
     zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
-  }
-
 
     break;
 
@@ -270,7 +266,7 @@ document.addEventListener('click',function(e){
 
     case "abonnementsupprime":
 
-    if(zone_abo) // suppression d'un abonnement depuis la fenêtre modale des like
+    if(zone_abo !== null) // suppression d'un abonnement depuis la fenêtre modale des like
   {
     zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
   }
@@ -305,32 +301,21 @@ document.addEventListener('click',function(e){
 
     // envoi d'une demande d'abonnement
 
-    case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
-                      '<p>Demande d\'abonnement envoyée.</p>'+
-                      '</div>.');
+    case "demandeok":
 
     // bouton pour annuler ma demande d'abonnement
 
-      if(zone_abo)
-    {
       zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
-    }
 
     break;
 
     //annulation d'une demande d'abonnement
 
-    case "demandeannule": alertbox.show('<div class="w3-panel w3-green">'+
-                          '<p>Demande d\'abonnemment annulée.</p>'+
-                          '</div>.');
+    case "demandeannule":
 
     // bouton pour suivre ultérieurement
 
-      if(zone_abo)
-    {
       zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
-    }
-
 
     break;
 
@@ -347,7 +332,6 @@ document.addEventListener('click',function(e){
     case "userblock": alertbox.show('<div class="w3-panel w3-red">'+
                         '<p>' + data.username +' vous à bloqué.</p>'+
                         '</div>.');
-
 
     break;
 
