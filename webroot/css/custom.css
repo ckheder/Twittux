@@ -8,6 +8,16 @@ body
 	font-family: 'Athiti', serif;
 }
 
+/* utiliser pour signaler une ou plusieurs notification sur loe menu réduit re'sponsive */
+
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  border-radius: 50%;
+  display: none;
+}
+
 /* ## Emoji ## */
 
 .emoji

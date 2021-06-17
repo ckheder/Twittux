@@ -2,6 +2,40 @@
 // Gestion des actions de la navbar : autocomplete, responsive
 //
 
+//variable
+
+const evtSource = new EventSource("/twittux/notifications/unreadnotif"); // URL du controller en charge de calculer le nombre de notification non lue
+
+var searchInput = document.querySelector('.input-search'); // input de recherche
+
+var autocomplete_zone = document.getElementById("autocomplete-results"); // zone des résultats
+
+var min_characters = 0; // nombre de caractère minimum : on déclenche l'appel AJAX avec 1 caractère minimum
+
+var titlepage = document.querySelector('title'); // récupération du titre de la page
+
+// detetction mobile
+
+    var hasTouchScreen = false;
+    if ("maxTouchPoints" in navigator) {
+        hasTouchScreen = navigator.maxTouchPoints > 0;
+    } else if ("msMaxTouchPoints" in navigator) {
+        hasTouchScreen = navigator.msMaxTouchPoints > 0;
+    } else {
+        var mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+        if (mQ && mQ.media === "(pointer:coarse)") {
+            hasTouchScreen = !!mQ.matches;
+        } else if ('orientation' in window) {
+            hasTouchScreen = true; // deprecated, but good fallback
+        } else {
+            // Only as a last resort, fall back to user agent sniffing
+            var UA = navigator.userAgent;
+            hasTouchScreen = (
+                /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+                /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
+            );
+        }
+    }
 
 // Affichage du menu sur les petits résolutions en cliquant sur la bouton
 
@@ -25,13 +59,62 @@ autocomplete_zone.style.display='none';
   }
 });
 
+// actualisation du nombre de notifcations non lues
+
+evtSource.onmessage = function (event) {
+
+    if(event.data != 0) // si j'ai 1 notification minimum
+  {
+
+    if (hasTouchScreen === false) // je ne suis pas sur mobile
+  {
+    document.querySelector('.nbunreadnotif').innerHTML = event.data; // mise à jour du nombre de notification non lue sur le badge de la navbar
+  }
+    else // je suis sur mobile
+  {
+    document.querySelector('.nbunreadnotifres').innerHTML = event.data; // mise à jour du nombre de notification sur le badge rouge à côté du lien vers les notifications
+
+    document.querySelector('.dot').style.display='inline-block'; // apparition d'un rond rouge sur le menu déroulant pour signaler de nouvelles notifications non lues
+  }
+
+// mise à jour du titre de la page
+
+// on retire le nombre de notifications précédents
+
+  titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
+
+// on ajoute sur le titre de la page le nombre de notifications non lues
+
+  titlepage.textContent  = "(" + event.data + ")" + titlepage.textContent;
+
+}
+  else // 0 notifications
+{
+    if (hasTouchScreen === true) // je  suis sur mobile
+  {
+
+    document.querySelector('.nbunreadnotifres').innerHTML = ''; // on efface le badge rouge
+
+    document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+
+  }
+
+    else // je ne suis pas sur mobile
+  {
+
+    document.querySelector('.nbunreadnotif').innerHTML = ''; // on efface le badge rouge
+
+  }
+
+// on supprime le nombre de notifications non lues du titre de la page
+
+  titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
+
+}
+
+}
+
 // autocomplétion
-
-var searchInput = document.querySelector('.input-search'); // input de recherche
-
-var autocomplete_zone = document.getElementById("autocomplete-results"); // zone des résultats
-
-var min_characters = 0; // nombre de caractère minimum : on déclenche l'appel AJAX avec 1 caractère minimum
 
 searchInput.addEventListener('keyup', displayMatches); // on déclenche l'évènement après chaque pression de touche
 

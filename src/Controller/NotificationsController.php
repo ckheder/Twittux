@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Controller;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\ConnectionManager;
+use Cake\Http\CallbackStream;
+use Cake\Http\Response;
+
 
 /**
  * Notifications Controller
@@ -171,5 +174,42 @@ class NotificationsController extends AppController
             {
               throw new NotFoundException(__('Cette page n\'existe pas.'));
             }
+        }
+
+        /**
+         * Méthode getunreadnotif
+         *
+         * Retourne le nombre totale de notifications non lues
+         *
+         */
+          public function getunreadnotif()
+        {
+
+          // Récupération du nombre de notification non lue
+
+            $unreadnotif = $this->Notifications->find()
+                                                ->where(['user_notif' =>  $this->Authentication->getIdentity()->username ,'statut' => 0])
+                                                ->count();
+
+          // Construction d'une réponse au format texte Server Side Event
+          
+                            $output = new CallbackStream(function () use ($unreadnotif)
+                           {
+                              echo "data: $unreadnotif\n\n";
+
+                              sleep(3); // délai de 3 secondes avant renvoi de la réponse
+
+                              ob_flush();
+
+                              flush();
+                         });
+
+          // Renvoi d'une réponse
+
+                           return (new Response())
+                           ->withHeader('Content-Type', 'text/event-stream')
+                           ->withHeader('Cache-Control', 'no-cache')
+                           ->withBody($output);
+
         }
 }

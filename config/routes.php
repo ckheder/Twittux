@@ -252,6 +252,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/notifications/statut',['controller' => 'Notifications', 'action' => 'statut']);
 
+    // nombre de notifications non lues
+
+    $builder->connect('/notifications/unreadnotif',['controller' => 'Notifications', 'action' => 'getunreadnotif']);
+
 /* ROUTE MESSAGERIE */
 
     // page d'accueil de la messagerie

@@ -10,7 +10,7 @@
 
  <div class="w3-bar w3-black w3-left-align w3-large">
 
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-padding-large w3-hover-white" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-padding-large w3-hover-white" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i><span class="dot"></span></a>
 
 <!-- lien vers actualités -->
 
@@ -26,7 +26,7 @@
 
 <!-- lien vers les notifications -->
 
-    <a href="/twittux/notifications" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Notifications"><i class="fa fa-bell"></i></a>
+    <a href="/twittux/notifications" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Notifications"><i class="fa fa-bell"></i><span class="w3-badge w3-right w3-small w3-red nbunreadnotif"></span></a>
 
 <!-- lien vers les paramètres -->
 
@@ -66,8 +66,6 @@
 
 <div id="smallscreensnav" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-large">
 
-
-
   <a href="/twittux/actualites" style="margin-top: 45px;" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-globe"></i> Actualités</a>
 
   <a href="/twittux/trending" title="Tendances" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-hashtag"></i> Tendances</a>
@@ -76,7 +74,7 @@
 
   <a href="/twittux/messagerie" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
 
-  <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications</a>
+  <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications <span class="w3-badge w3-red nbunreadnotifres"></span></a>
 
   <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
 
