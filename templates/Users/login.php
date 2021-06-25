@@ -99,7 +99,7 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
    <p>
 
-       <a href="#">Mot de passe oublié ?</a>
+       <a onclick="document.getElementById('modalforgotpassword').style.display='block'" style="cursor:pointer;">Mot de passe oublié ?</a>
 
    </p>
 

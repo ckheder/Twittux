@@ -31,6 +31,8 @@
 </head>
 <body>
 
+  <?= $this->element('modalforgotpassword') ?> <!-- modale réinitiliser mot de passe -->
+
     <div class="w3-container">
 
          <div class="w3-row">

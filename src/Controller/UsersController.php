@@ -7,6 +7,12 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use App\Event\UserListener; // listener personnel pour la création de la ligne settings à l'inscription
 use Cake\Http\Exception\NotFoundException;
+use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
+use Cake\Mailer\TransportFactory;
+use Cake\Utility\Security;
+use Cake\Datasource\ConnectionManager;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * Users Controller
@@ -34,7 +40,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->Authentication->allowUnauthenticated(['add', 'searchusers','login']);
+        $this->Authentication->allowUnauthenticated(['add', 'searchusers','login','forgotpassword','resetpassword']);
     }
 
     /**
@@ -53,10 +59,13 @@ class UsersController extends AppController
                       'username' => $this->request->getData('username'), // nom d'utilisateur
                       'password' => $this->request->getData('password'), // mot de passe
                       'email' =>  $this->request->getData('email'), // adresse mail
+                      'token' => Security::hash(Security::randomBytes(32)),
                       'description' => 'Aucune description', // description par défaut
                       'lieu' => 'Aucun lieu', // lieu par défaut
                       'website' => 'Aucun site internet'
                     );
+
+
 
         $user = $this->Users->patchEntity($user, $data); // mise à jour de la nouvelle entité
 
@@ -282,15 +291,27 @@ class UsersController extends AppController
             if ($this->Users->save($user))
           {
 
-            return $this->response->withStringBody('updateok'); // mise à jour réussie
+              if(array_key_exists('password', $data)) // si le mot de passe à était modifié, on déconnecte l'utilisateur pour qu'il se reconnecte avec le nouveau mot de passe
+            {
+
+              $this->Flash->success('Mise à jour réussie de vos informations.Votre mot de passe ayant été changé, veuillez vous reconnecter avec celui-ci.');
+
+              $this->Authentication->logout();
+
+              return $this->response->withStringBody('updateokandpassword');
+            }
+              else
+            {
+              return $this->response->withStringBody('updateok'); // mise à jour réussie
+            }
 
           }
             else
           {
             return $this->response->withStringBody('probleme'); // echec ou pas de mise à jour
           }
-    }
-  }
+        }
+      }
 
     /**
      * Delete method
@@ -429,6 +450,121 @@ class UsersController extends AppController
         {
           throw new NotFoundException(__('Cette page n\'existe pas.'));
         }
+    }
+
+    /**
+    * Méthode ForgotPassword
+    *
+    * Vérifie si l'adresse mail existe et envoi un mail vers celle ci pour réinitialiser le mot de passe oublié
+    *
+    */
+
+      public function forgotpassword()
+    {
+      if ($this->request->is('ajax'))
+     {
+
+      		$email = $this->request->getData('email'); // récupération de l'adresse mail en POST
+
+            if ($email == NULL)
+          {
+            return $this->response->withStringBody('emptymail'); //renvoi d'une réponse au format TEXT
+          }
+
+      		$token = Security::hash(Security::randomBytes(25)); // génération d'un token de sécurité
+
+      			 if($user = $this->Users->find()->where(['email'=>$email])->first()) // si l'adresse mail correspond à un utilisateur, on récupère cet utilisateur
+            {
+      				$user->token = $token; // on lui affecte le token généré précédemment
+
+      				    if ($this->Users->save($user)) // si l'affecation à marché, création d'un mail contenant un lien de Réinitialisation avec le token
+              {
+      					$mailer = new Mailer('default');
+      					$mailer->setTransport('gmail');
+      					$mailer->setFrom(['noreply@twittux.com' => 'Twittux'])
+      					->setTo($email)
+      					->setEmailFormat('html')
+      					->setSubject('Réinitialisation de votre de passe Twittux')
+      					->deliver('Bonjour,<br/><p>
+                Afin de réinitialiser votre de passe Twittux, veuillez cliquer sur le lien ci-dessous<br/><br/><a href="https://christophekheder.com/twittux/resetpassword/'.$token.'">Réinitialiser mon de passe Twittux</a>
+                <br />
+                </p>
+                <p>
+                Vous serez invité à crée un nouveau mot de passe pour votre compte.
+                </p>
+                <p style="color:red">
+                Attention, si vous n\'êtes pas à l\'origine de cette demande, votre adresse mail est peut être compromise.
+                </p>');
+      				}
+      				return $this->response->withStringBody('mailsend'); //renvoi d'une réponse au format TEXT
+      			}
+      			   else
+            {
+              return $this->response->withStringBody('mailnotsend'); //renvoi d'une réponse au format TEXT
+            }
+
+    }
+        else
+      {
+        throw new NotFoundException(__('Cette page n\'existe pas.')); // accès hors d'une requête AJAX
+      }
+
+    }
+
+    /**
+    * Méthode ResetPassword
+    *
+    * Mise à jour du mot de passe utilisateur et redirection vers l'accueuil pour se connnecter avec le nouveau
+    *
+    */
+
+      public function resetpassword()
+    {
+    	 if($this->request->is('post'))
+      {
+
+          if($this->request->getData('password') != $this->request->getData('confirmpassword')) // si les deux mot de passe ne correspondent pas, on redirige vers la page de changement de mot de passe
+        {
+
+          $this->Flash->error('Les deux mot de passe ne correspondent pas.');
+
+          return $this->redirect($this->referer());
+        }
+
+        // hashage du nouveau mot de passe
+
+        $hasher = new DefaultPasswordHasher();
+
+        $password = $hasher->hash($this->request->getData('password'));
+
+        // mise à jour du nouveau mot de passe
+
+        $statement = ConnectionManager::get('default')->prepare(
+        'UPDATE users SET password = :password WHERE token = :token');
+
+        $statement->bindValue('password',$password, 'string');
+        $statement->bindValue('token', $this->request->getParam('token'), 'string');
+        $statement->execute();
+
+        // récupération du nombre de ligne affectée: ici 1
+
+        $rowCount = $statement->rowCount();
+
+            if ($rowCount == 1) // 1 ligne affectée : affichage d'un message de succès puis redirection vers l'accueuil pour se logguer
+        {
+    			$this->Flash->success('Mot de passe réinitialiser avec succès, vous pouvez vous connecter avec celui-ci dès maintenant.');
+
+    			return $this->redirect('/');
+    		}
+          else // un problème empêche de mettre à jour le mot de passe on redirige de la page d'origine
+        {
+
+          $this->Flash->error('Impossible de réinitialiser votre mot de passe, veuillez réessayer plus tard.');
+
+          return $this->redirect($this->referer());
+        }
+
+    }
     }
 
 }

@@ -31,6 +31,8 @@
 </head>
 <body>
 
+  <?= $this->element('modalforgotpassword') ?> <!-- modale d'envoi de tweet -->
+
     <div class="w3-container">
 
          <div class="w3-row">
@@ -49,20 +51,9 @@
 
     </div>
 
-    <script>
+<!-- script JS -->
 
-    // test préliminaire des cookies
-
-    if(navigator.cookieEnabled)
-{
-  console.log('accepte')
-}
-  else
-{
-  console.log('refuse')
-}
-
-    </script>
+    <?= $this->Html->script('homepage.js'); ?> <!-- test des cookies, traitement du formulaire d'envoi d'adresse mail pour réinitialiser le mot de passe-->
 
 </body>
 

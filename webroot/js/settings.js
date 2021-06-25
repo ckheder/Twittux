@@ -218,6 +218,12 @@ inputavatar.value = ""; // on vide l'input file
 										'</div>.');
 break;
 
+case "updateokandpassword": // mise à jour d'informations réussie dont le mot de passe
+
+window.location.href = '/twittux/login?redirect=%2Fsettings'; // on redirige vers la page des settings
+
+break;
+
 case "probleme": // problème de mise à jour
 
                   alertbox.show('<div class="w3-panel w3-red">'+
@@ -267,7 +273,6 @@ case "typenotok" : // pas de type jpeg/jpg
 
 break;
                   }
-
 
     }).catch(function(err) {
 

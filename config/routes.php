@@ -89,6 +89,15 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/settings',['controller' => 'Users', 'action' => 'edit']);
 
+    // route forgotpassword
+
+    $builder->connect('/forgotpassword',['controller' => 'Users', 'action' => 'forgotpassword']);
+
+    // route resetpassword
+
+    $builder->connect('/resetpassword/{token}',['controller' => 'Users', 'action' => 'resetpassword']);
+
+
   /* ROUTE TWEET */
 
         // route profil

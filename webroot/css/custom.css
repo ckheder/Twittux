@@ -1,6 +1,6 @@
 /* Custom CSS feuille de style personnelle */
 
-/* générale */
+/* ## GENERAL ## */
 
 body
 {
@@ -8,9 +8,10 @@ body
 	font-family: 'Athiti', serif;
 }
 
-/* utiliser pour signaler une ou plusieurs notification sur loe menu réduit re'sponsive */
+/* utiliser pour signaler une ou plusieurs notification non lue sur le menu réduit responsive */
 
-.dot {
+	.dot
+{
   height: 15px;
   width: 15px;
   background-color: red;
@@ -18,9 +19,9 @@ body
   display: none;
 }
 
-/* ## Emoji ## */
+/* emoji  */
 
-.emoji
+	.emoji
 {
   width: 25px;
   height: 25px;
@@ -28,149 +29,16 @@ body
 }
 
 /* Lien désactivé */
-.disabled{
+
+	.disabled
+{
     pointer-events:none
 }
-/* ## Page d'acceuil ## */
 
-/* Liste sur la page d'accueuil */
-.list_accueil
+/* menu dropdown sur tweet, commentaire,... */
+
+	.dropbtn
 {
-  list-style-type: none !important;
-}
-.list_accueil li
-{
-  padding : 10px;
-  color : #657786;
-  font-size : 15px;
-}
-/* Paragraphe de la page d'accueuil */
-.home
-{
-  margin-top: 27px;
-  font-size : 20px;
-  text-align: center;
-}
-/* div d'information sous les input d'inscription */
-.help-block
-{
-margin-top: 5px;
-margin-bottom: 10px;
-color: #737373;
-}
-/* ## Fin Page d'acceuil ## */
-
-/* ## Notification ## */
-.alert-area {
-  max-height: 100%;
-  position: fixed;
-  bottom: 5px;
-  left: 20px;
-  right: 20px;
-}
-
-.alert-box {
-
-  position: relative;
-  transition: opacity 0.5s ease-in;
-}
-
-.alert-box.hide {
-  opacity: 0;
-}
-
-.alert-close {
-  background: transparent;
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
-
-.alert-close:before,
-.alert-close:after {
-  content: '';
-  width: 15px;
-  border-top: solid 2px white;
-  position: absolute;
-  top: 5px;
-  right: -1px;
-  display: block;
-}
-
-.alert-close:before {
-  transform: rotate(45deg);
-}
-
-.alert-close:after {
-  transform: rotate(135deg);
-}
-
-.alert-close:hover:before,
-.alert-close:hover:after {
-  border-top: solid 2px #d8d8d8;
-}
-
-@media (max-width: 767px) and (min-width: 481px) {
-  .alert-area {
-    left: 100px;
-    right: 100px;
-  }
-}
-
-@media (min-width: 768px) {
-  .alert-area {
-    width: 350px;
-    left: auto;
-    right: 0;
-  }
-}
-
-/* ALERT RELATED CLASS (END) */
-
-.alert-message-container {
-  text-align: center;
-  line-height: 2.5em;
-  margin-top: 50px;
-}
-
-.alert-message-box {
-  font-size: 20px;
-  width: 300px;
-  border: solid 1px #444;
-  padding: 10px 15px;
-  outline: none;
-  transition: box-shadow 0.1s;
-}
-
-.alert-message-box:focus {
-  box-shadow: 0 0 15px 2px #888;
-}
-
-.alert-message-button {
-  font-size: 18px;
-  color: white;
-  background: #14b9ff;
-  width: 250px;
-  border: solid 1px #14b9ff;
-  padding: 10px 20px;
-  margin-top: 5px;
-  cursor: pointer;
-  outline: none;
-  transition: background 0.1s;
-}
-
-.alert-message-button:hover,
-.alert-message-button:focus,
-.alert-message-button:active {
-  background: #7dd8ff;
-}
-/* ## Fin notification ## */
-
-/* ## menu dropdown sur tweet, commentaire,... ## */
-
-.dropbtn {
   background-color: white;
   color: black;
   font-size: 14px;
@@ -181,18 +49,21 @@ color: #737373;
   border-radius: 4px;
 }
 
-.dropbtn:hover, .dropbtn:focus {
+	.dropbtn:hover, .dropbtn:focus
+{
   background-color: #ddd;
 }
 
-.dropdown {
+	.dropdown
+{
   float: right;
   position: relative;
   display: inline-block;
   margin-left : 5px;
 }
 
-.dropdown-content {
+	.dropdown-content
+{
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -203,86 +74,30 @@ color: #737373;
   z-index: 1;
 }
 
-.dropdown-content a {
+	.dropdown-content a
+{
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
-.dropdown a:hover {background-color: #ddd;}
-
-.show {display: block;}
-
-/* ## Fin menu dropdown ## */
-
-/* ## autocomplétion sur navbar ## */
-
-.input-search
+.dropdown a:hover
 {
-	padding:8px;
-	display:block;
-	max-width:360px;
-	margin: 1px;
+	background-color: #ddd;
 }
 
-@media (min-width: 375px) and (max-width: 767px) {
-	.input-search
-	{
-		padding:8px;
-		display:block;
-		width:210px;
-		margin: 1px;
-	}
-}
-
-  #autocomplete-results /* liste des résultats masquée par défaut */
+.show
 {
-  display: none;
-  position: absolute;
-  top: 52px;
-	max-width:360px;
+	display: block;
 }
-  #autocomplete-results li
-{
-
-  background-color: white;
-  color: black;
-}
-  #autocomplete-results li:hover
-{
-  background-color: gold;
-}
-/* ## fin autocomplétion sur navbar ## */
-
-/* ## menu de navigation des résultats de recherche ## */
-
-.menusearch
-{
-  position:fixed;
-}
-.contentsearch
-{
-	margin-left:280px;
-}
-
-@media (min-width: 375px) and (max-width: 767px) {
-  .menusearch {
-    position: relative;
-  }
-	.contentsearch
-	{
-		margin-left:0px;
-	}
-}
-
-/* ## menu de navigation des résultats de recherche ## */
 
 /* spinner de chargement des données AJAX */
 
 /* spinner chargement de la liste des conversations, du changement de page sur la page tweet, moteur de recherche, page d'acceuil */
 
-.spinner:not([hidden]) {
+	.spinner:not([hidden])
+{
   position: relative;
   top: 0;
   left: 0;
@@ -293,7 +108,8 @@ color: #737373;
   align-items: center;
 }
 
-.spinner::after {
+	.spinner::after
+{
   content: "";
   width: 80px;
   height: 80px;
@@ -306,7 +122,8 @@ color: #737373;
 
 /* spinner chargement de la liste des conversations */
 
-#spinnerconv::after {
+	#spinnerconv::after
+{
   content: "";
   width: 80px;
   height: 80px;
@@ -317,7 +134,8 @@ color: #737373;
   animation: spin 1s infinite linear
 }
 
-#spinnerconv:not([hidden]) {
+	#spinnerconv:not([hidden])
+{
   position: relative;
   top: 0;
   left: 0;
@@ -336,58 +154,13 @@ color: #737373;
     transform: rotate(360deg);
   }
 }
-/* fin spinner de chargement des données AJAX */
-
-/* couleur au survol de la liste des conversations */
-
-.idconv
-{
-	background-color: white;
-	word-wrap: break-word;
-	cursor: pointer;
-	border-radius: 10px;
-	margin-bottom: 5px;
-
-}
-
-.idconv:hover
-{
-	background-color:  #BDCAC8;
-}
-
-/* fin couleur au survol de la liste des conversations */
-
-/* mise en page des médias sur la cell user */
-
-.media_user
-{
-	max-height:100%;
-	max-width:100%;
-	display: block;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-/* fin mise en page des médias sur la cell user */
-
-/* SETTINGS */
-	/* en-tête des informations */
-
-.settingsheader
-{
-	font-weight: bold;
-	text-decoration: underline;
-	margin-bottom: 15px;
-}
-
-	/* fin en-tête des informations */
-/* fin SETTINGS */
 
 /* INFINITE AJAX SCROLL */
 
 /* spinner chargement des données IAS pour tous */
 
-#spinnerajaxscroll::after {
+	#spinnerajaxscroll::after
+{
   content: "";
   width: 60px;
   height: 60px;
@@ -398,7 +171,8 @@ color: #737373;
   animation: spin 1s infinite linear
 }
 
-#spinnerajaxscroll:not([hidden]) {
+	#spinnerajaxscroll:not([hidden])
+{
   position: relative;
   top: 0;
   left: 0;
@@ -409,15 +183,296 @@ color: #737373;
   align-items: center;
 }
 
-/* div de fin d'IAS pour tous invisible par défaut*/
 
 /* div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
 
-.no-more
+	.no-more
 {
   opacity: 0;
 }
 
-/* fin div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
-
 /* FIN INFINITE AJAX SCROLL */
+
+/* ## Fin Général ## */
+
+/* ## Page d'acceuil ## */
+
+/* Liste sur la page d'accueuil */
+
+	.list_accueil
+{
+  list-style-type: none !important;
+}
+
+	.list_accueil li
+{
+  padding : 10px;
+  color : #657786;
+  font-size : 15px;
+}
+
+/* Paragraphe de la page d'accueuil */
+
+	.home
+{
+  margin-top: 27px;
+  font-size : 20px;
+  text-align: center;
+}
+
+/* div d'information sous les input d'inscription */
+
+	.help-block
+{
+margin-top: 5px;
+margin-bottom: 10px;
+color: #737373;
+}
+/* ## Fin Page d'acceuil ## */
+
+/* ## Notification  : zone d'affichage ## */
+
+	.alert-area
+{
+  max-height: 100%;
+  position: fixed;
+  bottom: 5px;
+  left: 20px;
+  right: 20px;
+}
+
+	.alert-box
+{
+  position: relative;
+  transition: opacity 0.5s ease-in;
+}
+
+	.alert-box.hide
+{
+  opacity: 0;
+}
+
+	.alert-close
+{
+  background: transparent;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+	.alert-close:before,
+	.alert-close:after
+{
+  content: '';
+  width: 15px;
+  border-top: solid 2px white;
+  position: absolute;
+  top: 5px;
+  right: -1px;
+  display: block;
+}
+
+	.alert-close:before
+{
+  transform: rotate(45deg);
+}
+
+	.alert-close:after
+{
+  transform: rotate(135deg);
+}
+
+	.alert-close:hover:before,
+	.alert-close:hover:after
+{
+  border-top: solid 2px #d8d8d8;
+}
+
+/* affichage adapté pour le responsive */
+
+	@media (max-width: 767px) and (min-width: 481px)
+{
+  .alert-area {
+    left: 100px;
+    right: 100px;
+  }
+}
+
+	@media (min-width: 768px)
+{
+  .alert-area {
+    width: 350px;
+    left: auto;
+    right: 0;
+  }
+}
+
+/* ALERT RELATED CLASS (END) */
+
+	.alert-message-container
+{
+  text-align: center;
+  line-height: 2.5em;
+  margin-top: 50px;
+}
+
+	.alert-message-box
+{
+  font-size: 20px;
+  width: 300px;
+  border: solid 1px #444;
+  padding: 10px 15px;
+  outline: none;
+  transition: box-shadow 0.1s;
+}
+
+	.alert-message-box:focus
+{
+  box-shadow: 0 0 15px 2px #888;
+}
+
+	.alert-message-button
+{
+  font-size: 18px;
+  color: white;
+  background: #14b9ff;
+  width: 250px;
+  border: solid 1px #14b9ff;
+  padding: 10px 20px;
+  margin-top: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.1s;
+}
+
+	.alert-message-button:hover,
+	.alert-message-button:focus,
+	.alert-message-button:active
+{
+  background: #7dd8ff;
+}
+/* ## Fin notification ## */
+
+/*  autocomplétion sur navbar  */
+
+.input-search
+{
+	padding:8px;
+	display:block;
+	max-width:360px;
+	margin: 1px;
+}
+
+/* position modifiée de l'input searchb suivant les résolutions */
+
+	@media (min-width: 375px) and (max-width: 767px)
+{
+	.input-search
+	{
+		padding:8px;
+		display:block;
+		width:210px;
+		margin: 1px;
+	}
+}
+
+/* liste des résultats masquée par défaut */
+
+  #autocomplete-results
+{
+  display: none;
+  position: absolute;
+  top: 52px;
+	max-width:360px;
+}
+  #autocomplete-results li
+{
+  background-color: white;
+  color: black;
+}
+  #autocomplete-results li:hover
+{
+  background-color: gold;
+}
+/* ## fin autocomplétion sur navbar ## */
+
+/* ## Moteur de recherche ## */
+
+/* menu de navigation des résultats de recherche */
+
+	.menusearch
+{
+  position:fixed;
+}
+.contentsearch
+{
+	margin-left:280px;
+}
+
+/* Position modifiée suivant la résolution */
+
+	@media (min-width: 375px) and (max-width: 767px)
+{
+  	.menusearch
+	{
+    position: relative;
+  }
+		.contentsearch
+	{
+		margin-left:0px;
+	}
+}
+
+/* ## Messagerie ## */
+
+/* Mise en page de la liste des conversations */
+
+.idconv
+{
+	background-color: white;
+	word-wrap: break-word;
+	cursor: pointer;
+	border-radius: 10px;
+	margin-bottom: 5px;
+}
+
+/* couleur au survol de la liste des conversations */
+
+.idconv:hover
+{
+	background-color:  #BDCAC8;
+}
+
+/* ## Fin Messagerie ## */
+
+/* ## Media ## */
+
+/* Mise en page de la taille des médias envoyés par l'utilisateur -> visible sur la cell Users */
+
+.media_user
+{
+	max-height:100%;
+	max-width:100%;
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+/* ## Fin Média ## */
+
+/* ## SETTINGS ## */
+
+	/* en-tête des informations */
+
+.settingsheader
+{
+	font-weight: bold;
+	text-decoration: underline;
+	margin-bottom: 15px;
+}
+
+	/* fin en-tête des informations */
+	
+/* fin SETTINGS */

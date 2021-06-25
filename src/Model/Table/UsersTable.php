@@ -119,6 +119,10 @@ class UsersTable extends Table
             );
 
         $validator
+            ->scalar('token')
+            ->allowEmptyString('token', null, 'create');
+
+        $validator
             ->scalar('description')
             ->allowEmptyString('description');
 
