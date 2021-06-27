@@ -60,6 +60,13 @@ class TweetsController extends AppController
 
   }
 
+  // on vérifie si l'utilisateur existe
+
+      if($this->verif_user($current_user) == 0) // utilisateur inexistant alors 404
+    {
+        throw new NotFoundException();
+    }
+
   // si je suis connecter
 
     if($this->Authentication->getIdentity())
@@ -68,12 +75,7 @@ class TweetsController extends AppController
       if($current_user != $this->Authentication->getIdentity()->username) // si je ne suis pas sur mon profil
     {
 
-          // on vérifie si l'utilisateur existe
 
-          if($this->verif_user($current_user) == 0)
-        {
-          throw new NotFoundException();
-        }
 
         // on vérifie si je ne suis pas bloqué
 
@@ -125,7 +127,7 @@ class TweetsController extends AppController
 {
 
   $this->set('no_see', $no_see);
-  
+
 }
 
 

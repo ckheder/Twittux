@@ -49,11 +49,11 @@
 
            <!-- lien vers la pages des abonnements d'une personne -->
 
-            <button class="w3-bar-item w3-button tabfollow w3-red" onclick="loadSocialItem('<?= $this->request->getParam('username') ?>', 'following')"><i class="fas fa-user-circle"></i> Abonnements</button>
+            <button class="w3-bar-item w3-button w3-red linkso" id="following" onclick="loadSocialItem('<?= $this->request->getParam('username') ?>', 'following')"><i class="fas fa-user-circle"></i> Abonnements</button>
 
      			<!-- lien vers la pages des abonnés d'une personne -->
 
-     			  <button class="w3-bar-item w3-button tabfollow followlink" onclick="loadSocialItem('<?= $this->request->getParam('username') ?>', 'followers')"><i class="far fa-user-circle"></i> Abonnés</button>
+     			  <button class="w3-bar-item w3-button linkso" id="followers" onclick="loadSocialItem('<?= $this->request->getParam('username') ?>', 'followers')"><i class="far fa-user-circle"></i> Abonnés</button>
 
           <?php
 
@@ -63,11 +63,11 @@
            ?>
            <!-- lien vers la pages des demande d'abonnements -->
 
-   				 <button class="w3-bar-item w3-button tabfollow requestlink" onclick="loadSocialItem('<?= $this->request->getParam('username'); ?>', 'requests')"><i class="fas fa-user-friends"></i> Demande</button>
+   				 <button class="w3-bar-item w3-button linkso" id="requests" onclick="loadSocialItem('<?= $this->request->getParam('username'); ?>', 'requests')"><i class="fas fa-user-friends"></i> Demande</button>
 
    				<!-- lien vers la pages des utilisateurs bloqués -->
 
-   				 <button class="w3-bar-item w3-button tabfollow" onclick="loadSocialItem('<?= $this->request->getParam('username'); ?>', 'usersblocks')"><i class="fas fa-user-lock"></i> Utilisateurs bloqués</button>
+   				 <button class="w3-bar-item w3-button linkso" id="usersblocks" onclick="loadSocialItem('<?= $this->request->getParam('username'); ?>', 'usersblocks')"><i class="fas fa-user-lock"></i> Utilisateurs bloqués</button>
 
            <?php
 

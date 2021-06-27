@@ -15,19 +15,6 @@
 
  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
- const navAnchor = document.querySelectorAll('.tabfollow'); // liste de tous les liens du menu pour permettre de surligner le lien actif
-
- navAnchor.forEach(anchor => {
-   anchor.addEventListener('click', addActive);
- })
-
- // on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
-
- function addActive(e) {
-   const current = document.querySelector('.w3-red');
-   current.className = current.className.replace("w3-red", "");
-   e.target.className += " w3-red";
- }
 
  //à l'ouverture de la page on charge la page des abonnements en AJAX
 
@@ -43,14 +30,6 @@
    // on appelle la fonction loadSocialItem pour charger le lien dans la div
 
    loadSocialItem(localStorage.getItem("followlink"),'followers');
-
-   // on retire la classe w3-red au lien abonnement
-
-   document.querySelector('.w3-red').className = document.querySelector('.w3-red').className.replace("w3-red", "");
-
-   // on applique au lien abonné la classe w3-red
-
-   document.querySelector('.followlink').className += " w3-red";
 
    // suppression de l'item local 'username'
 
@@ -68,14 +47,6 @@
    // on appelle la fonction loadSocialItem pour charger le lien dans la div
 
    loadSocialItem(localStorage.getItem("requestlink"),'requests');
-
-   // on retire la classe w3-red au lien abonnement
-
-   document.querySelector('.w3-red').className = document.querySelector('.w3-red').className.replace("w3-red", "");
-
-   // on applique au lien abonné la classe w3-red
-
-   document.querySelector('.requestlink').className += " w3-red";
 
    // suppression de l'item local 'username'
 
@@ -143,7 +114,15 @@
 
  	   spinner.setAttribute('hidden', ''); // disparition du spinner
 
-    document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
+     // suppression de la classe w3-red sur le bouton ayant cette classe
+
+      document.querySelector('.linkso.w3-red').className = document.querySelector('.linkso.w3-red').className.replace("w3-red", "");
+
+      // ajout de la classe w3-red sur l'item cliqué
+
+      document.getElementById(item).className += " w3-red";
+
+      document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
 
     // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page social), on la vide
 

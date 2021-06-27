@@ -25,7 +25,7 @@ navAnchor.forEach(anchor => {
   anchor.addEventListener('click', addActive);
 })
 
-// on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
+// on enlève la classe w3-red à l'item qui la possède pour la donner à l'élément cliqué
 
 function addActive(e) {
   const current = document.querySelector('.tablinknews.w3-red');
