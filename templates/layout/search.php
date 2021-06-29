@@ -76,13 +76,13 @@ use Cake\Routing\Router;
 
   <div class="w3-bar-block w3-white">
 
-    <button class="w3-bar-item w3-button tablink w3-red" onclick="loadSearchItem('searchtweets')"><i class="fas fa-pencil-alt"></i> Tweets</button>
+    <button class="w3-bar-item w3-button linksearch w3-red" id="searchtweets" onclick="loadSearchItem('searchtweets')"><i class="fas fa-pencil-alt"></i> Tweets</button>
 
-    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchusers')"><i class="fas fa-user"></i> Personnes</button>
+    <button class="w3-bar-item w3-button linksearch" id="searchusers" onclick="loadSearchItem('searchusers')"><i class="fas fa-user"></i> Personnes</button>
 
-    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchmostrecent')"><i class="fas fa-clock"></i> Récent</button>
+    <button class="w3-bar-item w3-button linksearch" id="searchmostrecent" onclick="loadSearchItem('searchmostrecent')"><i class="fas fa-clock"></i> Récent</button>
 
-    <button class="w3-bar-item w3-button tablink" onclick="loadSearchItem('searchmediapics')"><i class="fas fa-image"></i> Média</button>
+    <button class="w3-bar-item w3-button linksearch" id="searchmediapics" onclick="loadSearchItem('searchmediapics')"><i class="fas fa-image"></i> Média</button>
 
   </div>
 

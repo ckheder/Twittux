@@ -75,9 +75,11 @@
 
               </div>
 
-              <div hidden class="spinner"></div> <!-- image de chargement des données -->
+
 
             </div>
+
+              <div hidden class="spinner"></div> <!-- image de chargement des données -->
 
           <div id="list_tweet_<?= $this->request->getParam('username') ?>">
 

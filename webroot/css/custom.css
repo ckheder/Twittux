@@ -2,6 +2,11 @@
 
 /* ## GENERAL ## */
 
+html
+{
+	overflow-y: scroll;
+}
+
 body
 {
 	background-color: #DCDCDC;
@@ -96,93 +101,68 @@ body
 
 /* spinner chargement de la liste des conversations, du changement de page sur la page tweet, moteur de recherche, page d'acceuil */
 
-	.spinner:not([hidden])
-{
+.spinner {
   position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 50%;
+  top: 15%;
+  z-index: 99;
+  width: 40px;
+  height: 40px;
+
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid red;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
-	.spinner::after
-{
-  content: "";
-  width: 80px;
-  height: 80px;
-  border: 2px solid #f3f3f3;
-  border-top: 3px solid #f25a41;
-  border-radius: 100%;
-  will-change: transform;
-  animation: spin 1s infinite linear
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* spinner chargement de la liste des conversations */
 
-	#spinnerconv::after
-{
-  content: "";
-  width: 80px;
-  height: 80px;
-  border: 2px solid #f3f3f3;
-  border-top: 3px solid #f25a41;
-  border-radius: 100%;
-  will-change: transform;
-  animation: spin 1s infinite linear
-}
+	#spinnerconv
+	{
+	position: relative;
+  left: 50%;
+  top: 15%;
+  z-index: 99;
+  width: 40px;
+  height: 40px;
 
-	#spinnerconv:not([hidden])
-{
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid red;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
 /* INFINITE AJAX SCROLL */
 
 /* spinner chargement des données IAS pour tous */
 
-	#spinnerajaxscroll::after
+	#spinnerajaxscroll
 {
-  content: "";
-  width: 60px;
-  height: 60px;
-  border: 2px solid #f3f3f3;
-  border-top: 3px solid #713ff2;
-  border-radius: 100%;
-  will-change: transform;
-  animation: spin 1s infinite linear
-}
+	position: relative;
+  left: 50%;
+  top: 15%;
+  z-index: 99;
+  width: 40px;
+  height: 40px;
 
-	#spinnerajaxscroll:not([hidden])
-{
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid red;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;r
 }
-
 
 /* div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
 
@@ -474,5 +454,5 @@ color: #737373;
 }
 
 	/* fin en-tête des informations */
-	
+
 /* fin SETTINGS */

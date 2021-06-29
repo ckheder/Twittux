@@ -13,8 +13,6 @@ const regexp = /#(\S)/g; // expression régulière qui va servir à ôter le has
 
 const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
-const navAnchor = document.querySelectorAll('.tablink'); // liste de tous les liens du menu pour permettre de surligner le lien actif
-
 var URL; // URL de rercherche à charger suivant l'onglet cliqué
 
 var iassearch; // variable contenant la construction de l'Infinite Ajax Scroll
@@ -23,23 +21,9 @@ var DIVIAS; // Div ou sera chargé les données IAS suivant la page
 
 let zone_abo; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
 
-// surlignage
 
-// ajout d'un écouteur de clique sur chaque lien du menu
 
-navAnchor.forEach(anchor => {
-  anchor.addEventListener('click', addActive);
-})
-
-// on enlève la classe w3-red à l'item qui la possède pour la donner à l'élkément cliqué
-
-function addActive(e) {
-  const current = document.querySelector('.w3-red');
-  current.className = current.className.replace("w3-red", "");
-  e.target.className += " w3-red";
-}
-
-// chargement par AJAX des tweets sans média
+// chargement par AJAX des résultats de recherche
 
 document.querySelector("#result_search").addEventListener("load", loadSearchItem('searchtweets'));
 
@@ -144,6 +128,14 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
     .then(function (html) {
 
 	   spinner.setAttribute('hidden', ''); // disparition du spinner
+
+     // suppression de la classe w3-red sur le bouton ayant cette classe
+
+      document.querySelector('.linksearch.w3-red').className = document.querySelector('.linksearch.w3-red').className.replace("w3-red", "");
+
+      // ajout de la classe w3-red sur l'item cliqué
+
+      document.getElementById(itemsearch).className += " w3-red";
 
       document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
 
