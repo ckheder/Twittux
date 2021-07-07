@@ -50,9 +50,13 @@
 
                                 ]);?>
 
-      <?= $this->Form->control('destinataire',['type' => 'text','class' =>'w3-input w3-border destinataire','id' => 'user_message','label' =>'','placeholder'=>'Destinataire']); ?>
+      <?= $this->Form->control('destinataire[]',['type' => 'text','class' =>'w3-input w3-border destinataire','id' => 'user_message','label' =>'','placeholder'=>'Destinataire']); ?>
 
       <?= $this->Form->textarea('message' , ['id'=>'textarea_message','rows' => '3','required'=> 'required','maxlength' => '255','placeholder'=>' Message...']);?>
+
+      <!-- sert à indiquer au controller Messagerie que le message que je viens d'envoyer provient de la page d'accueuil de la messagerie -->
+
+      <?= $this->Form->hidden('indexmess' , ['id'=>'indexmess','value' =>'indexmess']);?>
 
 <!-- menu emoji -->
 

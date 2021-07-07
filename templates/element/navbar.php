@@ -32,6 +32,10 @@
 
     <a href="/twittux/settings" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Paramètres"><i class="fas fa-users-cog"></i></a>
 
+<!-- lien vers l'aide -->
+
+    <a href="/twittux/help" target="_blank" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Aide"><i class="far fa-question-circle"></i></a>
+
 <!-- zone de recherche -->
 
       <div class="w3-dropdown-hover">
@@ -77,6 +81,8 @@
   <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications <span class="w3-badge w3-red nbunreadnotifres"></span></a>
 
   <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
+
+  <a href="/twittux/help" target="_blank" class="w3-bar-item w3-button w3-padding-large"><i class="far fa-question-circle"></i> Aide</a>
 
   <a href="/twittux/<?= $authName ?>" class="w3-bar-item w3-button w3-padding-large"> <i><?= $this->Html->image('/img/avatar/'.$authName.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-circle', 'width'=>'21', 'height'=>'21')); ?></i> Mon profil</a>
 

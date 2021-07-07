@@ -227,6 +227,13 @@ navAnchor.forEach(anchor => {
        document.getElementById('user_message').remove();
      }
 
+     // suppression du champs caché indiquant que l'on ne vient pas de la page d'accueuil de la messagerie
+
+     if(document.getElementById('indexmess'))
+    {
+      document.getElementById('indexmess').remove();
+    }
+
      // si on est pas sur mobile et que le bouton de submit existe, on l'efface
 
      if (hasTouchScreen === false)

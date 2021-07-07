@@ -175,6 +175,19 @@ body
 
 /* ## Fin Général ## */
 
+/* ## Page d'aide ## */
+.help
+{
+	font-size: 16px;
+}
+
+.help li
+{
+	padding: 8px 16px;
+}
+
+/* ## Fin page d'aide ## */
+
 /* ## Page d'acceuil ## */
 
 /* Liste sur la page d'accueuil */

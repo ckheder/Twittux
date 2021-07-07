@@ -132,7 +132,7 @@ class MessagerieController extends AppController
         {
             // récupération ou génération d'une nouvelle conversation avec mon destinataire
 
-              $conversationresult = $this->get_conv($destinataire);
+              $conversationresult = $this->get_conv($destinataire[0]);
 
               $conversation = $conversationresult['conversation']; // identifiant conversation
 
@@ -175,17 +175,17 @@ class MessagerieController extends AppController
 
                 $data_new_conv = array('user_message' => $this->Authentication->getIdentity()->username, // expediteur
                                       'conversation' => $conversation, // identifiant de conversation
-                                      'destinataire' => $destinataire); // destinataire
+                                      'destinataire' => $destinataire[0]); // destinataire
 
                 $event = new Event('Model.Messagerie.newconv', $this, ['data_new_conv' => $data_new_conv]);
 
                 $this->getEventManager()->dispatch($event);
               }
 
-                if(is_array($destinataire)) // 1 ou plusieurs destinataire -> page de conversation
-              {
+
                   foreach($destinataire as $destinataire) // on vérifie , pour chaque destinataire , si il accepte les notifications de nouveaux message
                 {
+
                       if(AppController::check_notif('message', $destinataire, $conversation) == 'oui') // notification acceptée
                     {
 
@@ -198,28 +198,19 @@ class MessagerieController extends AppController
                     }
                 }
 
-                // renvoi d'une réponse jSON contenant le message à afficher dans la conversation
-
-                  return $this->response->withType("application/json")->withStringBody(json_encode($data));
-              }
-                else // 1 seul destinataire (index messagerie)
+                if($this->request->getData('indexmess'))
               {
-                  if(AppController::check_notif('message', $destinataire, $conversation) == 'oui') // notification acceptée
-                {
-
-                  // Evènement de création d'une notification de nouveau message
-
-                  $event = new Event('Model.Messagerie.afteradd', $this, ['data' => $data,'destinataire' => $destinataire]);
-
-                  $this->getEventManager()->dispatch($event);
-
-                }
-
-                // renvoi d'une réponse JSON confirmant un message bien envoyé
-
                 return $this->response->withType('application/json')
                                   ->withStringBody(json_encode(['Result' => 'msgok']));
               }
+                else
+              {
+                return $this->response->withType("application/json")->withStringBody(json_encode($data));
+              }
+
+
+
+
 
             }
 

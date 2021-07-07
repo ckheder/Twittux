@@ -45,7 +45,7 @@
 
 <footer class="w3-container w3-dark-grey">
 
-    <p class="w3-center">Conditions d'utilisation - Contribuer - Contact © 2021 Christophe KHEDER. Tous droits réservés.</p>
+    <p class="w3-center"><a href="/twittux/privacy">Politique de confidentialité</a> - <a href="/twittux/help">Aide</a> - <a href="https://github.com/ckheder/Twittux" target="_blank">Contribuer/Signaler un problème.</a></p>
 
 </footer>
 

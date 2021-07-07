@@ -49,9 +49,9 @@ class PagesController extends AppController
             return $this->redirect('/');
         }
 
-        // si je suis authentifié et que je clique sur l'accueuil du site, je suis redirigé vers l'actualités
+        // si je suis authentifié et que je clique sur l'accueuil du site, je suis redirigé vers l'actualités (sauf si je veux accéder à la page d'aide depuis un profil connecté)
 
-          if ($this->Authentication->getIdentity())
+          if ($this->Authentication->getIdentity() AND $this->request->getRequestTarget() != '/help')
         {
           return $this->redirect('/actualites');
         }

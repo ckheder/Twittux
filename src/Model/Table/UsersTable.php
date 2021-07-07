@@ -153,6 +153,6 @@ class UsersTable extends Table
 
         public function notReserved($value, array $context) // tableau recensant les noms réservés , utilisé dans le menuco/menuoffline
       {
-        return !in_array($value, ['actualites','accueuil','search','settings','notifications','messagerie','abonnement','logout'], false);
+        return !in_array($value, ['actualites','accueuil','search','settings','notifications','messagerie','abonnement','logout','help','privacy'], false);
       }
 }

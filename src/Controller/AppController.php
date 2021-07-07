@@ -122,7 +122,9 @@ class AppController extends Controller
                 'Settings.username = UserConversation.user_conv'
               ])
 
-                                    ->where(['Settings.username' =>  $username,'UserConversation.conversation' => $conversation]);
+                                    ->where(['Settings.username' =>  $username, 'UserConversation.conversation' => $conversation]);
+
+
 
                                     foreach ($notif_message_visible as $notif_message_visible)
                                   {
