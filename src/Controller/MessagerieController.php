@@ -115,8 +115,10 @@ class MessagerieController extends AppController
 
           // test du blocage sur l'envoi de message : tester uniquement en conversation duo ou index de la messagerie
 
-          if(count($destinataire) === 1) // tableau des destinataires
+          if(count($destinataire) === 1) // décompte du tableau des destinataires
         {
+
+          $typeconv = 'duo'; // décompte à 1 -> conversation en duo
 
             if(AppController::checkblock($destinataire[0], $this->Authentication->getIdentity()->username) == 'oui')
           {
@@ -126,6 +128,10 @@ class MessagerieController extends AppController
 
           }
 
+        }
+          else
+        {
+          $typeconv = 'multiple'; // décompte à plus de 1 donc conversation multiple
         }
 
           if($this->request->getData('conversation') == null) // je vient de la page d'accueil de la messagerie
@@ -191,7 +197,7 @@ class MessagerieController extends AppController
 
                       // Evènement de création d'une notification de nouveau message
 
-                      $event = new Event('Model.Messagerie.afteradd', $this, ['data' => $data,'destinataire' => $destinataire]);
+                      $event = new Event('Model.Messagerie.afteradd', $this, ['data' => $data,'destinataire' => $destinataire,'typeconv' => $typeconv]);
 
                       $this->getEventManager()->dispatch($event);
 

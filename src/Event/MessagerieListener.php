@@ -32,13 +32,23 @@ class MessagerieListener implements EventListenerInterface {
      *
 */
 
-            public function notifmessage($event, $data, $destinataire)
+            public function notifmessage($event, $data, $destinataire, $typeconv)
         {
 
+          // différentes notifications selon la conversation duo ou multiple
+
+            if($typeconv == 'duo') // conversation duo
+          {
+            $notif = '<img src="/twittux/img/avatar/'.$data['user_message'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$data['user_message'].'" class="w3-text-indigo">'.$data['user_message'].'</a> vous à envoyé un  <a href="#" data_msg_conv="'.$data['conversation'].'" class="w3-text-indigo">message.</a>';
+          }
+            elseif ($typeconv == 'multiple') // conversation multiple
+          {
+
+            $notif = '<img src="/twittux/img/avatar/'.$data['user_message'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$data['user_message'].'" class="w3-text-indigo">'.$data['user_message'].'</a> vous à envoyé un  <a href="#" data_msg_conv="'.$data['conversation'].'" class="w3-text-indigo">message </a> dans une conversation de groupe.';
+
+          }
 
           $entity = TableRegistry::get('Notifications');
-
-          $notif = '<img src="/twittux/img/avatar/'.$data['user_message'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$data['user_message'].'" class="w3-text-indigo">'.$data['user_message'].'</a> vous à envoyé un  <a href="#" data_msg_conv="'.$data['conversation'].'" class="w3-text-indigo">message.</a>';
 
           $notif_msg = $entity->newEmptyEntity();
 

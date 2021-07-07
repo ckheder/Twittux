@@ -29,19 +29,19 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
 <!-- input username -->
 
-      <?= $this->Form->control('username',['class' =>'w3-input w3-border','label' =>'','id'=>'username','placeholder'=>'nom d\'utilisateur']) ?>
+      <?= $this->Form->control('username',['class' =>'w3-input w3-border','label' =>'','id'=>'username','placeholder'=>'nom d\'utilisateur', 'disabled']) ?>
 
         <div class="help-block">Entre 5 et 20 caractères, les caractères spéciaux ne sont pas autorisés.</div>
 
 <!-- input mot de passe -->
 
-      <?= $this->Form->password('password',['class' =>'w3-input w3-border','label' =>'','id'=>'password','placeholder'=>'mot de passe']) ?>
+      <?= $this->Form->password('password',['class' =>'w3-input w3-border','label' =>'','id'=>'password','placeholder'=>'mot de passe', 'disabled']) ?>
 
         <div class="help-block">Conseils : 8 caractères minimum, utilisez des chiffres, des lettres majuscules et minuscules et des caractères spéciaux (#,@,$,...)</div>
 
 <!-- input adresse mail -->
 
-      <?= $this->Form->control('email',['class' =>'w3-input w3-border','label' =>'','id'=>'mail','placeholder'=>'adresse mail']) ?>
+      <?= $this->Form->control('email',['class' =>'w3-input w3-border','label' =>'','id'=>'mail','placeholder'=>'adresse mail', 'disabled']) ?>
 
     <br />
 
@@ -98,7 +98,9 @@ $user = new User; // utilisé dans le formulaire d'inscription pour bénéficier
 
    <p>
 
-     <button class="w3-btn w3-blue-grey">Connexion</button></p>
+     <button class="w3-btn w3-blue-grey">Connexion</button>
+
+   </p>
 
    <p>
 
