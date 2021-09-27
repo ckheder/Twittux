@@ -87,7 +87,7 @@ use Cake\I18n\Time;
 
 <!-- corps du message -->
 
-<p>
+<p data_auteurmessage = "<?= $message->user_message ;?>">
 
   <?= $message->message ;?>
 

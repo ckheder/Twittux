@@ -38,7 +38,7 @@
 
 <h4>
 
-  <i class="fas fa-envelope"></i>&nbsp;&nbsp;<span class="headmessage">Nouveau message</span></h4>
+  <div class="headmessage"><i class="fas fa-envelope"></i>&nbsp;&nbsp;Nouveau message</div></h4>
 
 </div>
 

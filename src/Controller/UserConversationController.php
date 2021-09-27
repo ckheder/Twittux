@@ -101,24 +101,28 @@ class UserConversationController extends AppController
     foreach($invituser as $invituser)
   {
 
-      if($this->isinconv($conversation, $invituser) === 'non')
+      if($invituser != $this->Authentication->getIdentity()->username) // je ne peut pas m'inviter moi même
     {
 
-    $data = array('whoinvit' => $this->Authentication->getIdentity()->username, // compte courant invitant
-                  'usertoinvit' => $invituser, // personne invitée
-                  'conversation' => $conversation, // identifiant de la conversation
-                  'typeconv' => $typeconv);
+          if($this->isinconv($conversation, $invituser) === 'non')
+        {
 
-    // Evènement de création d'une notification d'invitation à rejoindre une conversation
+          $data = array('whoinvit' => $this->Authentication->getIdentity()->username, // compte courant invitant
+                        'usertoinvit' => $invituser, // personne invitée
+                        'conversation' => $conversation, // identifiant de la conversation
+                        'typeconv' => $typeconv);
 
-    $event = new Event('Model.Messagerie.notiftoinvit', $this,  ['data' => $data]);
+        // Evènement de création d'une notification d'invitation à rejoindre une conversation
 
-    $this->getEventManager()->dispatch($event);
+          $event = new Event('Model.Messagerie.notiftoinvit', $this,  ['data' => $data]);
 
-    $invit ++; // incrémentation du nombre d'invité
+          $this->getEventManager()->dispatch($event);
 
-  }
-}
+          $invit ++; // incrémentation du nombre d'invité
+
+        }
+      }
+    }
 
   if($invit == 0) // si personne n'ais invité , renvoi d'une réponse JSON
 {

@@ -118,7 +118,13 @@ class MessagerieController extends AppController
           if(count($destinataire) === 1) // décompte du tableau des destinataires
         {
 
-          $typeconv = 'duo'; // décompte à 1 -> conversation en duo
+              if($destinataire[0] == $this->Authentication->getIdentity()->username) // test de l'envoi à soi -même
+            {
+              return $this->response->withType('application/json')
+                                ->withStringBody(json_encode(['Result' => 'sendtoyourself']));
+            }
+
+            $typeconv = 'duo'; // décompte à 1 -> conversation en duo
 
             if(AppController::checkblock($destinataire[0], $this->Authentication->getIdentity()->username) == 'oui')
           {
@@ -204,10 +210,10 @@ class MessagerieController extends AppController
                     }
                 }
 
-                if($this->request->getData('indexmess'))
+                if($this->request->getData('indexmess')) // envoi message depuis l'index
               {
                 return $this->response->withType('application/json')
-                                  ->withStringBody(json_encode(['Result' => 'msgok']));
+                                  ->withStringBody(json_encode(['Result' => 'msgok','conversation' => $conversation,'user_message' => $this->Authentication->getIdentity()->username,'message' => $data['message']]));
               }
                 else
               {
@@ -249,13 +255,16 @@ class MessagerieController extends AppController
         {
           $connection = ConnectionManager::get('default');
 
-      $conv = $connection->execute('SELECT M.conversation AS conversation, DM.message AS message, DM.created AS created, DM.user_message AS user_message,UC.visible AS visible, C.type_conv
-      FROM ( SELECT conversation, MAX( created ) AS max_date FROM messagerie GROUP BY conversation ) M
-      INNER JOIN conversation C ON M.conversation = C.id_conv
-      INNER join userconversation UC ON C.id_conv = UC.conversation
-      INNER JOIN messagerie DM ON C.id_conv = DM.conversation AND M.max_date = DM.created
-      WHERE UC.user_conv = "'.$this->Authentication->getIdentity()->username.'"
-      ORDER BY DM.created DESC');
+      $conv = $connection->execute('SELECT M.conversation, DM.message AS message, DM.created AS created, DM.user_message AS user_message,M.visible, C.type_conv
+            FROM ( SELECT messagerie.conversation, MAX( created ) AS max_date, UC.visible AS visible FROM messagerie  INNER join userconversation UC ON messagerie.conversation = UC.conversation
+                  WHERE UC.user_conv = "'.$this->Authentication->getIdentity()->username.'"
+                  GROUP BY messagerie.conversation ) M
+            INNER JOIN conversation C ON M.conversation = C.id_conv
+            INNER join userconversation UC ON C.id_conv = UC.conversation
+            INNER JOIN messagerie DM ON C.id_conv = DM.conversation
+            AND M.max_date = DM.created
+            GROUP BY M.conversation
+            ORDER BY DM.created DESC');
 
         $this->set('conv' , $conv); // renvoi de la liste des conversations
 

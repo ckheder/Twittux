@@ -51,5 +51,6 @@ class ConversationCell extends Cell
 
 
       $this->set('usersconv' , $users_conv);
+      $this->set('conv', $conv);
     }
 }

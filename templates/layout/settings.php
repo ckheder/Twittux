@@ -25,9 +25,9 @@
     </title>
     <?= $this->Html->meta('favicon.ico','img/favicon.ico', ['type' => 'icon']); ?>
     <?= $this->Html->css('w3');?>
-     <?= $this->Html->css('custom');?>
-     <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <?= $this->Html->css('custom');?>
+    <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
+    <?= $this->Html->css('//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css');?>
 </head>
 
 <!-- BODY -->

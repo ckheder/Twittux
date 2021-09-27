@@ -13,6 +13,7 @@ body
 	font-family: 'Athiti', serif;
 }
 
+
 /* utiliser pour signaler une ou plusieurs notification non lue sur le menu réduit responsive */
 
 	.dot
@@ -161,7 +162,7 @@ body
   border-radius: 50%;
   border-top: 16px solid red;
   -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;r
+  animation: spin 2s linear infinite;
 }
 
 /* div annoncant la fin du chargement des éléments par Infinite Ajax Scroll : masqué par défaut */
@@ -429,6 +430,7 @@ color: #737373;
 	cursor: pointer;
 	border-radius: 10px;
 	margin-bottom: 5px;
+	padding: 0.5px;
 }
 
 /* couleur au survol de la liste des conversations */
@@ -436,6 +438,27 @@ color: #737373;
 .idconv:hover
 {
 	background-color:  #BDCAC8;
+}
+
+/* header messagerie */
+
+	.headmessage
+{
+	font-size: 15px;
+	pointer-events: none;
+  cursor: default;
+}
+
+/* couleur des pastilles indiquant l'éta de connexion */
+
+	.red
+{
+	color : red;
+}
+
+	.green
+{
+	color: green;
 }
 
 /* ## Fin Messagerie ## */
