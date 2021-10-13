@@ -135,6 +135,7 @@
         if($authName) // si non auth, pas de formulaire d'envoi de commentaire
       {
 
+
 // ZONE COMMENTAIRE
 
 // formulaire de création de commentaire
@@ -145,7 +146,7 @@
 
                                       ]);
 
-        echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255','placeholder' => 'Commenter...']);?>
+        echo $this->Form->textarea('commentaire' , ['id'=>'textarea_comm','rows' => '3','required'=> 'required','maxlength' => '255','placeholder' => 'Commenter...',($tweet->allow_comment == 1) ? 'disabled' : '']);?>
 
                 <!--bouton dropdown pour les emojis -->
 
@@ -157,20 +158,21 @@
 
                       <div id="menuemojie" class="w3-dropdown-content w3-bar-block w3-border">
 
-<?php // parcours du dossier contenant les emojis et affichage dans la div
+                        <?php // parcours du dossier contenant les emojis et affichage dans la div
 
-  $dir = WWW_ROOT . 'img/emoji';
+                          $dir = WWW_ROOT . 'img/emoji';
 
-  $iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+                          $iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
 
-  foreach(new RecursiveIteratorIterator($iterator) as $file)
-{
-  $img = $file->getFilename();
+                          foreach(new RecursiveIteratorIterator($iterator) as $file)
+                        {
+                          $img = $file->getFilename();
 
-  echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
-}
+                          echo "<img src='/twittux/img/emoji/$img' class='emoji' data_code='$img'>";
+                        }
 
-?>
+                        ?>
+
                     </div>
 
               </div>
@@ -253,7 +255,6 @@
 
 <!--affichage des commentaires -->
 
-<div id="list_comm">
 
   <hr />
 
@@ -269,17 +270,22 @@
 
   <hr />
 
+  <div id="list_comm">
+
 <?php
 
  foreach ($commentaires as $commentaires) : ?>
 
-    <div style="word-wrap: break-word;" class="itemcomm" id="comm<?= $commentaires->id_comm ?>"><br>
+
+    <div style="word-wrap: break-word;" class="itemcomm" id="comm<?= $commentaires->id_comm ?>">
 
         <!--avatar -->
 
         <?=  $this->Html->image('/img/avatar/'.$commentaires->username.'.jpg', array('alt' => 'image utilisateur', 'class'=>'w3-left w3-circle w3-margin-right', 'width'=>60)); ?>
 
-        <?php if($authName) // si non auth, pas de comm
+        <?php
+
+          if($authName) // si non auth, pas de comm
         {
           ?>
 
@@ -301,9 +307,19 @@
 
           <?php
 
+          if($commentaires->username == $authName) // si je suis l'auteur du commentaire
+        {
+          ?>
+
+          <a class="updatecomment" href="#" onclick="return false;" data_idcomm="<?= $commentaires->id_comm ?>"> Modifier</a>
+
+        <?php
+
         }
 
-        if($commentaires->username != $authName)
+        }
+
+          if($commentaires->username != $authName) // si je ne suis ni l'auteur du commentaire ni l'auteur du tweet
         {
 
           ?>
@@ -332,12 +348,12 @@
 
         <!--date formatée -->
 
-        <span class="w3-opacity"><?= $commentaires->created->i18nformat('dd MMMM YYYY - HH:mm');?></span>
+        <span class="w3-opacity"><?= $commentaires->created->i18nformat('dd MMMM YYYY - HH:mm');?><?= ($commentaires->created < $commentaires->modified) ? " · modifié" : ''; ?></span>
 
 
         <!--corps du commentaire -->
 
-        <p><?= $commentaires->commentaire ;?></p>
+        <p class="commcontent<?= $commentaires->id_comm ?>"><?= $commentaires->commentaire ;?></p>
 
         <hr />
 
@@ -357,22 +373,24 @@
 
   if ($this->Paginator->hasNext())
   {
+
    ?>
 
    <div class="pagination">
 
-  <?= $this->Paginator->next('Next page'); ?>
+     <?= $this->Paginator->next('Next page'); ?>
 
-  </div>
+   </div>
 
   <?php
 
 }
 
 ?>
+
 <div class="w3-center">
 
-<div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des commentaires</div>
+  <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des commentaires</div>
 
 </div>
 
@@ -382,7 +400,14 @@
 
  ?>
 <br />
+
 </div>
 <!-- fin affichage des commentaires -->
 
 <!-- FIN ZONE COMMENTAIRE -->
+
+<script>
+
+  var idtweet = "<?= $tweet->id_tweet;?>"; // identifiant du tweet visité, servira à la connexion à Node Js
+
+</script>

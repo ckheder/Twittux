@@ -31,5 +31,6 @@ class Commentaire extends Entity
         'id_tweet' => true,
         'username' => true,
         'created' => true,
+        'modified' => true,
     ];
 }

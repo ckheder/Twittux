@@ -226,7 +226,7 @@ class TweetsController extends AppController
 
         //récupération des commentaires par odre décroissant
 
-        $commentaires = $this->paginate($this->Commentaires->find()->select(['id_comm','commentaire','username','created'])
+        $commentaires = $this->paginate($this->Commentaires->find()->select(['id_comm','commentaire','username','created','modified'])
                                     ->where(['Commentaires.id_tweet' => $id])
                                     ->order(['created' => 'DESC']));
 

@@ -8,6 +8,7 @@ use Cake\Event\EventManager;
 use App\Event\CommentaireListener;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\ConnectionManager;
+use Cake\I18n\FrozenTime;
 
 /**
  * Commentaires Controller
@@ -45,14 +46,14 @@ class CommentairesController extends AppController
             if($this->request->getData('allowcomm') == 1) // les commentaires sont bloqués (donnée envoyée en champ caché par le formulaire)
           {
             return $this->response->withType('application/json')
-                                  ->withStringBody(json_encode(['result' => 'commblock']));
+                                  ->withStringBody(json_encode(['Result' => 'commblock']));
           }
             else
           {
 
             $commentaire = $this->Commentaires->newEmptyEntity();
 
-            $idcomm = $this->idcomm(); // génération d'un nouvel identifiant de tweet
+            $idcomm = $this->idcomm(); // génération d'un nouvel identifiant de commentaire
 
             $auttweet = $this->request->getData('user_tweet'); // auteur du tweet
 
@@ -64,7 +65,7 @@ class CommentairesController extends AppController
           {
 
             return $this->response->withType('application/json')
-                                    ->withStringBody(json_encode(['result' => 'nocomm']));
+                                    ->withStringBody(json_encode(['Result' => 'nocomm']));
           }
 
             $data = array(
@@ -79,19 +80,21 @@ class CommentairesController extends AppController
                 if ($this->Commentaires->save($commentaire))
             {
 
-                if($auttweet != $this->Authentication->getIdentity()->username) // si le profil qui commente n'est pas celui qui est l'auteur du tweet
-              {
+                  if($auttweet != $this->Authentication->getIdentity()->username) // si le profil qui commente n'est pas celui qui est l'auteur du tweet
+                {
 
-                if(AppController::check_notif('commentaire', $auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de commentaire
-              {
+                    if(AppController::check_notif('commentaire', $auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de commentaire
+                  {
 
-              // Evènement de création d'une notification de commentaire
+                    // Evènement de création d'une notification de commentaire
 
-              $event = new Event('Model.Commentaire.afteradd', $this, ['data' => $data, 'auttweet' => $auttweet]);
+                    $event = new Event('Model.Commentaire.afteradd', $this, ['data' => $data, 'auttweet' => $auttweet]);
 
-              $this->getEventManager()->dispatch($event);
-           }
-         }
+                    $this->getEventManager()->dispatch($event);
+                  }
+                }
+
+                $commentaire['auttweet'] = $this->request->getData('user_tweet'); // ajout de l'auteur du tweet pour traitement en Javascript
 
                 return $this->response->withType("application/json")->withStringBody(json_encode($commentaire));
             }
@@ -99,7 +102,7 @@ class CommentairesController extends AppController
             {
 
               return $this->response->withType('application/json')
-                                      ->withStringBody(json_encode(['result' => 'nocomm']));
+                                      ->withStringBody(json_encode(['Result' => 'nocomm']));
             }
 
          }
@@ -111,6 +114,77 @@ class CommentairesController extends AppController
         }
 
     }
+
+    /**
+     * Modifier d'un commentaire
+     *
+     * @param string|null $id Commentaire id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+
+     public function update()
+     {
+
+             if ($this->request->is('ajax')) // requête AJAX uniquement
+         {
+
+           // on vérifie si je suis bien l'auteur du commentaire ($this->request->input('json_decode')->idcomm) ou que je suis l'auteur d'un tweet ($this->request->input('json_decode')->idtweet)qui veut supprimer un commentaires
+
+           $check_comm_user = $this->Commentaires->find()
+
+           ->leftjoin(
+                   ['Tweets'=>'tweets'],
+                   ['Tweets.id_tweet = (Commentaires.id_tweet)']
+                   )
+
+           ->where(['Commentaires.username' => $this->Authentication->getIdentity()->username, 'Commentaires.id_comm' => $this->request->getData('commtoupdate')]);
+
+
+             if($check_comm_user->isEmpty()) // si la requête est vide, je ne peut modifier ce commentaire
+           {
+             return $this->response->withType('application/json')
+                                   ->withStringBody(json_encode(['Result' => 'updatecommnotok']));
+           }
+
+               else
+           {
+
+             $date_update_comm = FrozenTime::now(); // date actuelle pour modifier le champ 'modified'
+
+             $commentaire = AppController::linkify_content($this->request->getData('commentaire'));
+
+             $statement = ConnectionManager::get('default')->prepare('UPDATE commentaires SET commentaire = :commentaire, modified = :date_update_comm  WHERE id_comm = :idcomm');
+
+             $statement->bindValue('commentaire', $commentaire, 'string');
+
+             $statement->bindValue('date_update_comm', FrozenTime::now(), 'datetime');
+
+             $statement->bindValue('idcomm', $this->request->getData('commtoupdate'), 'integer');
+
+             $statement->execute();
+
+             $rowCount = $statement->rowCount();
+
+              if ($rowCount == 1) // 1 ligne affectée : renvoi d'une réponse JSON : le résultat de la requête, l'identifiant du commentaire, le commentaire modifié et l'auteur du comme,commentaire
+             {
+               return $this->response->withType('application/json')
+                                     ->withStringBody(json_encode(['Result' => 'updatecommok','commupdated' => $commentaire, 'idcomm' => $this->request->getData('commtoupdate'), 'authcomm' => $this->Authentication->getIdentity()->username]));
+             }
+               else
+             {
+               return $this->response->withType('application/json')
+                                     ->withStringBody(json_encode(['Result' => 'updatecommnotok']));
+             }
+
+           }
+
+     }
+             else // en cas de non requête AJAX on lève une exception 404
+         {
+             throw new NotFoundException(__('Cette page n\'existe pas.'));
+         }
+ }
 
     /**
      * Suppression d'un commentaire

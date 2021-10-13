@@ -83,7 +83,7 @@ class AppController extends Controller
 
         $contenu = preg_replace('/(^|[^@\w])@(\w{1,20})\b/','$1<a href="/twittux/$2" class="w3-text-blue">@$2</a>', $contenu); // @username
 
-        $contenu =  preg_replace('/:([^\s]+):/', '<img src="/twittux/img/emoji/$1.png" class="emoji" alt=" :$1: "/>', $contenu); // emoji
+        $contenu =  preg_replace('/:([^\s]+):/', '<img src="/twittux/img/emoji/$1.png" class="emoji" alt=":$1:"/>', $contenu); // emoji
 
         //URL
 

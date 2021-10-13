@@ -146,7 +146,11 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/commentaire/delete',['controller' => 'Commentaires', 'action' => 'delete']);
 
-      //activer/Désactiver les commentaires
+        // modifier un commentaire
+
+    $builder->connect('/commentaire/update',['controller' => 'Commentaires', 'action' => 'update']);
+
+        //activer/Désactiver les commentaires
 
     $builder->connect('/commentaire/actioncomm',['controller' => 'Commentaires', 'action' => 'actioncomm']);
 

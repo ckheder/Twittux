@@ -126,6 +126,8 @@
 
 var no_see = "<?= $no_see ?>";
 
+var authname = "<?= $authName ?>"; // nom de l'autilisateur authentifié
+
 </script>
 
           <?= $this->Html->script('commentaire.js'); ?> <!-- ajout d'un commentaire, supprimer un commentaire,emoji -->
