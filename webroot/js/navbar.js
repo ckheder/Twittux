@@ -63,7 +63,7 @@ autocomplete_zone.style.display='none';
 
 evtSource.onmessage = function (event) {
 
-    if(event.data != 0) // si j'ai 1 notification minimum
+    if(event.data > 0) // si j'ai 1 notification minimum
   {
 
     if (hasTouchScreen === false) // je ne suis pas sur mobile

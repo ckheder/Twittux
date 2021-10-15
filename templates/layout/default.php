@@ -37,6 +37,10 @@
 
          <div class="w3-row">
 
+           <div class="nocookie">
+
+           </div>
+
              <?= $this->Flash->render() ?>
 
           <?= $this->fetch('content') ?>
@@ -48,6 +52,8 @@
     <p class="w3-center"><a href="/twittux/privacy">Politique de confidentialité</a> - <a href="/twittux/help">Aide</a> - <a href="https://github.com/ckheder/Twittux" target="_blank">Contribuer/Signaler un problème.</a></p>
 
 </footer>
+
+
 
     </div>
 

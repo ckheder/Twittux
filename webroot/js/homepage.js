@@ -5,16 +5,30 @@
  *
  */
 
-// test préliminaire des cookies
+// test des cookies
 
-  if(navigator.cookieEnabled)
+  var cookieEnabled = (navigator.cookieEnabled) ? true : false;
+
+  if (typeof navigator.cookieEnabled == "undefined" && !cookieEnabled) // si le test navigateur ne donne rien , test de la création d'un cookie de test
 {
-  console.log('accepte')
+  document.cookie="testcookie";
+
+  cookieEnabled = (document.cookie.indexOf("testcookie") != -1) ? true : false;
 }
-  else
+
+// si la création de cookie échoue : affichage d'un message puis effacement du bouton de connexion
+
+  if(cookieEnabled == false)
 {
-  console.log('refuse')
-}
+
+  document.querySelector('.nocookie').innerHTML = '<div class="w3-container w3-panel w3-border w3-blue">'+
+                                                    '<p>'+
+                                                    '<i class="fas fa-info-circle"></i> Les cookies sont bloqués sur votre navigateur. Veuillez les accepter pour vous inscrire ou vous connecté. Plus d\'informations : <a href="/twittux/privacy" style="text-decoration: underline;">Politique de confidentialité</a>'+
+                                                    '</p></div>';
+
+  document.querySelector('.w3-blue-grey').remove();
+};
+
 
 // Traitement du formulaire d'envoi d'adresse mail pour réinitialiser le mot de passe
 

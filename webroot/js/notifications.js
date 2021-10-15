@@ -10,9 +10,12 @@
  var actnotif = document.querySelectorAll('.actnotif'); // on stock tous les lien qui ont une classe 'actnotif' -> mettre à jour le statut d'une notif
  var nb_notification = document.querySelector('.nb_notification'); // récupération du nombre d'abonnement
 
- // Infinite AJAX scroll de la liste des notifications
+ // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou le nombre de notification est supérieur à zéro 
 
- let ias = new InfiniteAjaxScroll('#list_notif', {
+  if(nb_notification > 0)
+ {
+
+   let ias = new InfiniteAjaxScroll('#list_notif', {
    item: '.itemnotif',
    logger: false,
    next: '.next',
@@ -43,7 +46,7 @@
 
    document.querySelector('.no-more').style.opacity = '1';
  })
-
+}
  // marquer une notif comme lue / non lue
 
  document.addEventListener('click',function(e){
