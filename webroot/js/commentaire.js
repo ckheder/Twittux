@@ -17,13 +17,11 @@ var titlepagecomm = document.title;// titre de la page
 
 let form_comm = document.querySelector('#form_comm') // récupération du formulaire
 
-const socket = io("http://localhost:8083"); // connexion à Node JS avec Socket IO
-
 // ## Node Js ## //
 
 // connexion au serveur Node JS
 
-socket.emit("connexion", idtweet); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
+socket.emit("connexion", {rooms: idtweet, source: 'comment'}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
 
 // évènement ajout d'un commentaire
 
@@ -695,57 +693,10 @@ socket.emit('deletecommok', {idtweet: idtweet, idcomm: data['idcomm']})
     });
 
   }
+  
 })
+
 }
- /** affichage des notifications **/
-
- var AlertBox = function(id, option) {
-  this.show = function(msg) {
-
-      var alertArea = document.querySelector(id);
-      var alertBox = document.createElement('DIV');
-      var alertContent = document.createElement('DIV');
-      var alertClose = document.createElement('A');
-      var alertClass = this;
-      alertContent.classList.add('alert-content');
-      alertContent.innerHTML = msg;
-      alertClose.classList.add('alert-close');
-      alertClose.setAttribute('href', '#');
-      alertBox.classList.add('alert-box');
-      alertBox.appendChild(alertContent);
-      if (!option.hideCloseButton || typeof option.hideCloseButton === 'undefined') {
-        alertBox.appendChild(alertClose);
-      }
-      alertArea.appendChild(alertBox);
-      alertClose.addEventListener('click', function(event) {
-        event.preventDefault();
-        alertClass.hide(alertBox);
-      });
-      if (!option.persistent) {
-        var alertTimeout = setTimeout(function() {
-          alertClass.hide(alertBox);
-          clearTimeout(alertTimeout);
-        }, option.closeTime);
-      }
-
-  };
-
-  this.hide = function(alertBox) {
-    alertBox.classList.add('hide');
-    var disperseTimeout = setTimeout(function() {
-      alertBox.parentNode.removeChild(alertBox);
-      clearTimeout(disperseTimeout);
-    }, 500);
-  };
-};
-
-var alertbox = new AlertBox('#alert-area', {
-  closeTime: 5000,
-  persistent: false,
-  hideCloseButton: false
-});
-
-/** fin affichage des notifications **/
 
 /**ABONNEMENT **/
 

@@ -236,6 +236,96 @@ class TweetsController extends AppController
     }
   }
 
+   /**
+     * méthode add : ajout d'un nouveau tweet
+     *
+     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+            if ($this->request->is('ajax')) // requête AJAX uniquement
+        {
+
+            $tweet = $this->Tweets->newEmptyEntity(); // création d'une nouvelle entité
+
+            $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
+
+            if(AppController::get_type_profil($this->Authentication->getIdentity()->username) == 'prive') // su profil prive et non abonné
+          {
+
+            $private = 1; // tweet prive
+          }
+            else
+          {
+            $private = 0;
+          }
+            $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
+
+            // si présence d'un média , on le traite
+
+            if($this->request->getData('tweetmedia')->getError() != 4)
+          {
+
+            $contenu_tweet = AppController::uploadfiletweet($this->request->getData('tweetmedia'), $contenu_tweet,$idtweet); // traitement de l'envoi du fichier et mise à jour du contenu du tweets
+
+          }
+
+            $data = array(
+                            'id_tweet' => $idtweet,
+                            'username' => $this->Authentication->getIdentity()->username,
+                            'contenu_tweet' => AppController::linkify_content($contenu_tweet),
+                            'nb_commentaire' =>0,
+                            'nb_partage' =>0,
+                            'nb_like' =>0,
+                            'private' =>$private,
+                            'allow_comment' => 0
+                            );
+
+
+
+            $tweet = $this->Tweets->patchEntity($tweet, $data); // sauvegarde de la nouvelle entité
+
+
+                if ($this->Tweets->save($tweet))
+            {
+
+                // suppression des lignes du tableau data non nécessaires à l'affichage du tweet
+
+                unset($tweet["private"], $tweet["allow_comment"]);
+
+                // déclenchement d'un évènement destiné à voir si des utilisateurs sont mentionnés
+
+                $event = new Event('Model.Tweets.afteradd', $this, ['data' => $data]);
+
+                $this->getEventManager()->dispatch($event);
+
+                // récupération d'une instance du TweetsListener afin d'utiliser une fonction qui va nous renvoyer les hashtags
+                // éventuels du tweet posté afin des traiter en JS pour incrémenter les listes de hashtags
+
+                $tweetslistener = new TweetsListener();
+
+                $this->Tweets->getEventManager()->on($tweetslistener);
+
+                $hashtagstweet = $tweetslistener->getHashtags($data['contenu_tweet']);
+
+                // renvoi d'une réponse JSON
+
+                return $this->response->withType("application/json")->withStringBody(json_encode(['Tweet' => $tweet, 'Hashtag' => $hashtagstweet]));
+            }
+              else
+            {
+                return $this->response->withType('application/json')
+                                      ->withStringBody(json_encode(['result' => 'notweet']));
+            }
+        }
+
+            else // en cas de non requête AJAX on lève une exception 404
+        {
+            throw new NotFoundException(__('Cette page n\'existe pas.'));
+        }
+
+    }
+
   /**
    * Méthode média : afficher les tweets contenant un média uploadé
    *
@@ -331,88 +421,6 @@ class TweetsController extends AppController
     }
 
 }
-
-
-    /**
-     * méthode add : ajout d'un nouveau tweet
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
-        public function add()
-    {
-            if ($this->request->is('ajax')) // requête AJAX uniquement
-        {
-
-            $tweet = $this->Tweets->newEmptyEntity(); // création d'une nouvelle entité
-
-            $contenu_tweet = strip_tags($this->request->getData('contenu_tweet')); // suppression des tags éventuels
-
-            if(AppController::get_type_profil($this->Authentication->getIdentity()->username) == 'prive') // su profil prive et non abonné
-          {
-
-            $private = 1; // tweet prive
-          }
-            else
-          {
-            $private = 0;
-          }
-            $idtweet = $this->idtweet(); // génération d'un nouvel identifiant de tweet
-
-            // si présence d'un média , on le traite
-
-            if($this->request->getData('tweetmedia')->getError() != 4)
-          {
-
-            $contenu_tweet = AppController::uploadfiletweet($this->request->getData('tweetmedia'), $contenu_tweet,$idtweet); // traitement de l'envoi du fichier et mise à jour du contenu du tweets
-
-          }
-
-            $data = array(
-                            'id_tweet' => $idtweet,
-                            'username' => $this->Authentication->getIdentity()->username,
-                            'contenu_tweet' => AppController::linkify_content($contenu_tweet),
-                            'nb_commentaire' =>0,
-                            'nb_partage' =>0,
-                            'nb_like' =>0,
-                            'private' =>$private,
-                            'allow_comment' => 0
-                            );
-
-
-
-            $tweet = $this->Tweets->patchEntity($tweet, $data); // sauvegarde de la nouvelle entité
-
-
-                if ($this->Tweets->save($tweet))
-            {
-
-                // suppression des lignes du tableau data non nécessaires à l'affichage du tweet
-
-                unset($tweet["private"], $tweet["allow_comment"]);
-
-                // déclenchement d'un évènement destiné à voir si des utilisateurs sont mentionnés
-
-                $event = new Event('Model.Tweets.afteradd', $this, ['data' => $data]);
-
-                $this->getEventManager()->dispatch($event);
-
-                // renvoi d'une réponse JSON
-
-                return $this->response->withType("application/json")->withStringBody(json_encode($tweet));
-            }
-              else
-            {
-              return $this->response->withType('application/json')
-                                      ->withStringBody(json_encode(['result' => 'notweet']));
-            }
-        }
-
-            else // en cas de non requête AJAX on lève une exception 404
-        {
-            throw new NotFoundException(__('Cette page n\'existe pas.'));
-        }
-
-    }
 
     /**
      * Méthode Delete : suppression d'un tweet
@@ -550,7 +558,7 @@ class TweetsController extends AppController
             }
                 else
             {
-                idtweet(); // ou $this->idtweet();
+                $this->idtweet();
             }
     }
 

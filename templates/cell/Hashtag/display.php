@@ -19,7 +19,7 @@
 
         <br />
 
-        <span class="w3-opacity"><?= $list_hashtag->nb_post_hashtag ?> Tweets</span>
+        		<span class="w3-opacity"><span id="<?= $list_hashtag->hashtag ?>"><?= $list_hashtag->nb_post_hashtag ?></span> Tweets</span>
 
   </p>
 

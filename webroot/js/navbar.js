@@ -14,6 +14,8 @@ var min_characters = 0; // nombre de caractère minimum : on déclenche l'appel 
 
 var titlepage = document.querySelector('title'); // récupération du titre de la page
 
+  const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket IO
+
 // detetction mobile
 
     var hasTouchScreen = false;
@@ -58,6 +60,76 @@ window.addEventListener("click", function(event) {
 autocomplete_zone.style.display='none';
   }
 });
+
+// ## NODE JS ## //
+
+// ajout d'un tweet et traitement hashtag
+
+  socket.on('addtweet', function(data)
+{
+
+    var el = document.getElementById("list_tweet_" + data.Tweet['username']); // récupération de la div ou l'on va insérer le nouveau tweet
+
+    if(el)
+  {
+
+    var lientweet; // lien qui s'afficheront sur le menu déroulant du tweet suivant les différents scénarios
+
+      if(data.Tweet['username'] == authname) // je suis l'auteur du tweet  : affichage d'un lien de suppression du tweet
+    {
+      lientweet = '<a class="deletetweet" href="#" onclick="return false;" data_type = "0" data_idtweet="'+ data.Tweet['id_tweet']+'"> Supprimer</a>'
+    }
+      else // affichage d'un lien de signalement d'un tweet
+    {
+      lientweet = '<a href="#">Signaler ce post </a>'
+    }
+
+    // insertion du lien
+
+      el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ data.Tweet['id_tweet']+'"><br>'+
+            '<img src="/twittux/img/avatar/'+ data.Tweet['username']+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
+            '<div class="dropdown">'+
+            '<button onclick="openmenutweet('+ data.Tweet['id_tweet']+')" class="dropbtn">...</button>'+
+            '<div id="btntweet'+ data.Tweet['id_tweet']+'" class="dropdown-content">'+
+            ''+lientweet+''+
+            '</div>'+
+            '</div>'+
+            '<h4>'+ data.Tweet['username']+'</h4>'+
+            '<span class="w3-opacity">à l\'instant</span>'+
+            '<hr class="w3-clear">'+
+            '<p>'+ data.Tweet['contenu_tweet']+'</p>'+
+            '<hr class="w3-clear">'+
+            '<span class="w3-opacity"> <a onclick="openmodallike('+ data.Tweet['id_tweet']+')" style="cursor: pointer;"><span class="nb_like_'+ data.Tweet['id_tweet']+'">0</span>'+
+            ' J\'aime</a> - 0 Commentaire(s) - Partagé <span class="nb_share_'+ data.Tweet['id_tweet']+'">0</span> fois</span>'+
+            '<hr><p>'+
+            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ data.Tweet['id_tweet']+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+
+            '<a href="./statut/'+ data.Tweet['id_tweet']+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
+            '</p>'+
+            '</div>');
+          }
+
+    // traitement hashtag
+
+    // on récupère les éventuels hashtags utilisés
+
+    var hashtagarray = data.Hashtag;
+
+    // on vérifie si, pour chacun d'entre eux, ils existent dans les encarts de hashtag(news, profil et page trending).
+    // si oui, on incrémente leur compteur de 1
+
+        hashtagarray.forEach(element => 
+      {
+          if(document.querySelector('#'+element+''))
+        {
+          document.querySelector('#'+element+'').textContent ++;
+        }
+      }
+      
+      );
+
+})
+
+// ## FIN NODE JS ## //
 
 // actualisation du nombre de notifcations non lues
 
@@ -248,3 +320,54 @@ function displayMatches() {
   }
 
 })
+
+/** affichage des notifications **/
+
+
+var AlertBox = function(id, option) {
+  this.show = function(msg) {
+
+      var alertArea = document.querySelector(id);
+      var alertBox = document.createElement('DIV');
+      var alertContent = document.createElement('DIV');
+      var alertClose = document.createElement('A');
+      var alertClass = this;
+      alertContent.classList.add('alert-content');
+      alertContent.innerHTML = msg;
+      alertClose.classList.add('alert-close');
+      alertClose.setAttribute('href', '#');
+      alertBox.classList.add('alert-box');
+      alertBox.appendChild(alertContent);
+      if (!option.hideCloseButton || typeof option.hideCloseButton === 'undefined') {
+        alertBox.appendChild(alertClose);
+      }
+      alertArea.appendChild(alertBox);
+      alertClose.addEventListener('click', function(event) {
+        event.preventDefault();
+        alertClass.hide(alertBox);
+      });
+      if (!option.persistent) {
+        var alertTimeout = setTimeout(function() {
+          alertClass.hide(alertBox);
+          clearTimeout(alertTimeout);
+        }, option.closeTime);
+      }
+
+  };
+
+  this.hide = function(alertBox) {
+    alertBox.classList.add('hide');
+    var disperseTimeout = setTimeout(function() {
+      alertBox.parentNode.removeChild(alertBox);
+      clearTimeout(disperseTimeout);
+    }, 500);
+  };
+};
+
+var alertbox = new AlertBox('#alert-area', {
+  closeTime: 5000,
+  persistent: false,
+  hideCloseButton: false
+});
+
+/** fin affichage des notifications **/

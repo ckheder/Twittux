@@ -23,8 +23,6 @@ const spinner = document.querySelector('.spinner'); // div qui accueuillera le s
 
 const spaninputadduser = document.querySelector('#inputadduser'); // zone située dans le fenetre modale d'envoi d'invitation à rejojndre une conversation, remplie dynamiquement en javascript
 
-const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket IO
-
 var gettypeconv; // duo/multiple utilisé lors de la mise à jour de la fonction onclick suite à une désactivation/activation de conversation
 
 var usersinmyconvs = []; // stock tous les utilisateurs faisant parti de mes conversations actives
@@ -363,7 +361,7 @@ room.forEach(item => {
 
 // émission d'un évènement de connexion
 
-socket.emit("connexion", {rooms: rooms, authname: authname, usersinmyconvs: usersinmyconvs}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
+socket.emit("connexion", {rooms: rooms, authname: authname, usersinmyconvs: usersinmyconvs, source: 'messagerie'}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
 
 // on test si mon ou mes destinataires avec qui j'ai une conversation sont connectés
 
@@ -1204,54 +1202,3 @@ else if (Data.Result == 'noinvit')
 
 
 // FIN INVITER A REJOINDRE UNE CONVERSATION
-
-
-// NOTIFICATIONS
-
-var AlertBox = function(id, option) {
- this.show = function(msg) {
-
-     var alertArea = document.querySelector(id);
-     var alertBox = document.createElement('DIV');
-     var alertContent = document.createElement('DIV');
-     var alertClose = document.createElement('A');
-     var alertClass = this;
-     alertContent.classList.add('alert-content');
-     alertContent.innerHTML = msg;
-     alertClose.classList.add('alert-close');
-     alertClose.setAttribute('href', '#');
-     alertBox.classList.add('alert-box');
-     alertBox.appendChild(alertContent);
-     if (!option.hideCloseButton || typeof option.hideCloseButton === 'undefined') {
-       alertBox.appendChild(alertClose);
-     }
-     alertArea.appendChild(alertBox);
-     alertClose.addEventListener('click', function(event) {
-       event.preventDefault();
-       alertClass.hide(alertBox);
-     });
-     if (!option.persistent) {
-       var alertTimeout = setTimeout(function() {
-         alertClass.hide(alertBox);
-         clearTimeout(alertTimeout);
-       }, option.closeTime);
-     }
-
- };
-
- this.hide = function(alertBox) {
-   alertBox.classList.add('hide');
-   var disperseTimeout = setTimeout(function() {
-     alertBox.parentNode.removeChild(alertBox);
-     clearTimeout(disperseTimeout);
-   }, 500);
- };
-};
-
-var alertbox = new AlertBox('#alert-area', {
- closeTime: 5000,
- persistent: false,
- hideCloseButton: false
-});
-
-// FIN NOTIFICATIONS

@@ -19,6 +19,27 @@
 
   var url_tweet; // URL de recherche à charger suivant l'onglet cliqué
 
+
+
+  // ## Node Js ## //
+
+  // connexion au serveur Node JS
+
+  socket.emit("connexion", {rooms: username, source: 'profil'}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
+
+// suppression d'un tweet
+
+  socket.on('deletetweet', function(data)
+{
+
+  var divtweet = document.querySelector('#tweet'+data.idtweet); // on récupère la div contenant le tweet
+
+  divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le tweet
+
+})
+
+  // ## Fin Node JS ##//
+
   // surlignage
 
   // ajout d'un écouteur de clique sur chaque lien du menu
@@ -211,9 +232,7 @@ document.addEventListener('click',function(e){
   else if(Data == 'tweetsupprime')
 {
 
-var divtweet = document.querySelector('#tweet'+idtweet); // on récupère la div contenant le tweet
-
-divtweet.parentNode.removeChild(divtweet); // suppression de la div contenant le tweet
+  socket.emit('userdeletetweet', {idtweet: idtweet, usertweet: authname});
 
 //notification de réussite
 
@@ -362,55 +381,6 @@ document.addEventListener('click',function(e){
        }
 })
 
-/** notifications **/
-
-var AlertBox = function(id, option) {
-  this.show = function(msg) {
-
-      var alertArea = document.querySelector(id);
-      var alertBox = document.createElement('DIV');
-      var alertContent = document.createElement('DIV');
-      var alertClose = document.createElement('A');
-      var alertClass = this;
-      alertContent.classList.add('alert-content');
-      alertContent.innerHTML = msg;
-      alertClose.classList.add('alert-close');
-      alertClose.setAttribute('href', '#');
-      alertBox.classList.add('alert-box');
-      alertBox.appendChild(alertContent);
-      if (!option.hideCloseButton || typeof option.hideCloseButton === 'undefined') {
-        alertBox.appendChild(alertClose);
-      }
-      alertArea.appendChild(alertBox);
-      alertClose.addEventListener('click', function(event) {
-        event.preventDefault();
-        alertClass.hide(alertBox);
-      });
-      if (!option.persistent) {
-        var alertTimeout = setTimeout(function() {
-          alertClass.hide(alertBox);
-          clearTimeout(alertTimeout);
-        }, option.closeTime);
-      }
-
-  };
-
-  this.hide = function(alertBox) {
-    alertBox.classList.add('hide');
-    var disperseTimeout = setTimeout(function() {
-      alertBox.parentNode.removeChild(alertBox);
-      clearTimeout(disperseTimeout);
-    }, 500);
-  };
-};
-
-var alertbox = new AlertBox('#alert-area', {
-  closeTime: 5000,
-  persistent: false,
-  hideCloseButton: false
-});
-
-/** fin affichage de notifications **/
 
 /** LIKE **/
 

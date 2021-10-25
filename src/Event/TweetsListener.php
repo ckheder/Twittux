@@ -73,21 +73,6 @@ class TweetsListener implements EventListenerInterface {
             endforeach;
     }
 
-    // traitement hashtag
-
-    $array_hashtag = $this->getHashtags($data['contenu_tweet']);
-
-      if(count($array_hashtag) != 0) // si des hashtags sont trouvés
-    {
-      foreach ($array_hashtag as $hashtag):
-
-      $hashtag = str_replace('#', '', $hashtag); // suppression du symbole #
-
-      $this->hashtag($hashtag);
-
-      endforeach;
-
-    }
 }
 /**
      * Méthode testnotifcite
@@ -130,7 +115,7 @@ class TweetsListener implements EventListenerInterface {
                     return $at_username;
             }
 
-// fonction d'extraction des hashtag
+// fonction d'extraction des hashtag : récupération des #hashtags
 
             function getHashtags($string)
           {
@@ -142,9 +127,22 @@ class TweetsListener implements EventListenerInterface {
                             $hashtagArray = array_count_values($matches[0]);
 
                             $hashtag_Array = array_keys($hashtagArray);
+
+                              if(count($hashtag_Array) > 0) // si des hashtags sont trouvés
+                            {
+                              foreach ($hashtag_Array as $key => $hashtag):
+
+                              $hashtag = str_replace('#', '', $hashtag); // suppression du symbole #
+
+                              $this->hashtag($hashtag); // envoi à la fonction hashtag() pour traitement en BDD
+
+                              $hashtag_Array[$key] = $hashtag; // mise à jour du tableau avec les hashtags sans #
+
+                              endforeach;
+                            }
                           }
 
-            return $hashtag_Array;
+                            return $hashtag_Array;
 
           }
 

@@ -167,46 +167,17 @@ form_tweet.addEventListener('submit',  function (e) { // on capte l'envoi du for
   })
     .then(function(jsonData) {
 
-
 document.getElementById('modaltweet').style.display='none'; // fermeture modal
 
   if(jsonData.result == 'notweet')
 {
   alertbox.show('<div class="w3-panel w3-red">'+
                 '<p>Impossible de poster ce tweet.</p>'+
-              '</div>.');
+                '</div>.');
 }
 else {
 
-
-
-var el = document.getElementById("list_tweet_" + jsonData.username); // récupération de la div ou l'on va insérer le nouveau tweet
-
-//insertion du nouveau tweet au tout début de la div si elle existe
-
-  if(el)
-{
-
-el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ jsonData.id_tweet+'"><br>'+
-            '<img src="/twittux/img/avatar/'+ jsonData.username+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
-            '<div class="dropdown">'+
-            '<button onclick="openmenutweet('+ jsonData.id_tweet+')" class="dropbtn">...</button>'+
-            '<div id="btntweet'+ jsonData.id_tweet+'" class="dropdown-content">'+
-            '<a class="deletetweet" href="#" onclick="return false;" data_type = "0" data_idtweet="'+ jsonData.id_tweet+'"> Supprimer</a>'+
-            '</div>'+
-            '</div>'+
-            '<h4>'+ jsonData.username+'</h4>'+
-            '<span class="w3-opacity">à l\'instant</span>'+
-            '<hr class="w3-clear">'+
-            '<p>'+ jsonData.contenu_tweet+'</p>'+
-            '<hr class="w3-clear">'+
-            '<span class="w3-opacity"> <a onclick="openmodallike('+ jsonData.id_tweet+')" style="cursor: pointer;"><span class="nb_like_'+ jsonData.id_tweet+'">0</span>'+
-            ' J\'aime</a> - 0 Commentaire(s) - Partagé <span class="nb_share_'+ jsonData.id_tweet+'">0</span> fois</span>'+
-            '<hr><p>'+
-            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ jsonData.id_tweet+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+
-            '<a href="./statut/'+ jsonData.id_tweet+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
-            '</p>'+
-            '</div>');
+  socket.emit('newtweet', {Tweet: jsonData.Tweet, Hashtag: jsonData.Hashtag});
 
 //on vide la formulaire
 
@@ -221,24 +192,21 @@ document.getElementById('charactersRemaining').textContent = '255 caractère(s) 
   alertbox.show('<div class="w3-panel w3-green">'+
                       '<p>Tweet posté.</p>'+
                     '</div>.');
-                  }
-                  else {
 
-                      alertbox.show('<div class="w3-panel w3-green">'+
-                                          '<p>Tweet posté.</p>'+
-                                        '</div>.');
-                  }
 
 }
     }).catch(function(err) {
 
-// notification d'échec
+      console.log(err);
+
+    // notification d'échec
 
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème technique empêche de poster ce tweet.</p>'+
-                    '</div>.');
+                      '</div>.');
 
     });
   button_submit_tweet.disabled = false // on réactive le bouton
+
   button_submit_tweet.textContent = buttonTextSubmitTweet// on remet le texte initial du bouton
 })

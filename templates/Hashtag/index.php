@@ -6,13 +6,20 @@
  *
  */ -->
 
-<div class="w3-panel w3-border w3-light-grey">
+ <!--zone de notification -->
+
+ <div id="alert-area" class="alert-area"></div>
+
+<!--fin zone de notification  -->
+
+<div class="list_hashtag w3-panel w3-border w3-light-grey">
 
   <h4 class="w3-center"><i class="fas fa-globe"></i> Tendances</h4>
 
     <?php foreach ($hashtags as $hashtags): ?>
 
-        <p>
+        <p class="itemhashtag">
+
             <strong>
 
               <!-- nom du hashtag -->
@@ -25,22 +32,44 @@
 
               <!-- nombre de post contenant le hashtag -->
 
-                        <span class="w3-opacity"><?= $hashtags->nb_post_hashtag ?> Tweets</span>
+                    <span class="w3-opacity"><span id="<?= $hashtags->hashtag ?>"><?= $hashtags->nb_post_hashtag ?></span> Tweets</span>
 
         </p>
 
                 <?php endforeach; ?>
 
-              <!--lien pagination -->
+                  <!-- spinner de chargement des données par Infinite Ajax Scroll -->
 
-                <div id="pagination">
+  <div hidden id="spinnerajaxscroll"></div>
 
-                  <?= $this->Paginator->numbers() ?>
+<!-- pagination -->
 
-                  <?= $this->Paginator->next('Next page'); ?>
+<?php
 
-                  <?= $this->Paginator->counter() ?>
+  if ($this->Paginator->hasNext())
+{
 
-                </div>
+ ?>
+
+  <div class="pagination">
+
+
+    <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
+
+</div>
+
+<?php
+
+}
+
+?>
+
+<!-- affichage d'un message une fois atteint le bas de page ou le chargement de tous les éléments -->
+
+<div class="w3-center">
+
+  <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des résultats pour <?= $this->request->getParam('query') ?></div>
+
+</div>
 
 </div>

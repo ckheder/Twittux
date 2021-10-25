@@ -29,6 +29,7 @@
     <?= $this->Html->css('//fonts.googleapis.com/css?family=Athiti'); ?>
     <?= $this->Html->css('//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css');?>
     <?= $this->Html->script('//unpkg.com/@webcreate/infinite-ajax-scroll/dist/infinite-ajax-scroll.min.js'); ?>
+    <?= $this->Html->script('//cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js'); ?>
 </head>
 
 <!-- BODY -->
@@ -131,7 +132,9 @@
 
 <script>
 
-  var username = "<?= $this->request->getParam('username') ?>"; // utlisateur courant
+  var username = "<?= $this->request->getParam('username') ?>"; // nom du profil courant
+
+  var authname = "<?= $authName ?>"; // utilisateur authentifié visitant le profil
 
 </script>
 
