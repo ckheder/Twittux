@@ -13,12 +13,14 @@
 
  var DIVIAS; // Div ou sera chargé les données IAS suivant la page
 
+ var ITEMS; // servira à crée une instance d'Infinite Ajax Scroll si cette variable est supérieur à zéro
+
  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
 
  //à l'ouverture de la page on charge la page des abonnements en AJAX
 
- document.querySelector("#list_following").addEventListener("load", loadSocialItem(currentuser,'following'));
+  document.querySelector("#list_following").addEventListener("load", loadSocialItem(currentuser,'following'));
 
  // rejoindre depuis la page abonné depuis le profil
 
@@ -67,6 +69,7 @@
 
                         DIVIAS = 'list_following'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
 
+                        ITEMS = 'nb_following';
 
    							break;
 
@@ -76,6 +79,8 @@
 
                         DIVIAS = 'list_followers'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
 
+                        ITEMS = 'nb_follower';
+
    							break;
 
    		case "requests": // page des demandes d'abonnement d'une personne
@@ -83,6 +88,9 @@
                         URL = '/twittux/abonnement/demande';
 
                         DIVIAS = 'list_request'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
+
+                        ITEMS = 'nb_attente';
+
    							break;
 
        case "usersblocks": // page des utilisateurs bloqués
@@ -90,6 +98,8 @@
                         URL = '/twittux/userblock';
 
                         DIVIAS = 'list_userblock'; // Nom de la Div à utiliser pour InfiniteAjaxScroll
+
+                        ITEMS = 'nb_user_block';
 
              		break;
 
@@ -124,14 +134,16 @@
 
       document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
 
-    // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page social), on la vide
+        if(document.querySelector('.'+ITEMS+'').textContent > 0) // si il y'a plus d'un résultat, suivant la page chargée, on instancie IAS
+      {
+          // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page social), on la vide
 
-      if(iasfollow)
-    {
-      iasfollow = null;
-    }
+          if(iasfollow)
+        {
+          iasfollow = null;
+        }
 
-    // création d'une nouvelle instance InfiniteAjaxScroll
+          // création d'une nouvelle instance InfiniteAjaxScroll
 
           iasfollow = new InfiniteAjaxScroll('#'+DIVIAS+'', {
            item: '.itemsocial',
@@ -164,6 +176,7 @@
 
            document.querySelector('.no-more').style.opacity = '1';
          })
+      }
   })
 
      // affichage d'erreur si besoin

@@ -14,9 +14,9 @@ var min_characters = 0; // nombre de caractère minimum : on déclenche l'appel 
 
 var titlepage = document.querySelector('title'); // récupération du titre de la page
 
-  const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket IO
+const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket IO
 
-// detetction mobile
+// detection mobile
 
     var hasTouchScreen = false;
     if ("maxTouchPoints" in navigator) {
