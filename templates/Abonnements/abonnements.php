@@ -30,8 +30,6 @@
                 <div id="alert-area" class="alert-area"></div>
               <!--fin zone de notification sur l'état de de la suppression d'un abonnement -->
 
-              <br />
-
               <div id="list_following">
 
                 <?php foreach ($abonnement_valide as $abonnement_valide): ?>

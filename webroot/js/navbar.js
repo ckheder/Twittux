@@ -108,21 +108,55 @@ autocomplete_zone.style.display='none';
             '</div>');
           }
 
-    // traitement hashtag
+    // traitement des hashtags
 
-    // on récupère les éventuels hashtags utilisés
+      // on récupère les éventuels hashtags utilisés
 
-    var hashtagarray = data.Hashtag;
+        var hashtagarray = data.Hashtag;
 
-    // on vérifie si, pour chacun d'entre eux, ils existent dans les encarts de hashtag(news, profil et page trending).
-    // si oui, on incrémente leur compteur de 1
+    // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
 
         hashtagarray.forEach(element => 
       {
-          if(document.querySelector('#'+element+''))
+        var hashtagitem = document.querySelector('#'+element+'');
+
+          if(hashtagitem) // si le hashtag existe
         {
-          document.querySelector('#'+element+'').textContent ++;
+
+          //on incrémente le compteur de 1
+
+          hashtagitem.querySelector('#'+element+' span[class="nbtweets"]').textContent ++;
+
+          // on récupère l'élément au dessus du hashtag
+
+          var prevhashtagitem = hashtagitem.previousElementSibling;
+
+          // si cet élément est un paragraphe (donc le hashtag le plus populaire n'est pas utilisé)
+
+            if(prevhashtagitem.tagName == 'P')
+          {
+              // si le nombre de tweets pour ce hashtag est supérieur à celui au dessus, on échange leur place
+
+              if(hashtagitem.querySelector('.nbtweets').textContent > prevhashtagitem.querySelector('.nbtweets').textContent)
+            {
+              hashtagitem.parentNode.insertBefore(hashtagitem, prevhashtagitem);
+            }
+          }
+
         }
+
+            else if(document.querySelector('.list_hashtag') || typeof hashtagitem !== "undefined") // si je suis sur la page trending et que le hashtag n'existe pas on le crée à la fin
+          {
+
+            document.querySelector('#spinnerajaxscroll').insertAdjacentHTML('beforebegin','<p class="itemhashtag" id="'+element+'">'+
+                                '<strong>'+
+                                '<a href="/twittux/search/hashtag/%23'+element+'" class="w3-text-blue">#'+element+'</a>'+
+                                '</strong>'+
+                                '<br />'+
+                                '<span class="w3-opacity"><span class="nbtweets">1</span> Tweets</span>'+
+                                '</p>');
+          }
+
       }
       
       );

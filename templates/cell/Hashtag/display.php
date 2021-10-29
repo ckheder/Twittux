@@ -10,18 +10,19 @@
 
 			foreach ($list_hashtag as $list_hashtag):?>
 
-  <p>
-				<strong>
+  				<p id="<?= $list_hashtag->hashtag ?>">
 
-				<a href="/twittux/search/hashtag/%23<?= $list_hashtag->hashtag ?>" class="w3-text-blue">#<?= $list_hashtag->hashtag ?></a>
+					<strong>
 
-				</strong>
+						<a href="/twittux/search/hashtag/%23<?= $list_hashtag->hashtag ?>" class="w3-text-blue">#<?= $list_hashtag->hashtag ?></a>
 
-        <br />
+					</strong>
 
-        		<span class="w3-opacity"><span id="<?= $list_hashtag->hashtag ?>"><?= $list_hashtag->nb_post_hashtag ?></span> Tweets</span>
+        			<br />
 
-  </p>
+        			<span class="w3-opacity"><span class="nbtweets"><?= $list_hashtag->nb_post_hashtag ?></span> Tweets</span>
+
+ 				 </p>
 
 <?php
 

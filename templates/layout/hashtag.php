@@ -94,10 +94,6 @@ use Cake\Routing\Router;
 
 <!-- Right Column -->
 
-  </div>
-
-  </div>
-
   <?= $this->Html->script('hashtag.js'); ?> <!-- Infinite Ajax Scroll de la liste des hashtags -->
 
 </body>

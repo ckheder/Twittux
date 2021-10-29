@@ -18,7 +18,7 @@
 
     <?php foreach ($hashtags as $hashtags): ?>
 
-        <p class="itemhashtag">
+        <p class="itemhashtag" id="<?= $hashtags->hashtag ?>">
 
             <strong>
 
@@ -32,7 +32,7 @@
 
               <!-- nombre de post contenant le hashtag -->
 
-                    <span class="w3-opacity"><span id="<?= $hashtags->hashtag ?>"><?= $hashtags->nb_post_hashtag ?></span> Tweets</span>
+                    <span class="w3-opacity"><span class="nbtweets"><?= $hashtags->nb_post_hashtag ?></span> Tweets</span>
 
         </p>
 
@@ -68,7 +68,7 @@
 
 <div class="w3-center">
 
-  <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des résultats pour <?= $this->request->getParam('query') ?></div>
+  <div class="no-more w3-btn w3-round w3-blue-grey disabled">Fin des résultats</div>
 
 </div>
 
