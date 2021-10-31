@@ -220,10 +220,6 @@ class MessagerieController extends AppController
                 return $this->response->withType("application/json")->withStringBody(json_encode($data));
               }
 
-
-
-
-
             }
 
               else // message non envoyé

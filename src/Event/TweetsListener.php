@@ -20,140 +20,122 @@ class TweetsListener implements EventListenerInterface {
 
     public function implementedEvents(): array {
         return [
-            'Model.Tweets.afteradd' => 'afteradd'
+            'Model.Tweets.afteradd' => 'notifcitation'
         ];
     }
 
 /**
-     * Méthode afteradd
+     * Méthode notifcitation
      *
-     * Extraire les username de mes posts et envoi de notification de citation si accepté pour chacun, traitement des hashtag
+     * Création d'une notification de citation
      *
-     * Paramètres : $data -> tableau contenant le nom de la persone qui vient de tweeter et le tweet en question
+     * Paramètres : $usertweet => utilisateur ayant cité, $usercitation => utilisateur cité, $idtweet => identifiant du tweet concerné
      *
 */
 
-    public function afteradd($event, $data) {
+      public function notifcitation($event, $usertweet, $usercitation, $idtweet) 
+    {
 
         // envoi d'une notification a chaque personne cité dans un tweet
 
         $entity = TableRegistry::get('Notifications');
 
-        $array_username = $this->getUsernames($data['contenu_tweet']);
+        $notif = '<img src="/twittux/img/avatar/'.$usertweet.'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/"/><a href="/twittux/'.$usertweet.'" class="w3-text-indigo">'.$usertweet.'</a> à vous à cité dans un <a href="/twittux/statut/'.$idtweet.'" class="w3-text-indigo">tweet.</a>';
 
-        if(count($array_username) != 0) // si le tableau n'est pas vide
-    {
-        //on parcourt le tableau de résultat et on vérifie pour chaque personne si il accepte les notifications de citation
+        $notif_cite = $entity->newEmptyEntity();
 
-            foreach ($array_username as $at_username):
+        $notif_cite->user_notif = $usercitation;
 
-                $username = str_replace('>@', '', $at_username);
+        $notif_cite->notification = $notif;
 
-            if($username != $data['username'])
+        $notif_cite->statut = 0;
 
-        {
-                if($this->testnotifcite($username) == 'oui')
-            {
+        $notif_cite->created =  Time::now();
 
-                $notif = '<img src="/twittux/img/avatar/'.$data['username'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/"/><a href="/twittux/'.$data['username'].'" class="w3-text-indigo">'.$data['username'].'</a> à vous à cité dans un <a href="/twittux/statut/'.$data['id_tweet'].'" class="w3-text-indigo">tweet.</a>';
+        $entity->save($notif_cite);
 
-                $notif_cite = $entity->newEmptyEntity();
-
-                $notif_cite->user_notif = $username;
-
-                $notif_cite->notification = $notif;
-
-                $notif_cite->statut = 0;
-
-                $notif_cite->created =  Time::now();
-
-                $entity->save($notif_cite);
-            }
-        }
-            endforeach;
     }
 
-}
 /**
-     * Méthode testnotifcite
+     * Méthode getUsernames
      *
-     * Vérifie si le username en paramètre accepte les notifications de citation
+     * Extraction des usernames précédés d'un @ dans un tweet
      *
-     * Paramètres : $username -> nom de la personne
+     * Paramètres : $string => le tweet posté
      *
 */
-                private function testnotifcite($username)
-            {
-                $table_settings = TableRegistry::get('Settings');
 
-                $query = $table_settings->find()
-                                        ->select(['notif_citation'])
-                                        ->where(['username' => $username ]);
+            function getUsernames($string)
+          {
 
-            foreach ($query as $verif_notif)
+              preg_match_all("/(^|[^@\w])@(\w{1,15})\b/", $string, $matches); // recherche par Regex
+
+                  if ($matches) // si il y'a des résultats, on les stocks dans un tableau
                 {
-                  $notification_citation = $verif_notif['notif_citation'];
-                }
-
-             return $notification_citation;
-            }
-
-// fonction d'extraction des username
-
-                function getUsernames($string)
-            {
-                $at_username = FALSE;
-
-                preg_match_all("/(^|[^@\w])@(\w{1,15})\b/", $string, $matches);
-
-                    if ($matches)
-                {
-                    $atusernameArray = array_count_values($matches[0]);
+                    $atusernameArray = array_count_values($matches[0]); // comptage des valeurs du tableau
 
                     $at_username = array_keys($atusernameArray);
-                }
-                    return $at_username;
-            }
+                
+                    if(count($at_username) > 0) // si des hashtags sont trouvés
+                  {
+                    foreach ($at_username as $key => $username):
 
-// fonction d'extraction des hashtag : récupération des #hashtags
+                    $username = str_replace('>@', '', $username); // suppression du symbole @
+
+                    $at_username[$key] = $username; // mise à jour du tableau avec les username sans @
+
+                    endforeach;
+                  }
+                } 
+                    return $at_username;
+          }
+
+/**
+     * Méthode getHashtags
+     *
+     * Extraction des mots précédés d'un # dans un tweet
+     *
+     * Paramètres : $string => le tweet posté
+     *
+*/
 
             function getHashtags($string)
           {
 
-            preg_match_all("/(#\w+)/u", $string, $matches);
+            preg_match_all("/(#\w+)/u", $string, $matches); // recherche par Regex
 
-            if ($matches) {
+              if ($matches) // si il y'a des résultats, on les stocks dans un tableau
+            {
+                $hashtagArray = array_count_values($matches[0]); // comptage des valeurs du tableau
 
-                            $hashtagArray = array_count_values($matches[0]);
+                $hashtag_Array = array_keys($hashtagArray);
 
-                            $hashtag_Array = array_keys($hashtagArray);
+                if(count($hashtag_Array) > 0) // si des hashtags sont trouvés
+              {
+                foreach ($hashtag_Array as $key => $hashtag):
 
-                              if(count($hashtag_Array) > 0) // si des hashtags sont trouvés
-                            {
-                              foreach ($hashtag_Array as $key => $hashtag):
+                $hashtag = str_replace('#', '', $hashtag); // suppression du symbole #
 
-                              $hashtag = str_replace('#', '', $hashtag); // suppression du symbole #
+                $this->hashtag($hashtag); // envoi à la fonction hashtag() pour traitement en BDD
 
-                              $this->hashtag($hashtag); // envoi à la fonction hashtag() pour traitement en BDD
+                $hashtag_Array[$key] = $hashtag; // mise à jour du tableau avec les hashtags sans #
 
-                              $hashtag_Array[$key] = $hashtag; // mise à jour du tableau avec les hashtags sans #
+                endforeach;
+              }
+            }
 
-                              endforeach;
-                            }
-                          }
-
-                            return $hashtag_Array;
+            return $hashtag_Array;
 
           }
 
-            /**
-                 * Méthode hashtag
-                 *
-                 * Vérifie si le hashtag utilisé existe déjà
-                 *
-                 * Paramètres : $hashtag -> variable contenant un hashtag préalablement trouvé
-                 *
-            */
+/**
+      * Méthode hashtag
+      *
+      * Vérifie si le hashtag utilisé existe déjà
+      *
+      * Paramètres : $hashtag -> variable contenant un hashtag préalablement trouvé
+      *
+*/
 
               private function hashtag($hashtag)
             {

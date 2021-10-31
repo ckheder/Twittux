@@ -293,20 +293,32 @@ class TweetsController extends AppController
 
                 unset($tweet["private"], $tweet["allow_comment"]);
 
-                // déclenchement d'un évènement destiné à voir si des utilisateurs sont mentionnés
-
-                $event = new Event('Model.Tweets.afteradd', $this, ['data' => $data]);
-
-                $this->getEventManager()->dispatch($event);
-
                 // récupération d'une instance du TweetsListener afin d'utiliser une fonction qui va nous renvoyer les hashtags
+
                 // éventuels du tweet posté afin des traiter en JS pour incrémenter les listes de hashtags
 
                 $tweetslistener = new TweetsListener();
 
                 $this->Tweets->getEventManager()->on($tweetslistener);
 
-                $hashtagstweet = $tweetslistener->getHashtags($data['contenu_tweet']);
+                $hashtagstweet = $tweetslistener->getHashtags($data['contenu_tweet']); // récupération des hashtags sans le # pour traitement en JS dans les cells et sur la page tendance
+
+                $citationtweet = $tweetslistener->getUsernames($data['contenu_tweet']); // récupération des utilisateurs cités dans un tweet
+
+                  foreach($citationtweet as $citationtweet) // on vérifie , pour chaque utilisateur cités , si il accepte les notifications de citation
+                {
+
+                      if(AppController::check_notif('citation', $citationtweet)) // notification acceptée
+                    {
+
+                      // Evènement de création d'une notification de citation
+
+                      $event = new Event('Model.Tweets.afteradd', $this, ['usertweet' => $data['username'], 'usercitation' => $citationtweet, 'idtweet' => $data['id_tweet']]);
+
+                      $this->getEventManager()->dispatch($event);
+
+                    }
+                }
 
                 // renvoi d'une réponse JSON
 
