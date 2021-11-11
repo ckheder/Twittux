@@ -98,17 +98,17 @@ class UserConversationController extends AppController
 
       // on vérifie pour chaque utilisateur invité si il fait partie déjà de la conversation
 
-    foreach($invituser as $invituser)
+    foreach($invituser as $invitusers)
   {
 
-      if($invituser != $this->Authentication->getIdentity()->username) // je ne peut pas m'inviter moi même
+      if($invitusers != $this->Authentication->getIdentity()->username) // je ne peut pas m'inviter moi même
     {
 
-          if($this->isinconv($conversation, $invituser) === 'non')
+          if($this->isinconv($conversation, $invitusers) === 'non')
         {
 
           $data = array('whoinvit' => $this->Authentication->getIdentity()->username, // compte courant invitant
-                        'usertoinvit' => $invituser, // personne invitée
+                        'usertoinvit' => $invitusers, // personne invitée
                         'conversation' => $conversation, // identifiant de la conversation
                         'typeconv' => $typeconv);
 
@@ -135,7 +135,7 @@ class UserConversationController extends AppController
 {
 
   return $this->response->withType('application/json')
-                      ->withStringBody(json_encode(['Result' => 'invitok']));
+                      ->withStringBody(json_encode(['Result' => 'invitok', 'notifjoinconv' => $invituser]));
 }
 
   }

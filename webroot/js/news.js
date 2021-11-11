@@ -15,6 +15,10 @@ let url_news; // URL charger suivant l'onglet cliqué : news les plus récentes 
 
 let zone_abo = null; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
 
+//**Connexion NODE JS */
+
+socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
+
 //**NAVIGATION **//
 
 // surlignage
@@ -203,6 +207,11 @@ document.addEventListener('click',function(e){
 
     zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
+      if(Data.notifabo == 'oui') // si la personne accepte les notifications d'abonnements, on émet 1 évènement Node JS
+    {
+      socket.emit('newabo', data.username);
+    }
+
     break;
 
   // impossible d'ajouter un nouvel abonnement
@@ -257,6 +266,11 @@ document.addEventListener('click',function(e){
     // bouton pour annuler ma demande d'abonnement
 
       zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+
+        if(Data.notifabo == 'oui') // si la personne accepte les notifications d'abonnements, on émet 1 évènement Node JS
+      {
+        socket.emit('newabo', data.username);
+      }
 
     break;
 
@@ -420,8 +434,13 @@ document.addEventListener('click',function(e){
     case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
 
                       alertbox.show('<div class="w3-panel w3-green">'+
-                      '<p>Post partagé.</p>'+
-                    '</div>.');
+                                    '<p>Post partagé.</p>'+
+                                    '</div>.');
+
+                      if(Data.notifshare == 'oui') // si la personne accepte les notifications de partage, on émet 1 évènement Node JS
+                    {
+                      socket.emit('newshare', data.auttweet);
+                    }
 
     break;
 

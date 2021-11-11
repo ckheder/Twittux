@@ -185,31 +185,23 @@ class NotificationsController extends AppController
           public function getunreadnotif()
         {
 
-          // Récupération du nombre de notification non lue
+            if ($this->request->is('ajax')) // requête AJAX uniquement
+          {
+
+            // Récupération du nombre de notification non lue
 
             $unreadnotif = $this->Notifications->find()
                                                 ->where(['user_notif' =>  $this->Authentication->getIdentity()->username ,'statut' => 0])
                                                 ->count();
 
-          // Construction d'une réponse au format texte Server Side Event
-          
-                            $output = new CallbackStream(function () use ($unreadnotif)
-                           {
-                              echo "data: $unreadnotif\n\n";
 
-                              sleep(3); // délai de 3 secondes avant renvoi de la réponse
+            return $this->response->withStringBody(strval($unreadnotif));
 
-                              ob_flush();
+          }
 
-                              flush();
-                         });
-
-          // Renvoi d'une réponse
-
-                           return (new Response())
-                           ->withHeader('Content-Type', 'text/event-stream')
-                           ->withHeader('Cache-Control', 'no-cache')
-                           ->withBody($output);
-
+            else // en cas de non requête AJAX on lève une exception 404
+          {
+              throw new NotFoundException(__('Cette page n\'existe pas.'));
+          }
         }
 }

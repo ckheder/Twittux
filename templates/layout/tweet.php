@@ -122,23 +122,23 @@
 
   </div>
 
+  <!-- script JS -->
+
+<?= $this->Html->scriptStart(); ?>
+
         <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-            <?= $this->Html->scriptBlock(sprintf(
-                                                'var csrfToken = %s;',
-                                              json_encode($this->request->getAttribute('csrfToken'))
-                                              )); ?>
+            <?= sprintf(
+                        'var csrfToken = %s;',
+                        json_encode($this->request->getAttribute('csrfToken'))
+                        ); ?>
 
-<!-- script JS -->
+  var username = "<?= $this->request->getParam('username') ?>"; <!-- nom du profil courant -->
 
-<script>
+  var authname = "<?= $authName ?>"; <!-- utilisateur authentifié visitant le profil -->
 
-  var username = "<?= $this->request->getParam('username') ?>"; // nom du profil courant
+<?= $this->Html->scriptEnd();?>
 
-  var authname = "<?= $authName ?>"; // utilisateur authentifié visitant le profil
-
-</script>
-
-        <?= $this->Html->script('profil.js'); ?> <!-- supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
+<?= $this->Html->script('profil.js'); ?> <!-- supprimer un tweet, s'abonner à un profil, affichages des notifications correspondantes -->
 
 </body>
 

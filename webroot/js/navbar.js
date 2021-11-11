@@ -4,8 +4,6 @@
 
 //variable
 
-const evtSource = new EventSource("/twittux/notifications/unreadnotif"); // URL du controller en charge de calculer le nombre de notification non lue
-
 var searchInput = document.querySelector('.input-search'); // input de recherche
 
 var autocomplete_zone = document.getElementById("autocomplete-results"); // zone des résultats
@@ -39,6 +37,80 @@ const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket 
         }
     }
 
+// Recherche de nouvelles notifications au changement de page
+
+  if (hasTouchScreen === false) // je ne suis pas sur mobile
+{
+  var nbunreadnotif = document.getElementById('desktopscreensnav').querySelector('.nbunreadnotif'); // nombre de notification non lue sur le badge rouge de la navbar desktop
+}
+  else if(hasTouchScreen === true) // je suis sur mobile
+{
+  var nbunreadnotif = document.getElementById('smallscreensnav').querySelector('.nbunreadnotif'); // nombre de notification non lue sur le badge rouge de la navbar mobile
+}
+
+// appel de la fonction checkunreadnotif() au chargement de la page
+
+  nbunreadnotif.addEventListener("load", checkunreadnotif());
+
+  // Recherche toutes les notifications non lues
+
+  function checkunreadnotif()
+{
+  fetch('/twittux/notifications/unreadnotif', { // URL de recherche
+
+    headers: {
+                'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+              }
+  })
+  .then(function (data) {
+    return data.text();
+  })
+.then(function (Data) {
+
+    if(Data > 0) // si j'ai plus d'une notification non lue
+  {
+
+      if (hasTouchScreen === false) // version Desktop
+    {
+      // on retire le nombre de notifications précédents
+
+      titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
+
+      // on ajoute sur le titre de la page le nombre de notifications non lues
+      
+      titlepage.textContent  = "(" + Data + ")" + titlepage.textContent;
+      
+    }
+      else // version mobile : apparition d'une pastille rouge sur le menu mobile
+    {
+      document.querySelector('.dot').style.display='inline-block'; // apparition d'un rond rouge sur le menu déroulant pour signaler de nouvelles notifications non lues
+    }
+
+    nbunreadnotif.textContent = Data; // affichage sur le badge du nombre de notification non lue
+
+  }
+    else // 0 notifications
+  {
+      if (hasTouchScreen === true) // version mobile
+    {
+      document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+    }
+  
+      else // version Desktop
+    {
+      titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
+    }
+  
+    // on supprime le nombre de notifications non lues du titre de la page
+  
+    nbunreadnotif.innerHTML = ''; // on efface le badge rouge
+  
+  }
+
+})
+
+};
+
 // Affichage du menu sur les petits résolutions en cliquant sur la bouton
 
   function openNav()
@@ -63,6 +135,32 @@ autocomplete_zone.style.display='none';
 
 // ## NODE JS ## //
 
+// nouvelle notification //
+
+  socket.on('newnotif', function()
+{
+
+    if(nbunreadnotif.innerHTML) // si  il y'a minimum 1 notification non lue
+  {
+    nbunreadnotif.textContent ++;
+  }
+    else // si il n'y a aucune notification
+  {
+    nbunreadnotif.innerHTML = 1;
+  }
+
+  // mise à jour du titre de la page
+
+    // on retire le nombre de notifications précédents
+
+    titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
+
+    // on ajoute sur le titre de la page le nombre de notifications non lues
+
+    titlepage.textContent  = "(" + nbunreadnotif.textContent + ")" + titlepage.textContent;
+
+});
+
 // ajout d'un tweet et traitement hashtag
 
   socket.on('addtweet', function(data)
@@ -70,7 +168,7 @@ autocomplete_zone.style.display='none';
 
     var el = document.getElementById("list_tweet_" + data.Tweet['username']); // récupération de la div ou l'on va insérer le nouveau tweet
 
-    if(el)
+    if(el) // si cette div existe, on est donc sur l apage des profils
   {
 
     var lientweet; // lien qui s'afficheront sur le menu déroulant du tweet suivant les différents scénarios
@@ -84,7 +182,7 @@ autocomplete_zone.style.display='none';
       lientweet = '<a href="#">Signaler ce post </a>'
     }
 
-    // insertion du lien
+    // insertion du tweet
 
       el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ data.Tweet['id_tweet']+'"><br>'+
             '<img src="/twittux/img/avatar/'+ data.Tweet['username']+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
@@ -114,7 +212,7 @@ autocomplete_zone.style.display='none';
 
         var hashtagarray = data.Hashtag;
 
-    // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
+      // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
 
         hashtagarray.forEach(element => 
       {
@@ -122,7 +220,6 @@ autocomplete_zone.style.display='none';
 
           if(hashtagitem) // si le hashtag existe
         {
-
           //on incrémente le compteur de 1
 
           hashtagitem.querySelector('#'+element+' span[class="nbtweets"]').textContent ++;
@@ -144,7 +241,6 @@ autocomplete_zone.style.display='none';
           }
 
         }
-
             else if(document.querySelector('.list_hashtag') || typeof hashtagitem !== "undefined") // si je suis sur la page trending et que le hashtag n'existe pas on le crée à la fin
           {
 
@@ -160,65 +256,9 @@ autocomplete_zone.style.display='none';
       }
       
       );
-
 })
 
 // ## FIN NODE JS ## //
-
-// actualisation du nombre de notifcations non lues
-
-evtSource.onmessage = function (event) {
-
-    if(event.data > 0) // si j'ai 1 notification minimum
-  {
-
-    if (hasTouchScreen === false) // je ne suis pas sur mobile
-  {
-    document.querySelector('.nbunreadnotif').innerHTML = event.data; // mise à jour du nombre de notification non lue sur le badge de la navbar
-  }
-    else // je suis sur mobile
-  {
-    document.querySelector('.nbunreadnotifres').innerHTML = event.data; // mise à jour du nombre de notification sur le badge rouge à côté du lien vers les notifications
-
-    document.querySelector('.dot').style.display='inline-block'; // apparition d'un rond rouge sur le menu déroulant pour signaler de nouvelles notifications non lues
-  }
-
-// mise à jour du titre de la page
-
-// on retire le nombre de notifications précédents
-
-  titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
-
-// on ajoute sur le titre de la page le nombre de notifications non lues
-
-  titlepage.textContent  = "(" + event.data + ")" + titlepage.textContent;
-
-}
-  else // 0 notifications
-{
-    if (hasTouchScreen === true) // je  suis sur mobile
-  {
-
-    document.querySelector('.nbunreadnotifres').innerHTML = ''; // on efface le badge rouge
-
-    document.querySelector('.dot').style.display='none'; // on efface le rond rouge
-
-  }
-
-    else // je ne suis pas sur mobile
-  {
-
-    document.querySelector('.nbunreadnotif').innerHTML = ''; // on efface le badge rouge
-
-  }
-
-// on supprime le nombre de notifications non lues du titre de la page
-
-  titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
-
-}
-
-}
 
 // autocomplétion
 

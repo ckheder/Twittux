@@ -94,7 +94,15 @@ use Cake\Routing\Router;
 
 <!-- Right Column -->
 
-  <?= $this->Html->script('hashtag.js'); ?> <!-- Infinite Ajax Scroll de la liste des hashtags -->
+<!-- script JS -->
+
+<?= $this->Html->scriptStart(); ?>
+
+  var authname = "<?= $authName ?>"; <!-- utilisateur authentifié -->
+
+<?= $this->Html->scriptEnd();?>
+
+<?= $this->Html->script('hashtag.js'); ?> <!-- Infinite Ajax Scroll de la liste des hashtags -->
 
 </body>
 

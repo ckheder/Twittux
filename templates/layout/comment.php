@@ -99,17 +99,9 @@
 
     </div>
 
-          <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-          <?= $this->Html->scriptBlock(sprintf(
-                                                'var csrfToken = %s;',
-                                              json_encode($this->request->getAttribute('csrfToken'))
-                                              )); ?>
-
-<!-- script JS -->
-
 <!-- test pour déterminer si le tweet visité est privé ou public : va servir en javascript pour charger ou non des éléments comme le formulaire de commentaire -->
 
-<?php
+    <?php
 
   if(isset($no_see)) // si la variable existe dans la vue, c'est un tweet privé
 {
@@ -122,15 +114,25 @@
 
 ?>
 
-<script>
+<!-- script JS -->
 
-var no_see = "<?= $no_see ?>";
+  <?= $this->Html->scriptStart(); ?>
 
-var authname = "<?= $authName ?>"; // nom de l'autilisateur authentifié
+          <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
+          <?= sprintf(
+                        'var csrfToken = %s;',
+                        json_encode($this->request->getAttribute('csrfToken'))
+                      ); ?>
 
-</script>
 
-          <?= $this->Html->script('commentaire.js'); ?> <!-- ajout d'un commentaire, supprimer un commentaire,emoji -->
+
+    var no_see = "<?= $no_see ?>"; <!-- envoi de la variable no_see au script Javascript -->
+
+    var authname = "<?= $authName ?>"; <!-- nom de l'autilisateur authentifié -->
+
+  <?= $this->Html->scriptEnd();?>
+
+  <?= $this->Html->script('commentaire.js'); ?> <!-- ajout d'un commentaire, supprimer un commentaire,emoji -->
 
 </body>
 

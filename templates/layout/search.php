@@ -117,38 +117,42 @@ use Cake\Routing\Router;
 
   </div>
 
-          <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-          <?= $this->Html->scriptBlock(sprintf(
-                                                'var csrfToken = %s;',
-                                              json_encode($this->request->getAttribute('csrfToken'))
-                                              )); ?>
+  <!-- détermine si la recherche ce fait sur les hashtags ou non (utilisé en AJAX) -->
 
-<!-- détermine si la recherche ce fait sur les hashtags ou non (utilisé en AJAX) -->
+  <?php
 
-    <?php
+  if(Router::url(null, false) === Router::url(['_name' => 'search', 'query' => $this->request->getParam('query')]))
+{
+  $currenturl =  'search';
+}
+  else
+{
+  $currenturl =  'hashtag';
+}
 
-      if(Router::url(null, false) === Router::url(['_name' => 'search', 'query' => $this->request->getParam('query')]))
-    {
-      $currenturl =  'search';
-    }
-      else
-    {
-      $currenturl =  'hashtag';
-    }
-
-    ?>
+?>
 
 <!-- script JS -->
 
-<script>
+<?= $this->Html->scriptStart(); ?>
 
-  var keyword = "<?= $this->request->GetParam('query') ?>"; // mot clé de a recherche
+          <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
+          <?= sprintf(
+                        'var csrfToken = %s;',
+                        json_encode($this->request->getAttribute('csrfToken'))
+                      ); ?>
 
-  var currenturl = "<?= $currenturl ?>"; // savoir sur quel "groupe" d'url je me trouve : hashtag/search
 
-</script>
+  var keyword = "<?= $this->request->GetParam('query') ?>"; <!-- mot clé de a recherche -->
 
-        <?= $this->Html->script('search.js'); ?> <!-- traitement des liens du menu, ajout/demande/suppression d'ami depuis les résultats de recherche -->
+  var currenturl = "<?= $currenturl ?>"; <!-- savoir sur quel "groupe" d'url je me trouve : hashtag/search -->
+
+  var authname = "<?= $authName ?>"; <!-- utilisateur authentifié --> 
+
+<?= $this->Html->scriptEnd();?>
+
+<?= $this->Html->script('search.js'); ?> <!-- traitement des liens du menu, ajout/demande/suppression d'ami depuis les résultats de recherche -->
+
 </body>
 
 </html>

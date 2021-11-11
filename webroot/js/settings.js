@@ -5,6 +5,10 @@
  *
  */
 
+//**Connexion NODE JS */
+
+socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
+
 // désactivation du copier coller pour les champs mail et mot de passe de confirmation
 
 document.querySelectorAll("#confirmemail, #confirmpassword").forEach(item => {

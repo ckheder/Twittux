@@ -7,6 +7,10 @@
 
 const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
+//**Connexion NODE JS */
+
+socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
+
 iashashtag = null;
 
 // création d'une nouvelle instance InfiniteAjaxScroll

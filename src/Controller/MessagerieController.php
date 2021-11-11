@@ -194,19 +194,22 @@ class MessagerieController extends AppController
                 $this->getEventManager()->dispatch($event);
               }
 
-
-                  foreach($destinataire as $destinataire) // on vérifie , pour chaque destinataire , si il accepte les notifications de nouveaux message
+                  foreach($destinataire as $key => $destinataires) // on vérifie , pour chaque destinataire , si il accepte les notifications de nouveaux message
                 {
 
-                      if(AppController::check_notif('message', $destinataire, $conversation) == 'oui') // notification acceptée
+                      if(AppController::check_notif('message', $destinataires, $conversation) == 'oui') // notification acceptée
                     {
 
                       // Evènement de création d'une notification de nouveau message
 
-                      $event = new Event('Model.Messagerie.afteradd', $this, ['data' => $data,'destinataire' => $destinataire,'typeconv' => $typeconv]);
+                      $event = new Event('Model.Messagerie.afteradd', $this, ['data' => $data,'destinataire' => $destinataires,'typeconv' => $typeconv]);
 
                       $this->getEventManager()->dispatch($event);
 
+                    }
+                      else // notification refusée
+                    {
+                      unset($destinataire[$key]);
                     }
                 }
 
@@ -215,9 +218,9 @@ class MessagerieController extends AppController
                 return $this->response->withType('application/json')
                                   ->withStringBody(json_encode(['Result' => 'msgok','conversation' => $conversation,'user_message' => $this->Authentication->getIdentity()->username,'message' => $data['message']]));
               }
-                else
+                else // envoi depuis une conversation
               {
-                return $this->response->withType("application/json")->withStringBody(json_encode($data));
+                return $this->response->withType("application/json")->withStringBody(json_encode(['message' => $data, 'notifnewmessage' => $destinataire]));
               }
 
             }

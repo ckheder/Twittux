@@ -21,14 +21,14 @@ let form_comm = document.querySelector('#form_comm') // récupération du formul
 
 // connexion au serveur Node JS
 
-socket.emit("connexion", {rooms: idtweet, source: 'comment'}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
+  socket.emit("connexion", {rooms: idtweet, authname: authname}); // on transmet un identifiant de room correspondant au tweet en cours de visite et mon authname
 
 // évènement ajout d'un commentaire
 
   socket.on('addcomm', function(data)
 {
 
-  var testlink; // lien qui s'afficheront suivant les différents scénarios
+    var testlink; // lien qui s'afficheront suivant les différents scénarios
 
     if(data.auttweet == authname) // si je suis l'auteur du tweet...
   {
@@ -58,7 +58,6 @@ socket.emit("connexion", {rooms: idtweet, source: 'comment'}); // on transmet mo
     else // pour tous les autres  : personne qui lit le commentaire et qui n'en ai ni l'auteur ni le propriétaire du tweet
   {
     testlink = '<a class="blockuser" href="" onclick="return false;" data_username="'+data.username+'">Bloquer '+data.username+'</a>'+
-
                 '<a class="signalcomm" href="" onclick="return false;"> Signaler</a>';
   }
 
@@ -85,6 +84,7 @@ socket.emit("connexion", {rooms: idtweet, source: 'comment'}); // on transmet mo
   //on vide la formulaire
 
   form_comm.reset();
+
 })
 
 // mise à jour d'un commentaire
@@ -143,7 +143,6 @@ socket.emit("connexion", {rooms: idtweet, source: 'comment'}); // on transmet mo
   // mise à jour nombre de commentaire : décrémentation
 
   nb_comm.textContent --;
-
 
 })
 

@@ -91,6 +91,9 @@ class CommentairesController extends AppController
                     $event = new Event('Model.Commentaire.afteradd', $this, ['data' => $data, 'auttweet' => $auttweet]);
 
                     $this->getEventManager()->dispatch($event);
+
+                    $commentaire['notifnewcomm'] = 'oui'; // on ajoute une information comme quoi l'auteur du tweet accepte les notifications de commentaire et on déclenchera un event Node JS de nouvelle notification
+                    
                   }
                 }
 

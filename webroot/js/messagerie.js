@@ -96,11 +96,11 @@ var usersinmyconvs = []; // stock tous les utilisateurs faisant parti de mes con
     function updatelistconv(data)
   {
 
-    var spanlastmessage = document.querySelector('.idconv[data_idconv="'+data.conversation+'"] span[class="lastmessage"]'); // span contenant le dernier message de la conversation
+    var spanlastmessage = document.querySelector('.idconv[data_idconv="'+data.message['conversation']+'"] span[class="lastmessage"]'); // span contenant le dernier message de la conversation
 
-    var auteurlastmessage = document.querySelector('.idconv[data_idconv="'+data.conversation+'"] span[class="auteurmessager"]'); // span contenant l'auteur du dernier message
+    var auteurlastmessage = document.querySelector('.idconv[data_idconv="'+data.message['conversation']+'"] span[class="auteurmessager"]'); // span contenant l'auteur du dernier message
 
-    spanlastmessage.innerHTML=' : '+data.message+' - 1 seconde'; //mise à jour du dernier message de la conversation
+    spanlastmessage.innerHTML=' : '+data.message['message']+' - 1 seconde'; //mise à jour du dernier message de la conversation
 
       if(data.user_message === authname) // si je suis l'auteur du dernier message : affichage 'Vous' pour moi
     {
@@ -108,74 +108,74 @@ var usersinmyconvs = []; // stock tous les utilisateurs faisant parti de mes con
     }
       else
     {
-      auteurlastmessage.innerHTML=''+data.user_message+''; // sinon affichage de l'auteur pour moi
+      auteurlastmessage.innerHTML=''+data.message['user_message']+''; // sinon affichage de l'auteur pour moi
     }
 
-      document.querySelector('.idconv[data_idconv="'+data.conversation+'"]').setAttribute("style", "font-weight: bolder;"); // mise en couleur CSS pour signifier un nouveau message
+      document.querySelector('.idconv[data_idconv="'+data.message['conversation']+'"]').setAttribute("style", "font-weight: bolder;"); // mise en couleur CSS pour signifier un nouveau message
 
-      document.querySelector('#listconv').prepend(document.querySelector('.idconv[data_idconv="'+data.conversation+'"]')); // la conversation monte en haut pour signlaer un message récent postée
+      document.querySelector('#listconv').prepend(document.querySelector('.idconv[data_idconv="'+data.message['conversation']+'"]')); // la conversation monte en haut pour signlaer un message récent postée
   }
 
 // gestion de l'affichage d'un message envoyé depuis l'index  : affichage si je suis sur l'index ou dans une conversation
 
-  function addmessage(data)
-{
-
-  var auteurmessage; // va déterminer si on affiche 'Vous' pour l'expediteur ou le nom de l'auteur du message
-
-  var avatarauteurmessage; // va déterminer quel sera l'avatar de l'auteur du dernier message
-
-  var etatconnexion; // va déterminer si la personne à qui j'envoi le message est connecté ou pas
-
-    if(!document.querySelector('div[data_idconv="'+data.conversation+'"]')) // conversation inexistante à gauche
+    function addmessage(data)
   {
 
-    // suppression de la div bleue "Aucune conversation en cours" si elle existe
+    var auteurmessage; // va déterminer si on affiche 'Vous' pour l'expediteur ou le nom de l'auteur du message
+
+    var avatarauteurmessage; // va déterminer quel sera l'avatar de l'auteur du dernier message
+
+    var etatconnexion; // va déterminer si la personne à qui j'envoi le message est connecté ou pas
+
+      if(!document.querySelector('div[data_idconv="'+data.message['conversation']+'"]')) // conversation inexistante à gauche
+    {
+
+      // suppression de la div bleue "Aucune conversation en cours" si elle existe
 
         if(document.querySelector('.noconv'))
       {
         document.querySelector('.noconv').parentNode.removeChild(document.querySelector('.noconv'));
       }
 
-  // affichage des informations suivant le cas
+      // affichage des informations suivant le cas
 
-    auteurmessage = (data.user_message === authname) ? "Vous" : data.user_message; // si je suis l'auteur du message -> 'Vous' sinon l'expediteur
+    auteurmessage = (data.message['user_message'] === authname) ? "Vous" : data.message['user_message']; // si je suis l'auteur du message -> 'Vous' sinon l'expediteur
 
-    avatarauteurmessage = (data.user_message === authname) ? data.destinataire : data.user_message; // mon avatar si je suis l'auteur sinon celui de l'expediteur
+    avatarauteurmessage = (data.message['user_message'] === authname) ? data.message['destinataire'] : data.message['user_message']; // mon avatar si je suis l'auteur sinon celui de l'expediteur
 
-    etatconnexion = (data.user_message === authname) ? data.etatconnexion : "green"; // verte si mon destinataire est connecté rouge si il ne l'ais pas
+    etatconnexion = (data.message['user_message'] === authname) ? data.message['etatconnexion'] : "green"; // verte si mon destinataire est connecté rouge si il ne l'ais pas
 
-  // affichage du message envoyé
+      // affichage du message envoyé
 
-    listconv.insertAdjacentHTML('afterbegin','<div class="idconv w3-padding-16" style="font-weight: bolder" onclick="loadConversation(\''+data.conversation+'\', \'oui\', \'duo\')" data_idconv="'+data.conversation+'">'+
-                                '<span class="userconvsin'+data.conversation+'">'+
+    listconv.insertAdjacentHTML('afterbegin','<div class="idconv w3-padding-16" style="font-weight: bolder" onclick="loadConversation(\''+data.message['conversation']+'\', \'oui\', \'duo\')" data_idconv="'+data.message['conversation']+'">'+
+                                '<span class="userconvsin'+data.message['conversation']+'">'+
                                 '<img src="/twittux/img/avatar/'+avatarauteurmessage+'.jpg" alt="image utilisateur" class="w3-circle w3-margin-left" width="60">&nbsp;'+
                                 '<a href="/twittux/'+avatarauteurmessage+'" class="w3-text-blue" data_username="'+avatarauteurmessage+'" title="Voir le profil de '+avatarauteurmessage+'">'+avatarauteurmessage+'</a> <i title="connecté(e)" class="'+avatarauteurmessage+' fas fa-circle '+etatconnexion+'"></i>'+
                                 '</span><br />'+
-                                '&nbsp;&nbsp;<span class="w3-opacity w3-margin-top"><i class="far fa-comment-dots"></i>&nbsp;<span class="auteurmessager">'+auteurmessage+' </span>: <span class="lastmessage">'+data.message+' -  à l\'instant</span>&nbsp;</span>'+
+                                '&nbsp;&nbsp;<span class="w3-opacity w3-margin-top"><i class="far fa-comment-dots"></i>&nbsp;<span class="auteurmessager">'+auteurmessage+' </span>: <span class="lastmessage">'+data.message['message']+' -  à l\'instant</span>&nbsp;</span>'+
                                 '<br />'+
                                 '</div>');
 
     // test si je suis connecté à la conversation et connexion si ce n'est pas le cas
 
-          socket.emit('checkconnconv', data.conversation);
+          socket.emit('checkconnconv', data.message['conversation']);
 
     // ajout de mon destinataire (si il n'existe pas) dans le tableau des utilisateurs avec qui j'ai une conversation
 
-            if(data.user_message === authname)
+            if(data.message['user_message'] === authname)
           {
-              if(usersinmyconvs.indexOf(data.destinataire) === -1)
+              if(usersinmyconvs.indexOf(data.message['destinataire']) === -1)
             {
-              usersinmyconvs.push(data.destinataire);
+              usersinmyconvs.push(data.message['destinataire']);
             }
           }
 
     // ajout pour mon destinataire (si je n'existe pas) dans le tableau des utilisateurs avec qui il a une conversation
             else
           {
-              if(usersinmyconvs.indexOf(data.user_message) === -1)
+              if(usersinmyconvs.indexOf(data.message['user_message']) === -1)
             {
-              usersinmyconvs.push(data.user_message);
+              usersinmyconvs.push(data.message['user_message']);
             }
           }
 
@@ -189,22 +189,22 @@ var usersinmyconvs = []; // stock tous les utilisateurs faisant parti de mes con
 
           // affichage du message dans la conversation
 
-            if(document.getElementById("conv" + data.conversation))
+            if(document.getElementById("conv" + data.message['conversation']))
           {
 
-              if(typeof data.expediteur !== "undefined")
+              if(typeof data.message['expediteur'] !== "undefined")
             {
-              avatarauteurmessage = data.expediteur;
+              avatarauteurmessage = data.message['expediteur'];
             }
             else
             {
-              avatarauteurmessage = data.user_message;
+              avatarauteurmessage = data.message['user_message'];
             }
 
-              document.getElementById("conv" + data.conversation).insertAdjacentHTML('afterbegin', '<div style="word-wrap: break-word;margin-bottom : 15px;" class="w3-container w3-white"><br />'+
+              document.getElementById("conv" + data.message['conversation']).insertAdjacentHTML('afterbegin', '<div style="word-wrap: break-word;margin-bottom : 15px;" class="w3-container w3-white"><br />'+
                                                                                       '<span class="w3-opacity w3-right"><i class="far fa-clock"></i> à l\'instant</span>'+
                                                                                       '<img src="/twittux/img/avatar/'+ avatarauteurmessage+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
-                                                                                      '<p>'+ data.message+'</p><br />'+
+                                                                                      '<p>'+ data.message['message']+'</p><br />'+
                                                                                       '</div>');
 
               // réinitilisation du formulaire d'envoi de message
@@ -361,7 +361,7 @@ room.forEach(item => {
 
 // émission d'un évènement de connexion
 
-socket.emit("connexion", {rooms: rooms, authname: authname, usersinmyconvs: usersinmyconvs, source: 'messagerie'}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
+socket.emit("connexion", {rooms: rooms, authname: authname, usersinmyconvs: usersinmyconvs}); // on transmet mon username et toutes les conversationc précédemment stockés au serveur
 
 // on test si mon ou mes destinataires avec qui j'ai une conversation sont connectés
 
@@ -1024,7 +1024,7 @@ document.addEventListener('click',function(e){
 
                           // on envoi les informations au serveur
 
-                          socket.emit('messagefromindex', {destinataire: document.getElementById("user_message").value, conversation: jsonResult.conversation, user_message: jsonResult.user_message, message: jsonResult.message}); // Transmet le message aux autres
+                          socket.emit('messagefromindex', {destinataire: document.getElementById("user_message").value, conversation: jsonResult.conversation, user_message: jsonResult.user_message, message: jsonResult.message, notifmessage: jsonResult.notifnewmessage}); // Transmet le message aux autres
 
                           // réinitilisation du formulaire
 
@@ -1174,6 +1174,8 @@ form_addtoconv.addEventListener('submit', async function (e) {
   alertbox.show('<div class="w3-panel w3-green">'+
                 '<p>Invitation(s) envoyée(s)</p>'+
                 '</div>.');
+
+  socket.emit('notifinvittojoinconv', Data.notifjoinconv);
 }
 
 // si aucune invitation n'a était envoyée

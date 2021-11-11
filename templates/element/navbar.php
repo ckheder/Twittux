@@ -8,7 +8,7 @@
 
  <div class="w3-top">
 
- <div class="w3-bar w3-black w3-left-align w3-large">
+ <div id="desktopscreensnav" class="w3-bar w3-black w3-left-align w3-large">
 
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-left w3-padding-large w3-hover-white" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i><span class="dot"></span></a>
 
@@ -78,7 +78,7 @@
 
   <a href="/twittux/messagerie" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-envelope"></i> Messagerie</a>
 
-  <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications <span class="w3-badge w3-red nbunreadnotifres"></span></a>
+  <a href="/twittux/notifications" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-bell"></i> Notifications <span class="w3-badge w3-small w3-red nbunreadnotif"></span></a>
 
   <a href="/twittux/settings" class="w3-bar-item w3-button w3-padding-large"><i class="fas fa-users-cog"></i> Paramètres</a>
 

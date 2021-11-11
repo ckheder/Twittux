@@ -17,6 +17,9 @@
 
  const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
+ //**Connexion NODE JS */
+
+  socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
 
  //à l'ouverture de la page on charge la page des abonnements en AJAX
 
@@ -298,6 +301,11 @@ document.addEventListener('click',function(e){
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
+      if(Data.notifabo == 'oui')
+    {
+      socket.emit('newabo', data.username);
+    }
+
     break;
 
     // impossible d'ajouter un nouvel abonnement
@@ -344,6 +352,11 @@ document.addEventListener('click',function(e){
     // bouton pour annuler ma demande d'abonnement
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+
+    if(Data.notifabo == 'oui')
+    {
+      socket.emit('newabo', data.username);
+    }
 
     break;
 

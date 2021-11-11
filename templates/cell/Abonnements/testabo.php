@@ -2,7 +2,7 @@
 
  * testabo.php
  *
- * Affichagde des boutons relatifs à un abonnement: profil, moteur de recherche et toutes les pages abonnements : bonnements, * abonnés
+ * Affichagde des boutons relatifs à un abonnement: profil, moteur de recherche et toutes les pages abonnements : abonnements, abonnés
  *
  */ -->
  

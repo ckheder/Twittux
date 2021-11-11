@@ -122,13 +122,19 @@
 
     </div>
 
+<?= $this->Html->scriptStart(); ?>
+
           <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-          <?= $this->Html->scriptBlock(sprintf(
-                                                'var csrfToken = %s;',
-                                              json_encode($this->request->getAttribute('csrfToken'))
-                                              )); ?>
+          <?= sprintf(
+                      'var csrfToken = %s;',
+                      json_encode($this->request->getAttribute('csrfToken'))
+                      ); ?>
 
 <!-- script JS -->
+
+  var authname = "<?= $authName ?>"; <!-- utilisateur authentifié -->
+
+<?= $this->Html->scriptEnd();?>
 
 <?= $this->Html->script('settings.js'); ?> <!-- traitement des paramètres : mise à jour des informations utilisateur , des préférences de profil et de notifications -->
 

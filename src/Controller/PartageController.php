@@ -64,20 +64,24 @@ class PartageController extends AppController
                 if ($this->Partage->save($share)) // ajout d'un partage réussi, renvoi d'une réponse au format JSON
             {
 
-              if(AppController::check_notif('partage', $jsonData->auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de partage
-            {
-              $data['auttweet'] = $jsonData->auttweet;
+                $notifshare = 'non'; // variable qui va servir à ,si elle vaut 'oui', à émettre un évent Node JS de nouvelle notification
 
-              // Evènement de création d'une notification de commentaire
+                    if(AppController::check_notif('partage', $jsonData->auttweet ) == 'oui') // si l'auteur du tweet accepte les notifications de partage
+                {
+                    $data['auttweet'] = $jsonData->auttweet;
 
-              $event = new Event('Model.Partage.afteradd', $this, ['data' => $data]);
+                    // Evènement de création d'une notification de partage
 
-              $this->getEventManager()->dispatch($event);
-            }
+                    $event = new Event('Model.Partage.afteradd', $this, ['data' => $data]);
 
-                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'addshare']));
+                    $this->getEventManager()->dispatch($event);
+
+                    $notifshare = 'oui';
+                }
+
+                return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'addshare','notifshare' => $notifshare]));
              }
-                else // échec création d'un like, renvoi d'une réponse au format JSON
+                else // échec création d'un partage, renvoi d'une réponse au format JSON
             {
                 return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'probleme']));
             }
@@ -85,11 +89,9 @@ class PartageController extends AppController
 
             else // renvoi d'une réponse JSON signifiant que l'on à déja partagé ce post
         {
-
             return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'existshare']));
         }
     }
-
             else // en cas de non requête AJAX on lève une exception 404
         {
             throw new NotFoundException(__('Cette page n\'existe pas.'));

@@ -184,28 +184,31 @@ use Cake\Datasource\ConnectionManager;
                     if ($this->Abonnements->save($abonnement)) // création d'abonnement réussie, renvoi d'une réponse au format JSON
                 {
 
+                    $notifabo = 'non'; // variable qui va servir à ,si elle vaut 'oui', à émettre un évent Node JS de nouvelle notification
 
-                  if(AppController::check_notif('abonnement', $username ) == 'oui') // si la personne a laquell je m'abonne accepte les notifications d'abonnement
-                {
+                        if(AppController::check_notif('abonnement', $username ) == 'oui') // si la personne a laquell je m'abonne accepte les notifications d'abonnement
+                    {
 
-                  // Evènement de création d'une notification de d'abonnement ou de demande
+                        // Evènement de création d'une notification de d'abonnement ou de demande
 
-                  $event = new Event('Model.Abonnement.afteradd', $this, ['data' => $data]);
+                        $event = new Event('Model.Abonnement.afteradd', $this, ['data' => $data]);
 
-                  $this->getEventManager()->dispatch($event);
+                        $this->getEventManager()->dispatch($event);
 
-                }
+                        $notifabo = 'oui';
 
-                    if($etat == 0) // demande d'abonnement réussie
-                  {
-                    return $this->response->withType('application/json')
-                                        ->withStringBody(json_encode(['Result' => 'demandeok']));
-                  }
-                    else // abonnement réussie
-                  {
-                    return $this->response->withType('application/json')
-                                        ->withStringBody(json_encode(['Result' => 'abonnementajoute']));
-                  }
+                    }
+
+                        if($etat == 0) // demande d'abonnement réussie
+                    {
+                        return $this->response->withType('application/json')
+                                            ->withStringBody(json_encode(['Result' => 'demandeok','notifabo' => $notifabo]));
+                    }
+                         else // abonnement réussie
+                    {
+                        return $this->response->withType('application/json')
+                                            ->withStringBody(json_encode(['Result' => 'abonnementajoute','notifabo' => $notifabo]));
+                    }
 
                 }
                   else // impossible de s'abonner

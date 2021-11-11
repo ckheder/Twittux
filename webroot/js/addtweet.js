@@ -28,8 +28,11 @@ function openemojimenu() {
 //ajout au textarea des emojis ou des médias
 
 document.addEventListener('click',function(e){
+
   // récupération élément
-  if(e.target && e.target.className == 'emoji'){
+
+    if(e.target && e.target.className == 'emoji')
+  {
     var code = e.target.getAttribute('data_code');
     //suppression de l'extension du fichier
     code  = code.replace(/\.[^/.]+$/, "");
@@ -37,9 +40,8 @@ document.addEventListener('click',function(e){
 
     addtotextarea(code)
 
-  menuemoji.className = menuemoji.className.replace(" w3-show", "");
-
-}
+    menuemoji.className = menuemoji.className.replace(" w3-show", "");
+  }
 });
 
 // fonction d'ajout au textarea
@@ -47,6 +49,7 @@ document.addEventListener('click',function(e){
   function addtotextarea(stringtoadd)
 {
   textarea_tweet.value += stringtoadd;
+
   textarea_tweet.focus();
 }
 
@@ -60,8 +63,8 @@ function countCharacters(e) {
   countRemaining.textContent = counter + ' caractère(s) restant(s)';
 }
 
-const el = document.getElementById('textarea_tweet');
-el.addEventListener('keydown', countCharacters);
+
+textarea_tweet.addEventListener('keydown', countCharacters);
 
 // MEDIA
 
@@ -144,8 +147,8 @@ form_tweet.addEventListener('submit',  function (e) { // on capte l'envoi du for
   if(document.getElementById('textarea_tweet').value.length > 255)
 {
   alertbox.show('<div class="w3-panel w3-red">'+
-                      '<p>255 caractères maximum.</p>'+
-                    '</div>.');
+                '<p>255 caractères maximum.</p>'+
+                '</div>.');
   return;
 }
 
@@ -167,7 +170,9 @@ form_tweet.addEventListener('submit',  function (e) { // on capte l'envoi du for
   })
     .then(function(jsonData) {
 
-document.getElementById('modaltweet').style.display='none'; // fermeture modal
+  document.getElementById('modaltweet').style.display='none'; // fermeture modale
+
+  // impossible de poster un tweet
 
   if(jsonData.result == 'notweet')
 {
@@ -175,23 +180,34 @@ document.getElementById('modaltweet').style.display='none'; // fermeture modal
                 '<p>Impossible de poster ce tweet.</p>'+
                 '</div>.');
 }
-else {
+
+  // émission d'un event de nouveau tweet
+
+  else 
+{
 
   socket.emit('newtweet', {Tweet: jsonData.Tweet, Hashtag: jsonData.Hashtag});
 
-//on vide la formulaire
+  // évènenement de citation dans un tweet : contient un tableau de tous les utilisateurs cités dans le tweet posté et qui accepte les notifications de citation
 
-form_tweet.reset()
+    if(jsonData.notifcitation.length > 0) // si ce tableau n'est pas vide, on déclenche l'évènement
+  {
+    socket.emit('tweetcitation', jsonData.notifcitation)
+  }
 
-//reset du nombre de caractère restants
+  //on vide la formulaire
 
-document.getElementById('charactersRemaining').textContent = '255 caractère(s) restant(s)';
+  form_tweet.reset()
 
-//notification de réussite
+  //reset du nombre de caractère restants
+
+  document.getElementById('charactersRemaining').textContent = '255 caractère(s) restant(s)';
+
+  //notification de réussite
 
   alertbox.show('<div class="w3-panel w3-green">'+
-                      '<p>Tweet posté.</p>'+
-                    '</div>.');
+                '<p>Tweet posté.</p>'+
+                '</div>.');
 
 
 }
@@ -206,7 +222,10 @@ document.getElementById('charactersRemaining').textContent = '255 caractère(s) 
                       '</div>.');
 
     });
+
   button_submit_tweet.disabled = false // on réactive le bouton
 
+
   button_submit_tweet.textContent = buttonTextSubmitTweet// on remet le texte initial du bouton
+
 })

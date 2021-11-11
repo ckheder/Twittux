@@ -8,7 +8,12 @@
  // variables
 
  var actnotif = document.querySelectorAll('.actnotif'); // on stock tous les lien qui ont une classe 'actnotif' -> mettre à jour le statut d'une notif
+
  var nb_notification = document.querySelector('.nb_notification'); // récupération du nombre d'abonnement
+
+ //**Connexion NODE JS */
+
+socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
 
  // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou le nombre de notification est supérieur à zéro 
 
@@ -99,6 +104,48 @@
 
               div_notif.className = div_notif.className.replace("w3-container itemnotif w3-light-grey", "w3-container itemnotif w3-sand"); // mise à jour du background de la div
 
+              nbunreadnotif.textContent --; // décrémente le nombre de notif non lue sur le badge
+
+
+                  if(nbunreadnotif.textContent > 0) // si le nombre de notification non lue est supérieur à zéro
+                  
+                {
+
+                    if (hasTouchScreen === true) // je suis sur mobile : on efface le dot
+                  {
+                    document.querySelector('.dot').style.display='inline-block'; // on efface le rond rouge
+                  }
+                    else
+                  {
+                    // on retire le nombre de notifications précédents
+  
+                    document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+  
+                    // on ajoute sur le titre de la page le nombre de notifications non lues
+  
+                    document.querySelector('title').textContent  = "(" + nbunreadnotif.textContent + ")" + document.querySelector('title').textContent;
+                  }
+                  
+                }
+                  else // nombre de notification non lue égale à zéro
+                {
+                  // suppression du badge rouge indiquant des notifications non lues
+  
+                  nbunreadnotif.innerHTML = '';
+  
+                    if (hasTouchScreen === true) // je suis sur mobile : on efface le dot
+                  {
+                    document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+                  }
+                    else
+                  {
+                    // on retire le nombre de notifications précédents
+                 
+                    document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+                  }
+
+                }
+
             }
                 else if (e.target.getAttribute('data_statut') == "1") // on passe à une notification non lue
               {
@@ -109,6 +156,21 @@
 
                 div_notif.className = div_notif.className.replace("w3-container itemnotif w3-sand", "w3-container itemnotif w3-light-grey"); // mise à jour du background de la div
 
+                nbunreadnotif.textContent ++; // incrémentation du nombre de notif non lues sur le badge rouge
+
+                    if (hasTouchScreen === true) // je suis sur mobile : on affiche le dot
+                  {
+                    document.querySelector('.dot').style.display='inline-block'; // on efface le rond rouge
+                  }
+                    else
+                  {
+                    document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+
+                    // on ajoute sur le titre de la page le nombre de notifications non lues
+
+                    document.querySelector('title').textContent  = "(" + nbunreadnotif.textContent + ")" + document.querySelector('title').textContent;
+                  }
+
             }
 
              break;
@@ -116,18 +178,55 @@
              // Notification supprimée
 
              case "deletenotifok": alertbox.show('<div class="w3-panel w3-green">'+
-                                           '<p>Notification supprimée.</p>'+
-                                           '</div>.');
+                                                '<p>Notification supprimée.</p>'+
+                                                '</div>.');
 
             // suppresion du DOM de la div contenant la notification
 
             var div_notif_delete =  document.querySelector('[data_id_notif="'+ e.target.getAttribute('data_id_notif') +'"]');
 
-            div_notif_delete.parentNode.removeChild(div_notif_delete);
+              if(div_notif_delete.classList.contains('w3-light-grey')) // on supprime une notification no lue
+            {
 
-            //décrémentation du nombre de notification
+              nbunreadnotif.textContent --; // décrémentation du nombre de notif non lues sur le badge rouge
 
-            nb_notification.textContent --;
+                  if(nbunreadnotif.textContent > 0) // si le nombre de notification non lue est supérieur à zéro
+                {
+
+                  if (hasTouchScreen === false) // sur desktop : mise à jour du titre de page
+                {
+                  document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+                  
+                  document.querySelector('title').textContent  = "(" + nbunreadnotif.textContent + ")" + document.querySelector('title').textContent;
+                }
+              }
+                  else // nombre de notification non lue égale à zéro
+              {
+
+                  if (hasTouchScreen === false) // sur desktop : mise à jour du titre de page
+                {
+                  // on retire le nombre de notifications précédents
+
+                  document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+  
+                }
+
+                  else // sur mobile : on efface le dot
+                {
+                  document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+                }
+
+                nbunreadnotif.innerHTML = '';
+
+              }
+
+            }
+
+                div_notif_delete.parentNode.removeChild(div_notif_delete);
+
+                //décrémentation du nombre de notification
+
+                nb_notification.textContent --;
 
              break;
 
@@ -157,6 +256,23 @@
 
                                            })
 
+                                          // suppression du badge rouge indiquant des notifications non lues
+
+                                          nbunreadnotif.innerHTML = '';
+
+                                            if (hasTouchScreen === false) // sur desktop : mise à jour du titre de page
+                                          {
+
+                                          // on retire le nombre de notifications précédents
+
+                                            document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+
+                                          }
+                                            else if (hasTouchScreen === true) // sur mobile : suppression du dot
+                                          {
+                                            document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+                                          }
+
 
              break;
 
@@ -174,6 +290,23 @@
 
             document.querySelector('#list_notif').innerHTML = '';
 
+            // suppression du badge rouge indiquant des notifications non lues
+
+            nbunreadnotif.innerHTML = '';
+
+              if (hasTouchScreen === false) // sur desktop : mise à jour du titre de page
+            {
+
+              // on retire le nombre de notifications précédents
+
+              document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
+
+            }
+              else if (hasTouchScreen === true) // sur mobile : suppression du dot
+            {
+              document.querySelector('.dot').style.display='none'; // on efface le rond rouge
+            };
+
              break;
 
          }
@@ -186,7 +319,7 @@
 
              alertbox.show('<div class="w3-panel w3-red">'+
                            '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
-                         '</div>.');
+                            '</div>.');
 
          })
 

@@ -21,7 +21,9 @@ var DIVIAS; // Div ou sera chargé les données IAS suivant la page
 
 let zone_abo; // variable utilisée pour contenir une div existant dans la fenêtre modale pour mettre à jour le bouton d'abonnement
 
+//**Connexion NODE JS */
 
+socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
 
 // chargement par AJAX des résultats de recherche
 
@@ -139,9 +141,12 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
 
       document.getElementById("result_search").innerHTML = html; // chargement de la réponse dans la div précédente
 
-      iassearch = null;
+        if(document.querySelector('.itemsearch')) // si il y'a au minimum 1 résultat de recherche, on instancie IAS
+      {
 
-    // création d'une nouvelle instance InfiniteAjaxScroll
+        iassearch = null;
+
+        // création d'une nouvelle instance InfiniteAjaxScroll
 
           iassearch = new InfiniteAjaxScroll('.'+DIVIAS+'', {
            item: '.itemsearch',
@@ -170,10 +175,12 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
 
          // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
 
-         iassearch.on('last', function() {
+          iassearch.on('last', function() {
 
            document.querySelector('.no-more').style.opacity = '1';
          })
+
+        }
 
     })
 
@@ -227,27 +234,32 @@ document.addEventListener('click',function(e){
     // ajout d'un abonnement
 
     case "abonnementajoute": alertbox.show('<div class="w3-panel w3-green">'+ // notification
-                                        '<p>Abonnement ajouté.</p>'+
-                                        '</div>.');
+                                          '<p>Abonnement ajouté.</p>'+
+                                          '</div>.');
     // nouveau bouton
 
     zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
+
+      if(Data.notifabo == 'oui') // si l'utilisateur accepte les notifications d'abonnement, on émet un évènement Node JS
+    {
+      socket.emit('newabo', data.username);
+    }
 
     break;
 
     // impossible d'ajouter un nouvel abonnement
 
     case "abonnementnonajoute": alertbox.show('<div class="w3-panel w3-red">'+ // notification
-                                        '<p>Impossible d\'ajouter cet abonnement.</p>'+
-                                        '</div>.');
+                                              '<p>Impossible d\'ajouter cet abonnement.</p>'+
+                                              '</div>.');
 
     break;
 
     //suppression d'un abonnement
 
     case "abonnementsupprime": alertbox.show('<div class="w3-panel w3-green">'+
-                              '<p>Abonnement supprimer.</p>'+
-                              '</div>.');
+                                              '<p>Abonnement supprimer.</p>'+
+                                              '</div>.');
 
     zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
@@ -256,16 +268,16 @@ document.addEventListener('click',function(e){
     //Impossible de supprimer un abonnement
 
     case "abonnementnonsupprime": alertbox.show('<div class="w3-panel w3-red">'+
-                                  '<p>Impossible de supprimer cet abonnement.</p>'+
-                                  '</div>.');
+                                                '<p>Impossible de supprimer cet abonnement.</p>'+
+                                                '</div>.');
 
     break;
 
     //abonnement existant
 
     case "dejaabonne": alertbox.show('<div class="w3-panel w3-red">'+
-                        '<p>Vous suivez déjà ' + data.username +' .</p>'+
-                        '</div>.');
+                                      '<p>Vous suivez déjà ' + data.username +' .</p>'+
+                                      '</div>.');
 
 
     break;
@@ -273,20 +285,25 @@ document.addEventListener('click',function(e){
     // envoi d'une demande d'abonnement
 
     case "demandeok": alertbox.show('<div class="w3-panel w3-green">'+
-                      '<p>Demande d\'abonnement envoyée.</p>'+
-                      '</div>.');
+                                    '<p>Demande d\'abonnement envoyée.</p>'+
+                                    '</div>.');
 
     // bouton pour annuler ma demande d'abonnement
 
     zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+
+      if(Data.notifabo == 'oui') // si l'utilisateur accepte les notifications d'abonnement, on émet un évènement Node JS
+    {
+      socket.emit('newabo', data.username);
+    }
 
     break;
 
     //annulation d'une demande d'abonnement
 
     case "demandeannule": alertbox.show('<div class="w3-panel w3-green">'+
-                          '<p>Demande d\'abonnemment annulée.</p>'+
-                          '</div>.');
+                                        '<p>Demande d\'abonnemment annulée.</p>'+
+                                        '</div>.');
 
     // bouton pour suivre ultérieurement
 
@@ -381,11 +398,11 @@ document.addEventListener('click',function(e){
   // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
 
     if( document.querySelector('.modallike_'+idtweet).onclick == null )
-{
-   document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
+  {
+    document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
 
-   document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
-}
+    document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
+  }
 
     break;
 
@@ -396,11 +413,11 @@ document.addEventListener('click',function(e){
   // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
 
     if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
-{
-   document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
+  {
+    document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
 
-   document.querySelector('.modallike_'+idtweet).style.cursor = null;
-}
+    document.querySelector('.modallike_'+idtweet).style.cursor = null;
+  }
 
     break;
 
@@ -469,21 +486,26 @@ document.addEventListener('click',function(e){
                       '<p>Post partagé.</p>'+
                     '</div>.');
 
+                      if(Data.notifshare == 'oui') // si l'utilisateur accepte les notifications de partage, on émet un évènement Node JS
+                    {
+                      socket.emit('newshare', data.auttweet);
+                    }
+
     break;
 
     // suppression d'un like -> mise à jour du nombre de like
 
     case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
-                      '<p>Vous avez déjà partagé ce post.</p>'+
-                    '</div>.');
+                                      '<p>Vous avez déjà partagé ce post.</p>'+
+                                      '</div>.');
 
     break;
 
     // problème de création de like
 
     case "probleme": alertbox.show('<div class="w3-panel w3-red">'+
-                      '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard controller.</p>'+
-                    '</div>.');
+                                    '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard controller.</p>'+
+                                    '</div>.');
 
     break;
 
@@ -495,7 +517,7 @@ document.addEventListener('click',function(e){
 
         alertbox.show('<div class="w3-panel w3-red">'+
                       '<p>Un problème est survenu lors du traitement de votre demande.Veuillez réessayer plus tard.</p>'+
-                    '</div>.');
+                      '</div>.');
     });
        }
 })

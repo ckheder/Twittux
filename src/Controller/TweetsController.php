@@ -305,24 +305,32 @@ class TweetsController extends AppController
 
                 $citationtweet = $tweetslistener->getUsernames($data['contenu_tweet']); // récupération des utilisateurs cités dans un tweet
 
-                  foreach($citationtweet as $citationtweet) // on vérifie , pour chaque utilisateur cités , si il accepte les notifications de citation
+                  if(count($citationtweet) > 0) // si le tableau des utilisateurs cités n'est pas vide
                 {
 
-                      if(AppController::check_notif('citation', $citationtweet)) // notification acceptée
+                    foreach($citationtweet as $key => $citationtweets) // on vérifie , pour chaque utilisateur cités , si il accepte les notifications de citation
+                  {
+
+                      if(AppController::check_notif('citation', $citationtweets) == 'oui') // notification acceptée
                     {
 
                       // Evènement de création d'une notification de citation
 
-                      $event = new Event('Model.Tweets.afteradd', $this, ['usertweet' => $data['username'], 'usercitation' => $citationtweet, 'idtweet' => $data['id_tweet']]);
+                      $event = new Event('Model.Tweets.afteradd', $this, ['usertweet' => $data['username'], 'usercitation' => $citationtweets, 'idtweet' => $data['id_tweet']]);
 
                       $this->getEventManager()->dispatch($event);
 
                     }
+                      else // notifications refusées
+                    {
+                      unset($citationtweet[$key]);
+                    }
+                  }
                 }
 
                 // renvoi d'une réponse JSON
 
-                return $this->response->withType("application/json")->withStringBody(json_encode(['Tweet' => $tweet, 'Hashtag' => $hashtagstweet]));
+                return $this->response->withType("application/json")->withStringBody(json_encode(['Tweet' => $tweet, 'Hashtag' => $hashtagstweet,'notifcitation' => $citationtweet]));
             }
               else
             {

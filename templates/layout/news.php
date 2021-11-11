@@ -103,15 +103,21 @@
 
         </div>
 
+<?= $this->Html->scriptStart(); ?>
+
           <!-- génération d'un token CSRF pour l'envoi de données en AJAX -->
-          <?= $this->Html->scriptBlock(sprintf(
-                                                'var csrfToken = %s;',
-                                              json_encode($this->request->getAttribute('csrfToken'))
-                                              )); ?>
+          <?= sprintf(
+                      'var csrfToken = %s;',
+                      json_encode($this->request->getAttribute('csrfToken'))
+                      ); ?>
 
 <!-- script JS -->
 
-        <?= $this->Html->script('news.js'); ?> <!-- traitement des actions : delete un abonnement,changer le tri des news,... -->
+  var authname = "<?= $authName ?>"; <!-- utilisateur authentifié -->
+
+<?= $this->Html->scriptEnd();?>
+
+<?= $this->Html->script('news.js'); ?> <!-- traitement des actions : delete un abonnement,changer le tri des news,... -->
 
 </body>
 
