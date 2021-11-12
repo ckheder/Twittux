@@ -264,7 +264,7 @@ document.addEventListener('click',function(e){
 
 document.addEventListener('click',function(e){
 
-  if(e.target && e.target.className == 'follow'){
+  if(e.target && e.target.className == 'actionfollow'){
 
     var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
 
@@ -299,7 +299,7 @@ document.addEventListener('click',function(e){
                                         '</div>.');
     // nouveau bouton
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-red w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
       if(Data.notifabo == 'oui')
     {
@@ -322,7 +322,7 @@ document.addEventListener('click',function(e){
                               '<p>Abonnement supprimer.</p>'+
                               '</div>.');
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
@@ -351,7 +351,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour annuler ma demande d'abonnement
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
 
     if(Data.notifabo == 'oui')
     {
@@ -368,7 +368,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour suivre ultérieurement
 
-    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 

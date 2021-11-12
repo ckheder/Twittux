@@ -232,8 +232,8 @@ class TweetsController extends AppController
 
         $this->set(compact('commentaires'));
 
-
     }
+    $this->set('idtweet', $id);
   }
 
    /**

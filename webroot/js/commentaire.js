@@ -28,36 +28,36 @@ let form_comm = document.querySelector('#form_comm') // récupération du formul
   socket.on('addcomm', function(data)
 {
 
-    var testlink; // lien qui s'afficheront suivant les différents scénarios
+    var linkcomm; // lien qui s'afficheront suivant les différents scénarios
 
     if(data.auttweet == authname) // si je suis l'auteur du tweet...
   {
 
       if(data.username != authname) // ... mais pas l'auteur du comm : affichage d'un lien de suppression et de blocage
     {
-      testlink = '<a class="blockuser" href="" onclick="return false;" data_username="'+data.username+'">Bloquer '+data.username+'</a>'+
+      linkcomm = '<a class="blockuser" href="" onclick="return false;" data_username="'+data.username+'">Bloquer '+data.username+'</a>'+
                   '<a class="signalcomm" href="" onclick="return false;"> Signaler</a>';
     }
       else // ... et je suis l'auteur du commentaire
     {
-      testlink = '<a class="updatecomment" href="" onclick="return false;" data_idcomm="'+ data.id_comm+'">Modifier</a>';
+      linkcomm = '<a class="updatecomment" href="" onclick="return false;" data_idcomm="'+ data.id_comm+'">Modifier</a>';
     }
 
     // dans tous les cas, création d'un lien de suppression du commentaire
 
-      testlink += '<a class="deletecomm" href="#" onclick="return false;" data_idcomm="'+ data.id_comm+'"> Supprimer</a>';
+      linkcomm += '<a class="deletecomm" href="#" onclick="return false;" data_idcomm="'+ data.id_comm+'"> Supprimer</a>';
   }
 
     else if (data.username == authname)
   {
-    testlink = '<a class="updatecomment" href="" onclick="return false;" data_idcomm="'+ data.id_comm+'">Modifier</a>'+
+    linkcomm = '<a class="updatecomment" href="" onclick="return false;" data_idcomm="'+ data.id_comm+'">Modifier</a>'+
                 '<a class="deletecomm" href="#" onclick="return false;" data_idcomm="'+ data.id_comm+'"> Supprimer</a>';
   }
 
 
     else // pour tous les autres  : personne qui lit le commentaire et qui n'en ai ni l'auteur ni le propriétaire du tweet
   {
-    testlink = '<a class="blockuser" href="" onclick="return false;" data_username="'+data.username+'">Bloquer '+data.username+'</a>'+
+    linkcomm = '<a class="blockuser" href="" onclick="return false;" data_username="'+data.username+'">Bloquer '+data.username+'</a>'+
                 '<a class="signalcomm" href="" onclick="return false;"> Signaler</a>';
   }
 
@@ -69,7 +69,7 @@ let form_comm = document.querySelector('#form_comm') // récupération du formul
               '<div class="dropdown">'+
               '<button onclick="opencommoption('+ data.id_comm+')" class="dropbtn">...</button>'+
               '<div id="btncomm'+ data.id_comm+'" class="dropdown-content">'+
-              ''+testlink+''+
+              ''+linkcomm+''+
               '</div>'+
               '</div>'+
           		'<h4><a href="/twittux/'+ data.username+'">'+ data.username+'</h4>'+
@@ -489,7 +489,7 @@ document.addEventListener('click',function(e){
 
 // Infinite AJAX scroll de la liste des commentaires
 
-  if(nb_comm.textContent > 0) // si le nombre de commentaire est supérieur à 0, on active IAS
+  if(nb_comm && nb_comm.textContent > 0) // si la span nb_comm existe (pas le cas pour un tweet privé) et le nombre de commentaire est supérieur à 0, on active IAS
 {
 
 let ias = new InfiniteAjaxScroll('#list_comm', {
@@ -703,7 +703,7 @@ socket.emit('deletecommok', {idtweet: idtweet, idcomm: data['idcomm']})
 
 document.addEventListener('click',function(e){
 
- if(e.target && e.target.className == 'follow'){
+ if(e.target && e.target.className == 'actionfollow'){
 
    var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
 
@@ -745,7 +745,7 @@ document.addEventListener('click',function(e){
 
    // bouton pour annuler ma demande d'abonnement
 
-   document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
+   document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
 
    break;
 
@@ -757,7 +757,7 @@ document.addEventListener('click',function(e){
 
   // bouton de suivi
 
-  document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
+  document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-blue w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'">Suivre</a></button>';
 
   break;
 

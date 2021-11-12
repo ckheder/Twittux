@@ -196,7 +196,7 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
 
 document.addEventListener('click',function(e){
 
-  if(e.target && e.target.className == 'follow'){
+  if(e.target && e.target.className == 'actionfollow'){
 
     var action = e.target.getAttribute('data_action'); // follow -> crée un abonnement, delete -> supprimer un abonnement,cancel -> annuler une demande d'abonnement
 
@@ -238,7 +238,7 @@ document.addEventListener('click',function(e){
                                           '</div>.');
     // nouveau bouton
 
-    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="follow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-red w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="delete" data_username="'+ data.username +'"><i class="fas fa-user-minus"></i> Ne plus suivre</a></button>';
 
       if(Data.notifabo == 'oui') // si l'utilisateur accepte les notifications d'abonnement, on émet un évènement Node JS
     {
@@ -261,7 +261,7 @@ document.addEventListener('click',function(e){
                                               '<p>Abonnement supprimer.</p>'+
                                               '</div>.');
 
-    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 
@@ -290,7 +290,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour annuler ma demande d'abonnement
 
-    zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="follow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-orange w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
 
       if(Data.notifabo == 'oui') // si l'utilisateur accepte les notifications d'abonnement, on émet un évènement Node JS
     {
@@ -307,7 +307,7 @@ document.addEventListener('click',function(e){
 
     // bouton pour suivre ultérieurement
 
-    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="follow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
+    zone_abo.innerHTML = '<button class="w3-button w3-blue w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="add" data_username="' + data.username +'"><i class="fas fa-user-plus"></i> Suivre</a></button>';
 
     break;
 

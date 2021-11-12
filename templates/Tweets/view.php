@@ -41,7 +41,7 @@
 
                 <span class="zone_abo">
 
-                  <button class="w3-button w3-blue w3-round"><a class="follow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
+                  <button class="w3-button w3-blue w3-round"><a class="actionfollow" href="" onclick="return false;" data_action="add" data_username="<?= $user_tweet ?>">Suivre</a></button>
 
                 </span>
 
@@ -408,6 +408,6 @@
 
 <script>
 
-  var idtweet = "<?= $tweet->id_tweet;?>"; // identifiant du tweet visité, servira à la connexion à Node Js
+  var idtweet = "<?= $idtweet;?>"; // identifiant du tweet visité, servira à la connexion à Node Js
 
 </script>
