@@ -159,6 +159,19 @@ autocomplete_zone.style.display='none';
 
     titlepage.textContent  = "(" + nbunreadnotif.textContent + ")" + titlepage.textContent;
 
+    // si je suis sur la page des notifications et qu'il n'y as pas déjà la div messagenewnotif, on affiche cette dernière pour proposer de recharger la liste des notifications avec les nouvelles
+
+      if(document.querySelector('#listnotif') && !document.querySelector('.messagenewnotif'))
+    {
+      document.querySelector('.displaymessagenewnotif').insertAdjacentHTML('afterbegin', '<div class="w3-panel w3-light-grey w3-display-container messagenewnotif">'+
+                                                                            '<span onclick="this.parentElement.remove()"'+
+                                                                            'class="w3-button w3-large w3-display-topright">x</span>'+
+                                                                            '<p class="w3-center"><i class="fa fa-bell"></i> Vous avez de nouvelles notifications.<br />'+
+                                                                            '<button class="w3-button w3-round w3-border w3-border-black" onclick="loadnotif()">Afficher</button></p>'+
+                                                                            '</div>');
+
+    }
+
 });
 
 // ajout d'un tweet et traitement hashtag
@@ -168,7 +181,7 @@ autocomplete_zone.style.display='none';
 
     var el = document.getElementById("list_tweet_" + data.Tweet['username']); // récupération de la div ou l'on va insérer le nouveau tweet
 
-    if(el) // si cette div existe, on est donc sur l apage des profils
+    if(el) // si cette div existe, on est donc sur la page des profils
   {
 
     var lientweet; // lien qui s'afficheront sur le menu déroulant du tweet suivant les différents scénarios

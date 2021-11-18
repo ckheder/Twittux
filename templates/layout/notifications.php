@@ -46,7 +46,13 @@
 
             <?= $this->element('notifmenu') ?>
 
-            <?= $this->fetch('content') ?>
+            <div hidden class="spinner"></div> <!-- spinner de chargement de la liste des notifications -->
+
+              <div id = "listnotif"> <!-- affichera les notifications par appel AJAX -->
+
+                <?= $this->fetch('content') ?>
+
+              </div>
 
         </div>
 

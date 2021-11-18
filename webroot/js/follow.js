@@ -137,7 +137,7 @@
 
       document.getElementById("socialsinfos").innerHTML = html; // chargement de la réponse dans la div précédente
 
-        if(document.querySelector('.'+ITEMS+'').textContent > 0) // si il y'a plus d'un résultat, suivant la page chargée, on instancie IAS
+        if(document.querySelector('.itemsocial')) // si au moins un résultat est retourné, on instancie IAS
       {
           // si il y'a déjà une instance InfiniteAjaxScroll (visite d'une autre page social), on la vide
 

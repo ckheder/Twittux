@@ -6,6 +6,8 @@
  *
  */
 ?>
+
+
 <div class="w3-col m7">
 
       <div class="w3-row-padding">
@@ -14,7 +16,7 @@
 
           <div class="w3-card w3-round w3-white">
 
-            <div class="w3-container w3-padding">
+            <div class="w3-container w3-padding displaymessagenewnotif"> <!-- affichera un message de nouvelles notifications -->
 
               <div class="w3-center">
 
@@ -30,9 +32,7 @@
                 <div id="alert-area" class="alert-area"></div>
               <!--fin zone de notification sur le résultat de traitement des notifications -->
 
-              <br />
-
-              <div id="list_notif">
+          <div id="list_notif"> <!-- chargement des données Infinite Ajax Scroll -->
 
             <?php foreach ($notifications as $notifications): ?>
 
@@ -74,8 +74,6 @@
 
             <?php endforeach; ?>
 
-            </div>
-
         <!-- pagination -->
 
         <div hidden id="spinnerajaxscroll"></div>
@@ -105,6 +103,8 @@
 
 </div>
 
+      
+
           </div>
 
         </div>
@@ -112,5 +112,7 @@
       </div>
 
     </div>
+
+</div>
 
 </div>

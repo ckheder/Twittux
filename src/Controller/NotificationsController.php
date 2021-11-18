@@ -19,23 +19,33 @@ class NotificationsController extends AppController
   /**
    * Méthode Index
    *
-   * Retourne la liste de toute mes notifications lues et non lues
+   * Index des notifications
    *
    */
     public function index()
   {
-      $this->viewBuilder()->setLayout('notifications');
 
-      $this->set('title', 'Twittux | Notifications'); // titre de la page
+      if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge le layout spécifique
+    {
+        $this->viewBuilder()->setLayout('ajax');
+    }
+      else
+    {
+        $this->viewBuilder()->setLayout('notifications'); // chargement du layout 'notifications'
+  
+        $this->set('title', 'Twittux | Notifications'); // titre de la page
+      
+    }
 
-    // Récupération de mes notifications par odre décroissant de date
-
-      $notifications = $this->Notifications->find()
-                                            ->where(['user_notif' =>  $this->Authentication->getIdentity()->username ])
-                                            ->order(['created'=> 'DESC']);
-
-
-        $this->set('notifications', $this->Paginator->paginate($notifications, ['limit' => 10]));
+      // Récupération de mes notifications par odre décroissant de date
+    
+            $notifications = $this->Notifications->find()
+                                                ->where(['user_notif' =>  $this->Authentication->getIdentity()->username ])
+                                                ->order(['created'=> 'DESC']);
+    
+    
+            $this->set('notifications', $this->Paginator->paginate($notifications, ['limit' => 10]));
+        
   }
     /**
       * Méthode Statut

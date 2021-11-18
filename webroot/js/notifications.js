@@ -9,56 +9,97 @@
 
  var actnotif = document.querySelectorAll('.actnotif'); // on stock tous les lien qui ont une classe 'actnotif' -> mettre à jour le statut d'une notif
 
- var nb_notification = document.querySelector('.nb_notification'); // récupération du nombre d'abonnement
+ const listnotif = document.querySelector('#listnotif'); // div qui affichera la page index des notifications (appelé par AJAX)
+
+ const spinner = document.querySelector('.spinner'); // div qui accueuillera le spinner de chargement des données via AJAX
 
  //**Connexion NODE JS */
 
 socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
 
- // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou le nombre de notification est supérieur à zéro 
+// chargement des notifications au chargement de la page
 
-  if(nb_notification > 0)
- {
+listnotif.addEventListener("load", loadnotif());
 
-   let ias = new InfiniteAjaxScroll('#list_notif', {
-   item: '.itemnotif',
-   logger: false,
-   next: '.next',
-   spinner: {
+// va appelé la page des notifications par AJAX et l'afficher dans listnotif
 
-     // element qui sera le spinner de chargement des données
+function loadnotif() {
 
-     element: document.querySelector('#spinnerajaxscroll'),
+  listnotif.innerHTML = ''; // chargement de la réponse dans la div précédente
 
-     // affichage du spinner
+spinner.removeAttribute('hidden'); // affichage du spinner de chargement
 
-    show: function(element) {
-       element.removeAttribute('hidden');
-     },
+  fetch('/twittux/notifications', { // URL à charger dans la div précédente
 
-     // effacement du spinner
+              headers: {
+                          'X-Requested-With': 'XMLHttpRequest' // envoi d'un header pour tester dans le controlleur si la requête est bien une requête ajax
+                        }
+            })
 
-     hide: function(element) {
-       element.setAttribute('hidden', ''); // default behaviour
-     }
-   },
-   pagination: '.pagination'
- });
+  .then(function (data) {
+                          return data.text();
+                        })
+  .then(function (html) {
 
-// action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+   
+    spinner.setAttribute('hidden', ''); // disparition du spinner
 
- ias.on('last', function() {
+    listnotif.innerHTML = html; // chargement de la réponse dans la div précédente
 
-   document.querySelector('.no-more').style.opacity = '1';
- })
+    // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou il y'a minimum un résultat 
+
+    if(document.querySelector('.itemnotif'))
+  {
+ 
+    let ias = new InfiniteAjaxScroll('#list_notif', {
+    item: '.itemnotif',
+    logger: false,
+    next: '.next',
+    spinner: {
+ 
+      // element qui sera le spinner de chargement des données
+ 
+      element: document.querySelector('#spinnerajaxscroll'),
+ 
+      // affichage du spinner
+ 
+     show: function(element) {
+        element.removeAttribute('hidden');
+      },
+ 
+      // effacement du spinner
+ 
+      hide: function(element) {
+        element.setAttribute('hidden', ''); // default behaviour
+      }
+    },
+    pagination: '.pagination'
+  });
+ 
+ // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
+ 
+  ias.on('last', function() {
+ 
+    document.querySelector('.no-more').style.opacity = '1';
+  })
+ }
+
+})
+
+  // affichage d'erreur si besoin
+
+  .catch(function(err) {
+                         console.log(err);
+  });
+
 }
+
  // marquer une notif comme lue / non lue
 
  document.addEventListener('click',function(e){
 
     if(e.target && e.target.matches('.actnotif')) // si le lien cliqué possède l'attribut 'data_idconv'
    {
-
 
        var data = {
          "statut": e.target.getAttribute('data_statut') // récupération du statut
@@ -226,14 +267,21 @@ socket.emit("connexion", {authname: authname}); // on transmet mon username au s
 
                 //décrémentation du nombre de notification
 
-                nb_notification.textContent --;
+                document.querySelector('.nb_notification').textContent --;
+
+                  if(document.querySelector('.nb_notification').textContent == 0)
+                {
+                  document.querySelector('.no-more').style.opacity = '0';
+                }
+
+                
 
              break;
 
              // tous marquer comme lue
 
              case "allnotifreadok": alertbox.show('<div class="w3-panel w3-green">'+
-                                           '<p>Toutes les notif sont lue.</p>'+
+                                           '<p>Toutes les notifications sont marquées comme lues.</p>'+
                                            '</div>.');
 
                                            // on récupère toutes les div contenant la classe w3-container.w3-light-grey synonyme de notification non lue
@@ -284,7 +332,7 @@ socket.emit("connexion", {authname: authname}); // on transmet mon username au s
 
             // mise à jour du nombre de notifications à 0
 
-            nb_notification.textContent = "0";
+            document.querySelector('.nb_notification').textContent = "0";
 
             // on vide la liste des notifications
 

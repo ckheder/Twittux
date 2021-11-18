@@ -260,7 +260,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
 /* ROUTE Notifications */
 
-    // liste des notifications
+    // index des notifications
 
     $builder->connect('/notifications',['controller' => 'Notifications', 'action' => 'index']);
 
