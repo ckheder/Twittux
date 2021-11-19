@@ -58,7 +58,7 @@ io.on("connection", socket => {
           myconvs = myconvs.slice(1); // suppression de mon socket.id
 
         }
- 
+
     });
 
        // déconnexion
@@ -181,14 +181,14 @@ io.on("connection", socket => {
 
       data.notifnewmessage.forEach(function(element)
     {
-    
+
      let obj = users.find(o => o.username == element);
-    
+
         if(typeof obj !== "undefined") // destinataire connecté
       {
         socket.to(obj.userID).emit('newnotif');
       }
-    
+
     })
 
   });
@@ -213,9 +213,9 @@ io.on("connection", socket => {
   {
     data.forEach(function(element) // on envoi une notification pour chaque utilisateur invité
     {
-    
+
      let obj = users.find(o => o.username == element);
-    
+
         socket.to(obj.userID).emit('newnotif');
     })
   })
@@ -245,7 +245,7 @@ io.on("connection", socket => {
       socket.leave(''+conversation+''); // je quitte la conversation
 
       myconvs = myconvs.filter(item => item !== conversation) // j'enlève la conversation
-    } 
+    }
 
   });
 
@@ -290,7 +290,7 @@ io.on("connection", socket => {
 
       if(data.comm['notifnewcomm'])
     {
-      
+
       let obj = users.find(o => o.username === data.comm['auttweet']); // on vérifie si l'auteur du tweet est connecté
 
         if(typeof obj !== "undefined") // destinataire connecté

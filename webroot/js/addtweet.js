@@ -13,7 +13,6 @@ const textarea_tweet = document.querySelector('#textarea_tweet'); // textarea de
 
 let inputfile = document.getElementById('tweetmedia'); // input d'envoi de photo depuis l'ordinateur (sur modalmedia)
 
-
 //ouverture menu
 
 function openemojimenu() {
@@ -183,7 +182,7 @@ form_tweet.addEventListener('submit',  function (e) { // on capte l'envoi du for
 
   // émission d'un event de nouveau tweet
 
-  else 
+  else
 {
 
   socket.emit('newtweet', {Tweet: jsonData.Tweet, Hashtag: jsonData.Hashtag});

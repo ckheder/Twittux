@@ -77,9 +77,9 @@ const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket 
       titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
 
       // on ajoute sur le titre de la page le nombre de notifications non lues
-      
+
       titlepage.textContent  = "(" + Data + ")" + titlepage.textContent;
-      
+
     }
       else // version mobile : apparition d'une pastille rouge sur le menu mobile
     {
@@ -95,16 +95,16 @@ const socket = io("http://localhost:8082"); // connexion à Node JS avec Socket 
     {
       document.querySelector('.dot').style.display='none'; // on efface le rond rouge
     }
-  
+
       else // version Desktop
     {
       titlepage.textContent = titlepage.textContent.replace(/ *\([^)]*\) */g, "");
     }
-  
+
     // on supprime le nombre de notifications non lues du titre de la page
-  
+
     nbunreadnotif.innerHTML = ''; // on efface le badge rouge
-  
+
   }
 
 })
@@ -178,31 +178,20 @@ autocomplete_zone.style.display='none';
 
   socket.on('addtweet', function(data)
 {
+      if(document.querySelector("#list_tweet_" + data.Tweet['username'])) // je suis sur une page de profil
+    {
 
-    var el = document.getElementById("list_tweet_" + data.Tweet['username']); // récupération de la div ou l'on va insérer le nouveau tweet
-
-    if(el) // si cette div existe, on est donc sur la page des profils
+    if(data.Tweet['username'] == authname) // je suis sur mon profil et je suis l'auteur du tweet
   {
 
-    var lientweet; // lien qui s'afficheront sur le menu déroulant du tweet suivant les différents scénarios
+    // insertion du tweet pour moi
 
-      if(data.Tweet['username'] == authname) // je suis l'auteur du tweet  : affichage d'un lien de suppression du tweet
-    {
-      lientweet = '<a class="deletetweet" href="#" onclick="return false;" data_type = "0" data_idtweet="'+ data.Tweet['id_tweet']+'"> Supprimer</a>'
-    }
-      else // affichage d'un lien de signalement d'un tweet
-    {
-      lientweet = '<a href="#">Signaler ce post </a>'
-    }
-
-    // insertion du tweet
-
-      el.insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ data.Tweet['id_tweet']+'"><br>'+
+      document.querySelector(".usertweets").insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ data.Tweet['id_tweet']+'"><br>'+
             '<img src="/twittux/img/avatar/'+ data.Tweet['username']+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
             '<div class="dropdown">'+
             '<button onclick="openmenutweet('+ data.Tweet['id_tweet']+')" class="dropbtn">...</button>'+
             '<div id="btntweet'+ data.Tweet['id_tweet']+'" class="dropdown-content">'+
-            ''+lientweet+''+
+            '<a class="deletetweet" href="#" onclick="return false;" data_type = "0" data_idtweet="'+ data.Tweet['id_tweet']+'"> Supprimer</a>'+
             '</div>'+
             '</div>'+
             '<h4>'+ data.Tweet['username']+'</h4>'+
@@ -217,7 +206,20 @@ autocomplete_zone.style.display='none';
             '<a href="./statut/'+ data.Tweet['id_tweet']+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
             '</p>'+
             '</div>');
-          }
+    }
+      else
+    {
+        if(!document.querySelector('.messagenewtweet')) // si cette div n'existe pas , on affiche un message de nouveau tweet(testé à chaque fois en cas de plusieurs tweets à la suite)
+      {
+        document.querySelector('.displaymessagenewtweet').insertAdjacentHTML('afterbegin', '<div class="w3-panel w3-pale-green w3-display-container messagenewtweet">'+
+                                                                              '<span onclick="this.parentElement.remove()"'+
+                                                                              'class="w3-button w3-large w3-display-topright">x</span>'+
+                                                                              '<p class="w3-center"><i class="fas fa-pen"></i> Nouveaux tweets de '+data.Tweet['username']+'.<br /><br />'+
+                                                                              '<button class="w3-button w3-round w3-border w3-border-black" onclick="loadTweetItem(\'showtweets\')">Afficher</button></p>'+
+                                                                              '</div>');
+      }
+    }
+  }
 
     // traitement des hashtags
 
@@ -227,7 +229,7 @@ autocomplete_zone.style.display='none';
 
       // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
 
-        hashtagarray.forEach(element => 
+        hashtagarray.forEach(element =>
       {
         var hashtagitem = document.querySelector('#'+element+'');
 
@@ -267,7 +269,7 @@ autocomplete_zone.style.display='none';
           }
 
       }
-      
+
       );
 })
 

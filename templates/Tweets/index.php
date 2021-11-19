@@ -77,6 +77,8 @@
   {
     ?>
 
+  <div class="w3-container displaymessagenewtweet"></div> <!-- div qui servira à afficher un message 'nouveaux tweet de...' pour les personnes autres que le profil courant en cas de nouveau tweet du profil courant -->
+
     <div class="usertweets">
 
         <?php foreach ($tweets as $tweet):  ?>

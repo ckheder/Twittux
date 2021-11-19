@@ -76,8 +76,6 @@
 
               </div>
 
-
-
             </div>
 
               <div hidden class="spinner"></div> <!-- image de chargement des données -->
@@ -87,7 +85,6 @@
             <?= $this->fetch('content') ?>
 
           </div>
-
 
         </div>
 
