@@ -41,45 +41,45 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                         })
   .then(function (html) {
 
-   
+
     spinner.setAttribute('hidden', ''); // disparition du spinner
 
     listnotif.innerHTML = html; // chargement de la réponse dans la div précédente
 
-    // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou il y'a minimum un résultat 
+    // Infinite AJAX scroll de la liste des notifications : instanciation dans le cas unique ou il y'a minimum un résultat
 
     if(document.querySelector('.itemnotif'))
   {
- 
+
     let ias = new InfiniteAjaxScroll('#list_notif', {
     item: '.itemnotif',
     logger: false,
     next: '.next',
     spinner: {
- 
+
       // element qui sera le spinner de chargement des données
- 
+
       element: document.querySelector('#spinnerajaxscroll'),
- 
+
       // affichage du spinner
- 
+
      show: function(element) {
         element.removeAttribute('hidden');
       },
- 
+
       // effacement du spinner
- 
+
       hide: function(element) {
         element.setAttribute('hidden', ''); // default behaviour
       }
     },
     pagination: '.pagination'
   });
- 
+
  // action lors du chargement de toutes les données : affichage d'une div annoncant qu'il n'y a plus rien à charger
- 
+
   ias.on('last', function() {
- 
+
     document.querySelector('.no-more').style.opacity = '1';
   })
  }
@@ -92,6 +92,17 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                          console.log(err);
   });
 
+}
+
+  function requestlink()
+{
+  //création d'un item local contenant le nom du profil en cours de visite
+
+  localStorage.setItem("requestlink", authname);
+
+  // redirection vers la page social
+
+  window.location.href = '/twittux/social/'+ authname+'';
 }
 
  // marquer une notif comme lue / non lue
@@ -149,7 +160,7 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
 
 
                   if(nbunreadnotif.textContent > 0) // si le nombre de notification non lue est supérieur à zéro
-                  
+
                 {
 
                     if (hasTouchScreen === true) // je suis sur mobile : on efface le dot
@@ -159,21 +170,21 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                     else
                   {
                     // on retire le nombre de notifications précédents
-  
+
                     document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
-  
+
                     // on ajoute sur le titre de la page le nombre de notifications non lues
-  
+
                     document.querySelector('title').textContent  = "(" + nbunreadnotif.textContent + ")" + document.querySelector('title').textContent;
                   }
-                  
+
                 }
                   else // nombre de notification non lue égale à zéro
                 {
                   // suppression du badge rouge indiquant des notifications non lues
-  
+
                   nbunreadnotif.innerHTML = '';
-  
+
                     if (hasTouchScreen === true) // je suis sur mobile : on efface le dot
                   {
                     document.querySelector('.dot').style.display='none'; // on efface le rond rouge
@@ -181,7 +192,7 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                     else
                   {
                     // on retire le nombre de notifications précédents
-                 
+
                     document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
                   }
 
@@ -237,7 +248,7 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                   if (hasTouchScreen === false) // sur desktop : mise à jour du titre de page
                 {
                   document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
-                  
+
                   document.querySelector('title').textContent  = "(" + nbunreadnotif.textContent + ")" + document.querySelector('title').textContent;
                 }
               }
@@ -249,7 +260,7 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                   // on retire le nombre de notifications précédents
 
                   document.querySelector('title').textContent = document.querySelector('title').textContent.replace(/ *\([^)]*\) */g, "");
-  
+
                 }
 
                   else // sur mobile : on efface le dot
@@ -274,7 +285,7 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
                   document.querySelector('.no-more').style.opacity = '0';
                 }
 
-                
+
 
              break;
 
@@ -459,22 +470,3 @@ spinner.removeAttribute('hidden'); // affichage du spinner de chargement
 
 }
 })
-
-/** accéder à la page des demandes d'abonnement depuis une notification **/
-
-  if(document.querySelector(".requestlink"))
-{
-
-  document.querySelector(".requestlink").addEventListener('click',function(e)
-{
-
-// création d'un item local contenant le nom du profil en cours de visite
-
-  localStorage.setItem("requestlink", e.target.getAttribute('data_username'));
-
-// redirection vers la page social
-
-  window.location.href = '/twittux/social/'+ e.target.getAttribute('data_username')+'';
-
-})
-}

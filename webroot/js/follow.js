@@ -29,7 +29,7 @@
 
  // si l'item existe, c'est qu'on a cliqué sur le lien abonné d'un profil
 
-  if(localStorage.getItem("followlink")!== null)
+  if(localStorage.getItem("followlink"))
  {
 
    // on appelle la fonction loadSocialItem pour charger le lien dans la div
@@ -46,12 +46,12 @@
 
  // si l'item existe, c'est qu'on a cliqué sur une notification de demande d'abonnement
 
-  if(localStorage.getItem("requestlink")!== null)
+  if(localStorage.getItem("requestlink"))
  {
 
    // on appelle la fonction loadSocialItem pour charger le lien dans la div
 
-   loadSocialItem(localStorage.getItem("requestlink"),'requests');
+   loadSocialItem(authname,'requests');
 
    // suppression de l'item local 'username'
 

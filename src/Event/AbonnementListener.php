@@ -38,7 +38,7 @@ class AbonnementListener implements EventListenerInterface {
 
             if($data['etat'] == 0) // demande
           {
-              $notif = '<img src="/twittux/img/avatar/'.$data['suiveur'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$data['suiveur'].'" class="w3-text-indigo">'.$data['suiveur'].'</a> souhaite s\'abonner : <a href="#" class="w3-text-indigo requestlink" data_username ="'.$data['suivi'].'">gérer mes demandes.</a>';
+              $notif = '<img src="/twittux/img/avatar/'.$data['suiveur'].'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$data['suiveur'].'" class="w3-text-indigo">'.$data['suiveur'].'</a> souhaite s\'abonner : <a href="#" class="w3-text-indigo" onclick="requestlink()" data_username ="'.$data['suivi'].'">gérer mes demandes.</a>';
           }
             elseif ($data['etat'] == 1)
           {
