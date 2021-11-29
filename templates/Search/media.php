@@ -117,7 +117,7 @@
 
 <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_auttweet = "<?= $resultat_tweet_media->username ?>" data_id_tweet="<?= $resultat_tweet_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
 
 

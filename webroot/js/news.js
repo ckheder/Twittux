@@ -17,7 +17,101 @@ let zone_abo = null; // variable utilisée pour contenir une div existant dans l
 
 //**Connexion NODE JS */
 
-socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
+socket.emit("connexion", {authname: authname, rooms: 'newspage'}); // on transmet mon username au serveur
+
+//** Evènement NODE JS */
+
+//** hashtag */
+
+  socket.on('hashtag', function(data)
+{
+
+        // on récupère les éventuels hashtags utilisés
+
+        var hashtagarray = data.Hashtag;
+
+      // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
+
+        hashtagarray.forEach(element =>
+      {
+        var hashtagitem = document.querySelector('#'+element+'');
+
+          if(hashtagitem) // si le hashtag existe
+        {
+          //on incrémente le compteur de 1
+
+          hashtagitem.querySelector('#'+element+' span[class="nbtweets"]').textContent ++;
+
+          // on récupère l'élément au dessus du hashtag
+
+          var prevhashtagitem = hashtagitem.previousElementSibling;
+
+          // si cet élément est un paragraphe (donc le hashtag le plus populaire n'est pas utilisé)
+
+            if(prevhashtagitem.tagName == 'P')
+          {
+              // si le nombre de tweets pour ce hashtag est supérieur à celui au dessus, on échange leur place
+
+              if(hashtagitem.querySelector('.nbtweets').textContent > prevhashtagitem.querySelector('.nbtweets').textContent)
+            {
+              hashtagitem.parentNode.insertBefore(hashtagitem, prevhashtagitem);
+            }
+          }
+
+        }
+      }
+
+      );
+})
+
+//** like */
+
+// ajout /suppression d'un like/
+
+  socket.on('actionlike', function(data)
+{
+
+    if(data.action == 'add') // ajout d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent ++;
+
+    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+      if(document.querySelector('.modallike_'+data.idtweet).onclick == null)
+    {
+        document.querySelector('.modallike_'+data.idtweet).setAttribute('onclick', 'openmodallike('+data.idtweet+');');
+    
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "pointer";
+    }
+  }
+    else if(data.action == 'remove') // suppression d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent --;
+
+    // si le nombre de like vaut 0 , on supprime l'attribut onclik() et on revient à un curseur initial
+
+      if(document.querySelector('.nb_like_'+data.idtweet).textContent == 0)
+    {
+        document.querySelector('.modallike_'+data.idtweet).removeAttribute('onclick');
+        
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "initial";
+    }
+  }
+})
+
+//** Partage */
+
+// nouveau partage
+
+  socket.on('addshare', function(idtweet)
+{
+  if(document.querySelector('.nb_share_'+idtweet))
+  {
+    document.querySelector('.nb_share_'+idtweet).textContent ++;
+  }
+})
+
+//** Fin NODE JS */
 
 //**NAVIGATION **//
 
@@ -324,7 +418,9 @@ document.addEventListener('click',function(e){
 
   if(e.target && e.target.getAttribute('data_action') == 'like'){
 
-    var idtweet = e.target.getAttribute('data_id_tweet');
+    var idtweet = e.target.getAttribute('data_id_tweet'); // identifiant du tweet
+
+    var auttweet = e.target.getAttribute('data_auttweet'); // auteur du tweet
 
     let response = fetch('/twittux/likecontent', {
       headers: {
@@ -345,33 +441,15 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un like -> mise à jour du nombre de like
+    // ajout d'un like -> émission d'un évènement serveur de nouveau like( add : new like)
 
-    case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
-
-    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
-
-    if( document.querySelector('.modallike_'+idtweet).onclick == null )
-{
-   document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
-
-   document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
-}
+    case "addlike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'add'});
 
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like
+    // suppression d'un like -> émission d'un évènement serveur de nouveau like( remove : dislike)
 
-    case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
-
-    // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
-
-    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
-{
-   document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
-
-   document.querySelector('.modallike_'+idtweet).style.cursor = null;
-}
+    case "dislike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'remove'});
 
     break;
 
@@ -429,18 +507,17 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un partage -> mise à jour du nombre de partage
+    // ajout d'un partage -> émission d'un évènement serveur de nouveau partage
 
-    case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
+    case "addshare": 
 
                       alertbox.show('<div class="w3-panel w3-green">'+
                                     '<p>Post partagé.</p>'+
                                     '</div>.');
 
-                      if(Data.notifshare == 'oui') // si la personne accepte les notifications de partage, on émet 1 évènement Node JS
-                    {
-                      socket.emit('newshare', data.auttweet);
-                    }
+
+                      socket.emit('newshare', {auttweet: data.auttweet,idtweet: data.idtweet, notifshare: Data.notifshare});
+
 
     break;
 

@@ -25,6 +25,113 @@
 
   socket.emit("connexion", {rooms: username, authname: authname}); // on transmet mon username et le profil courant au serveur
 
+  // ajout d'un tweet
+
+  socket.on('addtweet', function(data)
+{
+      if(document.querySelector("#list_tweet_" + data.Tweet['username'])) // je suis sur une page de profil
+    {
+
+    if(data.Tweet['username'] == authname) // je suis sur mon profil et je suis l'auteur du tweet
+  {
+
+    // insertion du tweet pour moi
+
+      document.querySelector(".usertweets").insertAdjacentHTML('afterbegin', '<div class="w3-container w3-card w3-white w3-round w3-margin"  id="tweet'+ data.Tweet['id_tweet']+'"><br>'+
+            '<img src="/twittux/img/avatar/'+ data.Tweet['username']+'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/>'+
+            '<div class="dropdown">'+
+            '<button onclick="openmenutweet('+ data.Tweet['id_tweet']+')" class="dropbtn">...</button>'+
+            '<div id="btntweet'+ data.Tweet['id_tweet']+'" class="dropdown-content">'+
+            '<a class="deletetweet" href="#" onclick="return false;" data_type = "0" data_idtweet="'+ data.Tweet['id_tweet']+'"> Supprimer</a>'+
+            '</div>'+
+            '</div>'+
+            '<h4>'+ data.Tweet['username']+'</h4>'+
+            '<span class="w3-opacity">à l\'instant</span>'+
+            '<hr class="w3-clear">'+
+            '<p>'+ data.Tweet['contenu_tweet']+'</p>'+
+            '<hr class="w3-clear">'+
+            '<span class="w3-opacity"> <a class="modallike_'+data.Tweet['id_tweet']+'"><span class="nb_like_'+ data.Tweet['id_tweet']+'">0</span>'+
+            ' J\'aime</a> - 0 Commentaire(s) - Partagé <span class="nb_share_'+ data.Tweet['id_tweet']+'">0</span> fois</span>'+
+            '<hr><p>'+
+            '<a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="'+ data.Tweet['id_tweet']+'"><i class="fa fa-thumbs-up"></i> J\'aime</a>\xa0\xa0\xa0'+
+            '<a href="./statut/'+ data.Tweet['id_tweet']+'" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>'+
+            '</p>'+
+            '</div>');
+    }
+      else
+    {
+        if(!document.querySelector('.messagenewtweet')) // si cette div n'existe pas , on affiche un message de nouveau tweet(testé à chaque fois en cas de plusieurs tweets à la suite)
+      {
+        document.querySelector('.displaymessagenewtweet').insertAdjacentHTML('afterbegin', '<div class="w3-panel w3-pale-green w3-display-container messagenewtweet">'+
+                                                                              '<span onclick="this.parentElement.remove()"'+
+                                                                              'class="w3-button w3-large w3-display-topright">x</span>'+
+                                                                              '<p class="w3-center"><i class="fas fa-pen"></i> Nouveaux tweets de '+data.Tweet['username']+'.<br /><br />'+
+                                                                              '<button class="w3-button w3-round w3-border w3-border-black" onclick="loadTweetItem(\'showtweets\')">Afficher</button></p>'+
+                                                                              '</div>');
+      }
+    }
+  }
+})
+
+// traitement hashtag
+
+  socket.on('hashtag', function(data)
+{
+
+    // traitement des hashtags
+
+      // on récupère les éventuels hashtags utilisés
+
+        var hashtagarray = data.Hashtag;
+
+      // on vérifie si, pour chaque hashtag, si il existe dans les encarts de hashtag(news, profil et page trending).
+
+        hashtagarray.forEach(element =>
+      {
+        var hashtagitem = document.querySelector('#'+element+'');
+
+          if(hashtagitem) // si le hashtag existe
+        {
+          //on incrémente le compteur de 1
+
+          hashtagitem.querySelector('#'+element+' span[class="nbtweets"]').textContent ++;
+
+          // on récupère l'élément au dessus du hashtag
+
+          var prevhashtagitem = hashtagitem.previousElementSibling;
+
+          // si cet élément est un paragraphe (donc le hashtag le plus populaire n'est pas utilisé)
+
+            if(prevhashtagitem.tagName == 'P')
+          {
+              // si le nombre de tweets pour ce hashtag est supérieur à celui au dessus, on échange leur place
+
+              if(hashtagitem.querySelector('.nbtweets').textContent > prevhashtagitem.querySelector('.nbtweets').textContent)
+            {
+              hashtagitem.parentNode.insertBefore(hashtagitem, prevhashtagitem);
+            }
+          }
+
+        }
+            else if(document.querySelector('.list_hashtag') || typeof hashtagitem !== "undefined") // si je suis sur la page trending et que le hashtag n'existe pas on le crée à la fin
+          {
+
+            document.querySelector('#spinnerajaxscroll').insertAdjacentHTML('beforebegin','<p class="itemhashtag" id="'+element+'">'+
+                                '<strong>'+
+                                '<a href="/twittux/search/hashtag/%23'+element+'" class="w3-text-blue">#'+element+'</a>'+
+                                '</strong>'+
+                                '<br />'+
+                                '<span class="w3-opacity"><span class="nbtweets">1</span> Tweets</span>'+
+                                '</p>');
+          }
+
+      }
+
+      );
+
+    })
+
+
 // suppression d'un tweet
 
   socket.on('deletetweet', function(data)
@@ -36,6 +143,55 @@
 
 })
 
+//** like */
+
+// ajout /suppression d'un like/
+
+  socket.on('actionlike', function(data)
+{
+
+    if(data.action == 'add') // ajout d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent ++;
+
+    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+      if(document.querySelector('.modallike_'+data.idtweet).onclick == null)
+    {
+        document.querySelector('.modallike_'+data.idtweet).setAttribute('onclick', 'openmodallike('+data.idtweet+');');
+    
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "pointer";
+    }
+  }
+    else if(data.action == 'remove') // suppression d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent --;
+
+    // si le nombre de like vaut 0 , on supprime l'attribut onclik() et on revient à un curseur initial
+
+      if(document.querySelector('.nb_like_'+data.idtweet).textContent == 0)
+    {
+        document.querySelector('.modallike_'+data.idtweet).removeAttribute('onclick');
+        
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "initial";
+    }
+  }
+  
+
+})
+
+//** Partage */
+
+// ajout d'un partage
+
+socket.on('addshare', function(idtweet)
+{
+  if(document.querySelector('.nb_share_'+idtweet))
+  {
+    document.querySelector('.nb_share_'+idtweet).textContent ++;
+  }
+})
+  
   // ## Fin Node JS ##//
 
   // surlignage
@@ -422,33 +578,16 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un like -> mise à jour du nombre de like
+    // ajout d'un like -> émission d'un évènement serveur de nouveau like
 
-    case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
+    case "addlike": socket.emit('like', {idtweet: idtweet, auttweet: username, action: 'add'});
 
-    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
-
-    if( document.querySelector('.modallike_'+idtweet).onclick == null )
-  {
-    document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
-
-    document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
-  }
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like
+    // suppression d'un like -> émission d'un évènement serveur de dislike
 
-    case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
-
-    // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
-
-    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
-  {
-    document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
-
-    document.querySelector('.modallike_'+idtweet).style.cursor = null;
-  }
-
+    case "dislike": socket.emit('like', {idtweet: idtweet, auttweet: username, action: 'remove'});
+    
     break;
 
     // problème de création de like
@@ -506,18 +645,16 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un partage -> mise à jour du nombre de partage
+    // ajout d'un partage -> émission d'un évènement serveur de nouveau partage
 
-    case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
+    case "addshare": 
 
                       alertbox.show('<div class="w3-panel w3-green">'+
                                     '<p>Post partagé.</p>'+
                                     '</div>.');
 
-        if(Data.notifshare == 'oui') // si l'utilisateur accepte les notifications de partage, on émet un évènement Node JS
-      {
-        socket.emit('newshare', data.auttweet);
-      }
+
+      socket.emit('newshare', {auttweet: data.auttweet,idtweet: data.idtweet, notifshare: Data.notifshare});
 
     break;
 

@@ -84,11 +84,18 @@ io.on("connection", socket => {
 
 //## TWEET ## //
 
-  // nouveau tweet
+  // nouveau tweet + traitement hashtag
 
       socket.on('newtweet', function (data)
     {
-      io.emit('addtweet', {Tweet: data.Tweet, Hashtag: data.Hashtag});
+
+      io.to(data.Tweet['username']).emit('addtweet', {Tweet: data.Tweet}); // annonce d'un nouveau tweet
+
+        if(data.Hashtag.length >0) // si des hashtag sont trouvés : envoi d'un évènement aux pages de news, au profil qui vient de poster et à la page trending
+      {
+        io.to("newspage").to(data.Tweet['username']).to("trendingpage").emit('hashtag', {Hashtag: data.Hashtag});
+      }
+
     }
   )
 
@@ -147,7 +154,7 @@ io.on("connection", socket => {
   socket.on('messagefromindex', function (data)
 {
 
-  let obj = users.find(o => o.username === data.destinataire); // on récupère les infos du destinataire
+  let obj = users.find(o => o.username == data.destinataire); // on récupère les infos du destinataire
 
   let connectstate; // état de la connexion du destinataire
 
@@ -251,15 +258,21 @@ io.on("connection", socket => {
 
   //## PARTAGE ##//
 
-  //## Ajout d'un partage : création d'une notification
+  //## Ajout d'un partage : création d'une notification + incrémentation du nombre de partage sur un post
 
-    socket.on('newshare', function(auttweet)
+    socket.on('newshare', function(data)
   {
-    let obj = users.find(o => o.username === auttweet); // on vérifie si l'auteur du tweet est connecté
+      io.to("newspage").to("searchpage").to(data.auttweet).emit('addshare', data.idtweet);
 
-      if(typeof obj !== "undefined") // auteur connecté
+      if(data.notifshare == "oui") // si l'auteur du tweet accepte les notifications de partage et qu'il est connecté
     {
-      socket.to(obj.userID).emit('newnotif'); // évènement de nouvelle notification
+
+        let obj = users.find(o => o.username == data.auttweet); // on vérifie si l'auteur du tweet est connecté
+
+        if(typeof obj !== "undefined") // auteur connecté
+      {
+        socket.to(obj.userID).emit('newnotif'); // évènement de nouvelle notification
+      }
     }
   });
 
@@ -276,6 +289,16 @@ io.on("connection", socket => {
       socket.to(obj.userID).emit('newnotif'); // évènement de nouvelle notification
     }
   });
+
+  //## LIKE ##//
+
+  //## new like ##//
+
+    socket.on('like', function(data) // émission d'un évènement de new like ou dislike(data.action : add-> nouveau like, remove -> dislike)
+  {
+    io.to("newspage").to("searchpage").to(data.auttweet).emit('actionlike', {idtweet: data.idtweet, action: data.action});
+
+  })
 
   //## COMMENTAIRE ## //
 

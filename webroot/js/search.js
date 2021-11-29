@@ -23,7 +23,56 @@ let zone_abo; // variable utilisée pour contenir une div existant dans la fenê
 
 //**Connexion NODE JS */
 
-socket.emit("connexion", {authname: authname}); // on transmet mon username au serveur
+socket.emit("connexion", {authname: authname,rooms: 'searchpage'}); // on transmet mon username au serveur
+
+//** like */
+
+// ajout /suppression d'un like/
+
+  socket.on('actionlike', function(data)
+{
+
+    if(data.action == 'add') // ajout d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent ++;
+
+    // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
+
+      if(document.querySelector('.modallike_'+data.idtweet).onclick == null)
+    {
+        document.querySelector('.modallike_'+data.idtweet).setAttribute('onclick', 'openmodallike('+data.idtweet+');');
+    
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "pointer";
+    }
+  }
+    else if(data.action == 'remove') // suppression d'un like
+  {
+    document.querySelector('.nb_like_'+data.idtweet).textContent --;
+
+    // si le nombre de like vaut 0 , on supprime l'attribut onclik() et on revient à un curseur initial
+
+      if(document.querySelector('.nb_like_'+data.idtweet).textContent == 0)
+    {
+        document.querySelector('.modallike_'+data.idtweet).removeAttribute('onclick');
+        
+        document.querySelector('.modallike_'+data.idtweet).style.cursor = "initial";
+    }
+  }
+})
+
+//** Partage */
+
+// nouveau partage
+
+  socket.on('addshare', function(idtweet)
+{
+  if(document.querySelector('.nb_share_'+idtweet))
+  {
+    document.querySelector('.nb_share_'+idtweet).textContent ++;
+  }
+})
+
+//** Fin NODE JS */
 
 // chargement par AJAX des résultats de recherche
 
@@ -371,6 +420,7 @@ document.addEventListener('click',function(e){
   if(e.target && e.target.getAttribute('data_action') == 'like'){
 
     var idtweet = e.target.getAttribute('data_id_tweet');
+    var auttweet = e.target.getAttribute('data_auttweet');
 
     let response = fetch('/twittux/likecontent', {
       headers: {
@@ -391,33 +441,15 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un like -> mise à jour du nombre de like
+    // ajout d'un like -> envoi d'un évènement au serveur Node ( action add -> like)
 
-    case "addlike": document.querySelector('.nb_like_'+idtweet).textContent ++;
-
-  // si le nombre de like vaut 0 (donc pas de fonction onclick() pour ouvrir la modale des like), on crée désormais un lien vers une modale contenant le nombre de like
-
-    if( document.querySelector('.modallike_'+idtweet).onclick == null )
-  {
-    document.querySelector('.modallike_'+idtweet).setAttribute('onclick', 'openmodallike('+idtweet+');');
-
-    document.querySelector('.modallike_'+idtweet).style.cursor = "pointer";
-  }
+    case "addlike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'add'});
 
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like
+    // suppression d'un like -> envoi d'un évènement au serveur Node ( action remove -> dislike)
 
-    case "dislike": document.querySelector('.nb_like_'+idtweet).textContent --;
-
-  // si le nombre de like vaut 0 , on supprime la fonction onclick() qui ouvre la modale des likes
-
-    if( document.querySelector('.nb_like_'+idtweet).textContent == 0 )
-  {
-    document.querySelector('.modallike_'+idtweet).removeAttribute('onclick');
-
-    document.querySelector('.modallike_'+idtweet).style.cursor = null;
-  }
+    case "dislike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'remove'});
 
     break;
 
@@ -478,22 +510,19 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un partage -> mise à jour du nombre de partage
+    // ajout d'un partage -> envoi d'un évènement au serveur Node (nouveau partage)
 
-    case "addshare": document.querySelector('.nb_share_'+data.idtweet).textContent ++;
+    case "addshare": 
 
                       alertbox.show('<div class="w3-panel w3-green">'+
-                      '<p>Post partagé.</p>'+
-                    '</div>.');
+                                    '<p>Post partagé.</p>'+
+                                    '</div>.');
 
-                      if(Data.notifshare == 'oui') // si l'utilisateur accepte les notifications de partage, on émet un évènement Node JS
-                    {
-                      socket.emit('newshare', data.auttweet);
-                    }
+                      socket.emit('newshare', {auttweet: data.auttweet,idtweet: data.idtweet, notifshare: Data.notifshare});
 
     break;
 
-    // suppression d'un like -> mise à jour du nombre de like
+    // suppression d'un partage -> mise à jour du nombre de partage
 
     case "existshare": alertbox.show('<div class="w3-panel w3-red">'+
                                       '<p>Vous avez déjà partagé ce post.</p>'+

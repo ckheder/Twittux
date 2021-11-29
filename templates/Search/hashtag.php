@@ -97,7 +97,7 @@
 
     <!-- affichage du nombre de like -->
 
-    <a <?= ($resultat_tweet->nb_like > 0) ? "onclick=\"openmodallike($resultat_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> class="modallike_<?= $resultat_tweet->id_tweet ?>" ><span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
+    <a <?= ($resultat_tweet->nb_like > 0) ? "onclick=\"openmodallike($resultat_tweet->id_tweet)\" style=\"cursor: pointer;\"" : ''; ?> class="modallike_<?= $resultat_tweet->id_tweet ?>"><span class="nb_like_<?= $resultat_tweet->id_tweet ?>"><?= $resultat_tweet->nb_like ;?></span> J'aime</a>
 
     <!-- affichage du nombre de commentaire -->
 
@@ -118,7 +118,7 @@
 
     <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
+        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_auttweet = "<?= $resultat_tweet->username ?>" data_id_tweet="<?= $resultat_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
         &nbsp;
 
         <?php
