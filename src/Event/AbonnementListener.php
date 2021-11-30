@@ -19,6 +19,7 @@ class AbonnementListener implements EventListenerInterface {
     {
         return [
             'Model.Abonnement.afteradd' => 'notifabo',
+            'Model.Abonnement.acceptrequest' => 'notifacceptrequest'
         ];
     }
 
@@ -58,5 +59,35 @@ class AbonnementListener implements EventListenerInterface {
           $entity->save($notif_abo);
 
         }
+
+        /**
+     * Méthode notifacceptrequest
+     *
+     * Création d'une notification d'acceptation de demande d'abonnement
+     *
+     * Paramètres : $suiveur -> personne qui me suis | $suivi -> profil connecté qui accepte une demande d'abonnement
+     *
+*/
+
+        public function notifacceptrequest($event, $suiveur, $suivi)
+      {
+
+        $entity = TableRegistry::get('Notifications');
+
+        $notif = '<img src="/twittux/img/avatar/'.$suivi.'.jpg" alt="image utilisateur" class="w3-left w3-circle w3-margin-right" width="60"/><a href="/twittux/'.$suivi.'" class="w3-text-indigo">'.$suivi.'</a> à accepté votre demande d\'abonnement.';
+
+        $notif_request = $entity->newEmptyEntity();
+
+        $notif_request->user_notif = $suiveur; // personne qui me suis désormais
+
+        $notif_request->notification = $notif; // notification
+
+        $notif_request->statut = 0;
+
+        $notif_request->created =  Time::now();
+
+        $entity->save($notif_request);
+
+      }
 
 }

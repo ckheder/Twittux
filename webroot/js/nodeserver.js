@@ -282,6 +282,7 @@ io.on("connection", socket => {
 
     socket.on('newabo', function(username)
   {
+
     let obj = users.find(o => o.username === username); // on vérifie si la personne à laquelle on s'abonne est connectée
 
       if(typeof obj !== "undefined") // personne connecté

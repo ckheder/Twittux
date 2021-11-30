@@ -353,7 +353,7 @@ document.addEventListener('click',function(e){
 
     document.querySelector('.zone_abo[data_username="'+ data.username+'"]').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'"><i class="fas fa-user-times"></i> Annuler</a></button>';
 
-    if(Data.notifabo == 'oui')
+      if(Data.notifabo == 'oui')
     {
       socket.emit('newabo', data.username);
     }
@@ -431,8 +431,8 @@ document.addEventListener('click',function(e){
   // demande d'abonnement acceptée
 
   case "accept": alertbox.show('<div class="w3-panel w3-green">'+ // notification
-                                        '<p>'+ data.username+' fais désormais parti de vos abonnés.</p>'+
-                                        '</div>.');
+                                '<p>'+ data.username+' fais désormais parti de vos abonnés.</p>'+
+                                '</div>.');
 
   // suppression de la personne de la page
 
@@ -441,6 +441,10 @@ document.addEventListener('click',function(e){
   // décrémentation du nombre de demande
 
   document.querySelector('.nb_attente').textContent --;
+
+  // émission d'un évènement Node JS qui aboutira à la création d'une notification comme quoi j'ai accepté sa demande d'abonnement
+
+  socket.emit('newabo', data.username);
 
   break;
 

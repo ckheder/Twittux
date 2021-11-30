@@ -400,8 +400,16 @@ use Cake\Datasource\ConnectionManager;
 
                 $rowCount = $statement->rowCount();
 
-                    if ($rowCount == 1) // 1 ligne affectée : renvoi d'une réponse JSON
+                    if ($rowCount == 1) // 1 ligne affectée : renvoi d'une réponse
                 {
+                    // Evènement de création d'une notification de d'abonnement ou de demande
+
+                    $event = new Event('Model.Abonnement.acceptrequest', $this, ['suiveur' => $username, 'suivi'=>$this->Authentication->getIdentity()->username]);
+
+                    $this->getEventManager()->dispatch($event);
+
+                    // renvoi de la réponse JSON signifiant une réussite
+
                     return $this->response->withType('application/json')->withStringBody(json_encode(['Result' => 'accept']));
                 }
                     else // renvoi d'une réponse JSON signifiant un échec

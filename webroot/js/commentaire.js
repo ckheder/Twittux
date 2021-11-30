@@ -735,6 +735,7 @@ document.addEventListener('click',function(e){
                                        '<p>Impossible d\'ajouter cet abonnement.</p>'+
                                        '</div>.');
 
+
    break;
 
    // envoi d'une demande d'abonnement
@@ -746,6 +747,11 @@ document.addEventListener('click',function(e){
    // bouton pour annuler ma demande d'abonnement
 
    document.querySelector('.zone_abo').innerHTML = '<button class="w3-button w3-orange w3-round"><a class="actionfollow" href="#" onclick="return false;" data_action="cancel" data_username="' + data.username +'">Annuler</a></button>';
+
+    if(Data.notifabo == 'oui') // si l'utilisateur accepte les notifications d'abonnement, on émet un évènement Node JS
+   {
+     socket.emit('newabo', data.username);
+   }
 
    break;
 
