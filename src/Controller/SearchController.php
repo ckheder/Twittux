@@ -183,6 +183,7 @@ use Cake\Http\Exception\NotFoundException;
 
         public function mediahashtag()
       {
+          
           if ($this->request->is('ajax')) // si la requête est de type AJAX, on charge la layout spécifique
 
         {
@@ -207,10 +208,12 @@ use Cake\Http\Exception\NotFoundException;
                                                                                                     'Tweets.created',
                                                                                                     'Tweets.nb_commentaire',
                                                                                                     'Tweets.nb_partage',
-                                                                                                    'Tweets.nb_like',
+                                                                                                    'Tweets.nb_like'
                                                                                                   ])
-                                                                                            ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"','Tweets.contenu_tweet REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]'])
+                                                                                            ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"']) 
+                                                                                            ->where(['Tweets.contenu_tweet REGEXP' => '#[[:<:]]'.$keyword.'[[:>:]]']) 
                                                                                             ->where(['private' => 0])));
+
 
       }
 

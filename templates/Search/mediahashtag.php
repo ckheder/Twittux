@@ -12,7 +12,6 @@
 
  use Cake\Utility\Text; // utilitaire de manipulation d'une chaîne de caractère
 
-
           if(count($resultat_tweet_hashtag_media) === 0) // aucun résultat au comptage des résultats dans le tableau
         {
 
@@ -156,7 +155,7 @@
 
          <div class="pagination">
 
-          <?= $this->Paginator->options(['url' => array('controller' => '/search/hashtag/'.$this->request->getParam('query').'')]); ?> <!-- url modifiée pour la seconde page -->
+          <?= $this->Paginator->options(['url' => array('controller' => '/search/hashtag/media/'.$this->request->getParam('query').'')]); ?> <!-- url modifiée pour la seconde page -->
 
           <?= $this->Paginator->next('Next page'); ?> <!-- lien vers la ou les seconde(s) page(s) -->
 

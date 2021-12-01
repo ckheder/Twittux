@@ -83,6 +83,7 @@ document.querySelector("#result_search").addEventListener("load", loadSearchItem
     function loadSearchItem(itemsearch)
   {
 
+
   		switch(itemsearch)
   	{
   		case "searchusers": // recherche d'utilisateurs
