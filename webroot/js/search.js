@@ -421,6 +421,7 @@ document.addEventListener('click',function(e){
   if(e.target && e.target.getAttribute('data_action') == 'like'){
 
     var idtweet = e.target.getAttribute('data_id_tweet');
+
     var auttweet = e.target.getAttribute('data_auttweet');
 
     let response = fetch('/twittux/likecontent', {
@@ -442,15 +443,27 @@ document.addEventListener('click',function(e){
   switch(Data.Result)
 {
 
-    // ajout d'un like -> envoi d'un évènement au serveur Node ( action add -> like)
+    // ajout d'un like
+
+    // émission d'un évènement serveur de nouveau like( add : new like)
 
     case "addlike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'add'});
 
+    // mise à jour de l'icone de like qui passe au rouge
+
+    e.target.parentNode.innerHTML = '<i class="fas fa-heart w3-margin-bottom" data_id_tweet="'+ idtweet+'" data_action="like" style="color: red; cursor: pointer"></i>';
+
     break;
 
-    // suppression d'un like -> envoi d'un évènement au serveur Node ( action remove -> dislike)
+    // suppression d'un like
+
+    // émission d'un évènement serveur de nouveau like( remove : dislike)
 
     case "dislike": socket.emit('like', {idtweet: idtweet, auttweet: auttweet, action: 'remove'});
+
+    // mise à jour de l'icone de like qui passe au vide
+
+    e.target.parentNode.innerHTML = '<i class="far fa-heart w3-margin-bottom" style="cursor: pointer" data_id_tweet="'+idtweet+'" data_action="like"></i>';
 
     break;
 

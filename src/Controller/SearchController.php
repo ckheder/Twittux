@@ -59,7 +59,7 @@ use Cake\Http\Exception\NotFoundException;
                                                                                         'Tweets.nb_partage',
                                                                                         'Tweets.nb_like',
                                                                                     ])
-                                                ->where(['MATCH (Tweets.contenu_tweet,Tweets.username) AGAINST(:search)'])
+                                                ->where(['MATCH (Tweets.contenu_tweet) AGAINST(:search)'])
                                                 ->where(['private' => 0]) // on ne cherche que les tweets publics
                                                 ->bind(':search', $keyword)));
 
@@ -87,7 +87,7 @@ use Cake\Http\Exception\NotFoundException;
 
       // on récupère toutes les informations du tweets contenant #mot-clé
 
-      $this->set('resultat_tweet_media', $this->paginate($this->Tweets->find()->select([
+     $this->set('resultat_tweet_media', $this->paginate($this->Tweets->find()->select([
                                                                                       'Tweets.id_tweet',
                                                                                       'Tweets.username',
                                                                                       'Tweets.contenu_tweet',
@@ -96,8 +96,7 @@ use Cake\Http\Exception\NotFoundException;
                                                                                       'Tweets.nb_partage',
                                                                                       'Tweets.nb_like',
                                                       ])
-                                              ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"','MATCH (Tweets.contenu_tweet,Tweets.username) AGAINST(:search)'])
-                                              ->where(['private' => 0])
+                                              ->where(['Tweets.contenu_tweet REGEXP' => '<img.+?class=".*?media_tweet.*?"','MATCH (Tweets.contenu_tweet) AGAINST(:search IN BOOLEAN MODE)', 'private' => 0])
                                               ->bind(':search', $keyword)));
 
       }

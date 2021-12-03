@@ -113,11 +113,13 @@
 
     <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_auttweet = "<?= $resultat_tweet_hashtag_media->username ?>" data_id_tweet="<?= $resultat_tweet_hashtag_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
+        <!-- cell d'affichage si j'aime ou non le tweet -->
+
+      <?= $this->cell('Like', [$authName, $resultat_tweet_hashtag_media->id_tweet]); ?>
+
         &nbsp;
 
-
-        <?php
+      <?php
 
               if($resultat_tweet_hashtag_media->username != $authName) // si je ne suis pas l'auteut du tweet, on affiche le lien de partage
             {

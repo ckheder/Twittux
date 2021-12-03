@@ -118,9 +118,11 @@
 
 <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_auttweet = "<?= $query_tweet->username ?>" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
-        &nbsp;
+  <!-- cell d'affichage si j'aime ou non le tweet -->
 
+  <?= $this->cell('Like', [$authName, $query_tweet->id_tweet]); ?>
+
+        &nbsp;
 
         <?php
 

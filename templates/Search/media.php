@@ -12,7 +12,6 @@
 
   use Cake\Utility\Text; // utilitaire de manipulation d'une chaîne de caractère
 
-
           if(count($resultat_tweet_media) === 0) // aucun résultat au comptage des résultats dans le tableau
         {
 
@@ -117,9 +116,11 @@
 
 <p>
 
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="like" data_auttweet = "<?= $resultat_tweet_media->username ?>" data_id_tweet="<?= $resultat_tweet_media->id_tweet ?>"><i class="fa fa-thumbs-up"></i> J'aime</a>
-        &nbsp;
+    <!-- cell d'affichage si j'aime ou non le tweet -->
 
+    <?= $this->cell('Like', [$authName, $resultat_tweet_media->id_tweet]); ?>
+
+        &nbsp;
 
         <?php
 
