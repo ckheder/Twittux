@@ -6,8 +6,8 @@
  *
  */ -->
  
- <span class="iconeaime<?= $idtweet;?>">
+ <span title="Aimer ce tweet" class="iconeaime<?= $idtweet;?> w3-margin-right">
 
-    <?= ($likestatut == 1) ? "<i class=\"fas fa-heart w3-margin-bottom\" data_id_tweet=\"$idtweet\" data_action=\"like\" style=\"color: red; cursor: pointer\"></i>" : "<i class=\"far fa-heart w3-margin-bottom\" style=\"cursor: pointer\" data_id_tweet=\"$idtweet\" data_action=\"like\"></i>" ;?>
+    <?= ($likestatut == 1) ? "<i class=\"fas fa-heart\" data_id_tweet=\"$idtweet\" data_action=\"like\" style=\"color: red; cursor: pointer\"></i>" : "<i class=\"far fa-heart w3-margin-bottom\" style=\"cursor: pointer\" data_id_tweet=\"$idtweet\" data_action=\"like\"></i>" ;?>
 
 </span>

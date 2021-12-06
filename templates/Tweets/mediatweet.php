@@ -212,9 +212,7 @@
 
         <?= $this->cell('Like', [$authName, $tweet->id_tweet]); ?>
         
-        &nbsp;
-        
-        <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+        <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-right"><i title="Commenter ce tweet" class="fa fa-comment"></i></a>
 
         <?php
 
@@ -223,8 +221,8 @@
                 if($tweet->username != $authName) // si le post partagé n'est pas un post à moi -> affichage du bouton de partage
               {
               ?>
-                &nbsp;
-                  <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $tweet->username ?>" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+
+                  <?= $this->cell('Partage', [$authName, $tweet->username, $tweet->id_tweet]); ?>
         <?php
               }
             }

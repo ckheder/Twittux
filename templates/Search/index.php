@@ -101,7 +101,7 @@
 
         <!-- affichage du nombre de commentaire -->
 
-  - <a href="/twittux/statut/<?= $query_tweet->id_tweet ;?>" class="w3-margin-bottom"><?= $query_tweet->nb_commentaire;?> Commentaire(s)</a>
+  - <?= $query_tweet->nb_commentaire;?> Commentaire(s)</a>
 
         <!-- affichage du nombre de partage -->
 
@@ -122,15 +122,17 @@
 
   <?= $this->cell('Like', [$authName, $query_tweet->id_tweet]); ?>
 
-        &nbsp;
+ <!-- lien vers les commentaires -->
+
+ <a href="./statut/<?= $query_tweet->id_tweet ;?>" class="w3-margin-right"><i title="Commenter ce tweet" class="fas fa-comment"></i></a>
 
         <?php
 
               if($query_tweet->username != $authName) // si je ne suis pas l'auteut du tweet, on affiche le lien de partage
             {
               ?>
-        &nbsp;
-                <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $query_tweet->username ?>" data_id_tweet="<?= $query_tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+
+                <?= $this->cell('Partage', [$authName, $query_tweet->username, $query_tweet->id_tweet]); ?>
         <?php
 
             }

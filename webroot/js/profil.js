@@ -659,14 +659,14 @@ document.addEventListener('click',function(e){
 
     // ajout d'un partage -> émission d'un évènement serveur de nouveau partage
 
-    case "addshare": 
-
-                      alertbox.show('<div class="w3-panel w3-green">'+
+    case "addshare": alertbox.show('<div class="w3-panel w3-green">'+
                                     '<p>Post partagé.</p>'+
                                     '</div>.');
 
 
       socket.emit('newshare', {auttweet: data.auttweet,idtweet: data.idtweet, notifshare: Data.notifshare});
+
+      e.target.parentNode.innerHTML = '<i title="Vous avez déjà partagé ce tweet" class="fas fa-share-square" style="color: #4F50F8;"></i>';
 
     break;
 

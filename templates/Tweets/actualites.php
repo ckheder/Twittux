@@ -120,9 +120,7 @@
 
           <?= $this->cell('Like', [$authName, $actu->id_tweet]); ?>
         
-        &nbsp;
-        
-        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-margin-bottom"><i class="fa fa-comment"></i> Commenter</a>
+        <a href="./statut/<?= $actu->id_tweet ;?>" class="w3-margin-right"><i title="Commenter ce tweet" class="fa fa-comment"></i></a>
 
         <?php
 
@@ -133,9 +131,7 @@
 
           ?>
 
-        &nbsp;
-
-        <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $actu->username ?>" data_id_tweet="<?= $actu->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+            <?= $this->cell('Partage', [$authName, $actu->username, $actu->id_tweet]); ?>
 
         <?php
 

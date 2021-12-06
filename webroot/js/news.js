@@ -530,6 +530,8 @@ document.addEventListener('click',function(e){
 
                       socket.emit('newshare', {auttweet: data.auttweet,idtweet: data.idtweet, notifshare: Data.notifshare});
 
+    e.target.parentNode.innerHTML = '<i title="Vous avez déjà partagé ce tweet" class="fas fa-share-square" style="color: #4F50F8;"></i>';
+
 
     break;
 

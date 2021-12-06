@@ -199,7 +199,7 @@
 
         <!-- affichage du nombre de commentaire -->
 
-          - <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-bottom"><?= $tweet->nb_commentaire;?> Commentaire(s) </a>
+          - <?= $tweet->nb_commentaire;?> Commentaire(s)
 
         <!-- affichage du nombre de partage -->
 
@@ -207,7 +207,7 @@
 
         <hr>
 
-        <?php if($authName) // si non auth, pas de comm
+        <?php if($authName) // si non auth, pas de commentaire, like ou de partage
         {
           ?>
 
@@ -219,7 +219,9 @@
 
         <?= $this->cell('Like', [$authName, $tweet->id_tweet]); ?>
 
-          &nbsp;
+        <!-- lien vers les commentaires -->
+
+        <a href="./statut/<?= $tweet->id_tweet ;?>" class="w3-margin-right"><i title="Commenter ce tweet" class="fas fa-comment"></i></a>
 
         <?php
 
@@ -228,8 +230,7 @@
                 if($tweet->username != $authName) // si le post partagé n'est pas un post à moi -> affichage du bouton de partage
               {
               ?>
-                &nbsp;
-                  <a class="w3-margin-bottom" onclick="return false;" style="cursor: pointer;" data_action="share" data_auttweet = "<?= $tweet->username ?>" data_id_tweet="<?= $tweet->id_tweet ?>"><i class="fas fa-retweet"></i> Partager</a>
+                  <?= $this->cell('Partage', [$authName, $tweet->username, $tweet->id_tweet]); ?>
               <?php
 
               }
