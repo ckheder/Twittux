@@ -114,9 +114,7 @@
 
         </div>
 
-      </div>
-
-      <br>
+      
 
       <?php endforeach ;
 
@@ -125,13 +123,11 @@
 
    ?>
 
-      <div class="w3-card w3-round">
+      <div class="w3-card w3-round w3-row-padding w3-white">
 
         <!-- affichage média -->
 
-        <div class="w3-white">
-
-           <div class="w3-row-padding">
+           <div id="media_list">
 
              <?php // parcours du dossier contenant les emojis et affichage dans la div
 
@@ -155,9 +151,9 @@
 
             $counter++;
 
-            // si il y'a 4 médias maximum on arrête le parcours du tableau
+            // si il y'a 6 médias maximum on arrête le parcours du tableau
 
-              if ($counter >= 4)
+              if ($counter >= 6)
             {
               break;
             }
@@ -169,14 +165,18 @@
             if(count($array_media) > 0)
            {
 
-            foreach($array_media as $media_user)
-          {
+              foreach($array_media as $media_user)
+            {
 
-            $img_media_user_no_extension = substr($media_user, 0, strrpos($media_user, '.')); // on supprime l'extension du fichier pour crée un lien vers le post contenant le média
+              $img_media_user_no_extension = substr($media_user, 0, strrpos($media_user, '.')); // on supprime l'extension du fichier pour crée un lien vers le post contenant le média
 
-            echo '<a href="./statut/'.$img_media_user_no_extension.'"><img src="/twittux/img/media/'.$this->request->getParam('username').'/'.$media_user.'" class="media_user" /></a>';
+              echo '<div class="media">';
 
-          }
+              echo '<a href="./statut/'.$img_media_user_no_extension.'"><img src="/twittux/img/media/'.$this->request->getParam('username').'/'.$media_user.'" class="media_user" /></a>';
+
+              echo '</div>';
+
+            }
 
         }
           else
@@ -188,7 +188,9 @@
 
           ?>
 
-         </div>
+ 
+
+
 
         </div>
 
@@ -199,6 +201,8 @@
   }
 
   ?>
+
+</div>
 
       <br>
 

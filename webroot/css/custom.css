@@ -64,7 +64,6 @@ body
 {
   float: right;
   position: relative;
-  display: inline-block;
   margin-left : 5px;
 }
 
@@ -463,17 +462,32 @@ color: #737373;
 
 /* ## Fin Messagerie ## */
 
-/* ## Media ## */
+/* ## Media : Mise en page de la taille des médias envoyés par l'utilisateur -> visible sur la cell Users ## */
 
-/* Mise en page de la taille des médias envoyés par l'utilisateur -> visible sur la cell Users */
+  /* Div générale contenant la liste des médias  */
+
+#media_list
+{
+  display: table;
+  padding: 9px;
+  margin: 0 auto;
+}
+  /* Div spécifique à chaque média */
+
+.media
+{
+  width: 100px; 
+  height: 100px;       
+  float: left;
+  margin: 1px;
+}
+
+  /* Taille des images */
 
 .media_user
 {
-	max-height:100%;
-	max-width:100%;
-	display: block;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	height:100%;
+	width:100%;
 }
 
 /* ## Fin Média ## */
