@@ -4,8 +4,6 @@
 
 This is a training project with Cakephp 4.The code is available for free.
 
-Test (alpha access) : (https://christophekheder.com/twittux/)
-
 ## Built With
 
 * [CakePHP4](https://cakephp.org/) - CakePHP makes building web applications simpler, faster, while requiring less code ,a modern PHP 7 framework.
